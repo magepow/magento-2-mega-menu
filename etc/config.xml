@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!-- /**
+ * Magiccart 
+ * @category    Magiccart 
+ * @copyright   Copyright (c) 2014 Magiccart (http://www.magiccart.net/) 
+ * @license     http://www.magiccart.net/license-agreement.html
+ * @Author: DOng NGuyen<nguyen@dvn.com>
+ * @@Create Date: 2016-02-23 18:59:34
+ * @@Modify Date: 2016-04-28 15:54:48
+ * @@Function:
+ */ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+	<default>
+	    <magicmenu>
+            <general>
+                <dropdown>0</dropdown>
+            </general>
+            <topmenu>
+                <enabled>1</enabled>
+                <fullWidth>0</fullWidth>
+                <sticker>1</sticker>
+                <switcher>767</switcher>
+                <home>1</home>
+                <demo>1</demo>
+                <mainCat>1</mainCat>
+                <extraCat>1</extraCat>
+                <notIncludeNav>0</notIncludeNav>
+            </topmenu>
+            <vmenu>
+                <enabled>0</enabled>
+                <home>0</home>
+                <mainCat>1</mainCat>
+                <extraCat>0</extraCat>
+                <notIncludeNav>0</notIncludeNav>
+            </vmenu>
+            <accordion>
+                <enabled>1</enabled>
+            </accordion>
+	    </magicmenu>
+	</default>
+</config>

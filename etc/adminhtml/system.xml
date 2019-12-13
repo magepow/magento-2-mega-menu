@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+
+<!-- /**
+ * Magiccart 
+ * @category    Magiccart 
+ * @copyright   Copyright (c) 2014 Magiccart (http://www.magiccart.net/) 
+ * @license     http://www.magiccart.net/license-agreement.html
+ * @Author: DOng NGuyen<nguyen@dvn.com>
+ * @@Create Date: 2016-02-23 18:59:34
+ * @@Modify Date: 2017-08-29 18:17:04
+ * @@Function:
+ */ -->
+ 
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="Magiccart" translate="label" sortOrder="100">
+            <label>Magiccart</label>
+        </tab>
+        <section id="magicmenu" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Magic Menu</label>
+            <tab>Magiccart</tab>
+            <resource>Magiccart_Magicmenu::config_magicmenu</resource>
+            <group id="general" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+<!--                 <field id="enabled" translate="label comment" type="select" sortOrder="0"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <comment>Enabled frontend</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field> -->
+                <field id="dropdown" translate="label comment" type="multiselect" sortOrder="5"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Dropdown Navigation : </label>
+                    <comment>Use Dropdown menu</comment>
+                    <source_model>Magiccart\Magicmenu\Model\System\Config\Category</source_model>
+                    <can_be_empty>1</can_be_empty>
+                </field>                
+            </group>
+            <group id="topmenu" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Top Menu</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="5"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <comment>Enabled frontend</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="fullWidth" translate="label comment" type="select" sortOrder="5"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Mega Menu Full Width : </label>
+                    <comment>Mega Menu Full Width</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="sticker" translate="label comment" type="select" sortOrder="10"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sticker Menu : </label>
+                    <comment>Fixed to top while scroll page</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="switcher" translate="label comment" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Switcher to Mobile: </label>
+                    <validate>validate-zero-or-greater</validate>  
+                    <comment>Size Screen switcher to Menu Mobile</comment>
+                </field>
+                <field id="home" translate="label comment" type="select" sortOrder="20"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Home : </label>
+                    <comment>Show button home</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="demo" translate="label comment" type="select" sortOrder="25"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Home Demo: </label>
+                    <comment>Show dropdown demo multistore</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="mainCat" translate="label comment" type="select" sortOrder="30"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Main Category : </label>
+                    <comment>Show Standard Category</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="extraCat" translate="label comment" type="select" sortOrder="35"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Extra Category : </label>
+                    <comment>Show Extra Category</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="notIncludeNav" translate="label comment" type="multiselect" sortOrder="40"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Not Include in Navigation Top : </label>
+                    <comment>Disable category in topmenu</comment>
+                    <source_model>Magiccart\Magicmenu\Model\System\Config\Category</source_model>
+                    <can_be_empty>1</can_be_empty>
+                </field>
+            </group>
+            <group id="vmenu" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Vertical Menu</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="0"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <comment>Enabled frontend</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="home" translate="label comment" type="select" sortOrder="20"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Home : </label>
+                    <comment>Show button home</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="demo" translate="label comment" type="select" sortOrder="25"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Home Demo: </label>
+                    <comment>Show dropdown demo multistore</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="mainCat" translate="label comment" type="select" sortOrder="30"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Main Category : </label>
+                    <comment>Show Standard Category</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="extraCat" translate="label comment" type="select" sortOrder="35"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show Extra Category : </label>
+                    <comment>Show Extra Category</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="notIncludeNav" translate="label comment" type="multiselect" sortOrder="40"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Not Include in Navigation Top : </label>
+                    <comment>Disable category in topmenu</comment>
+                    <source_model>Magiccart\Magicmenu\Model\System\Config\Category</source_model>
+                    <can_be_empty>1</can_be_empty>
+                </field>
+            </group>
+            <group id="accordion" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Accordion Menu</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="0"  showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <comment>Enabled frontend</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

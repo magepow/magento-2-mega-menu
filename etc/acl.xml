@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!-- /**
+ * Magiccart 
+ * @category    Magiccart 
+ * @copyright   Copyright (c) 2014 Magiccart (http://www.magiccart.net/) 
+ * @license     http://www.magiccart.net/license-agreement.html
+ * @Author: DOng NGuyen<nguyen@dvn.com>
+ * @@Create Date: 2016-02-23 18:59:34
+ * @@Modify Date: 2016-04-22 17:17:02
+ * @@Function:
+ */ -->
+ 
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+	<acl>
+	    <resources>
+	        <resource id="Magento_Backend::admin">
+	        	<resource id="Magiccart_Magicmenu::magiccart" title="Magiccart" sortOrder="10">
+	        	    <resource id="Magiccart_Magicmenu::magicmenu" title="Magic Menu" sortOrder="10">
+	        	        <resource id="Magiccart_Magicmenu::magicmenu_menu" title="Menu" sortOrder="10" />
+	        	        <resource id="Magiccart_Magicmenu::magicmenu_extra" title="Extra Menu" sortOrder="20" />
+	        	    </resource>
+	        	</resource>
+	            <resource id="Magento_Backend::stores">
+	                <resource id="Magento_Backend::stores_settings">
+	                    <resource id="Magento_Config::config">
+	                        <resource id="Magiccart_Magicmenu::config_magicmenu" title="Magic Menu" />
+	                    </resource>
+	                </resource>
+	            </resource>
+	        </resource>
+	    </resources>
+	</acl>
+</config>

@@ -1,0 +1,70 @@
+<?php
+/**
+ * Magiccart 
+ * @category 	Magiccart 
+ * @copyright 	Copyright (c) 2014 Magiccart (http://www.magiccart.net/) 
+ * @license 	http://www.magiccart.net/license-agreement.html
+ * @Author: DOng NGuyen<nguyen@dvn.com>
+ * @@Create Date: 2016-02-08 22:57:12
+ * @@Modify Date: 2019-12-02 15:21:53
+ * @@Function:
+ */
+
+$menu = $this->_sysCfg->topmenu;
+$vmenu = $this->_sysCfg->vmenu;
+// drawMainMenu vs DrowMobileMenu
+$homeHtml  	= $this->drawHomeMenu();
+$menuHtml  	= $this->drawMainMenu();
+$extraHtml 	= $this->drawExtraMenu();
+$mobileMenu = $menuHtml['mobile'];
+$drawHomeMenu  = $menu['home'] ? $homeHtml : '';
+$drawMainMenu  = '';
+$drawExtraMenu = $menu['extraCat'] ? $extraHtml : '';
+?>
+<nav class="navigation mean-nav navigation-mobile" role="navigation" data-action="navigation">
+	<ul class="nav-mobile" data-alo-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
+		<?php echo $mobileMenu ?>
+		<?php echo $drawExtraMenu ?>
+	</ul>
+</nav>
+<?php if($vmenu['enabled']) : ?>
+	<?php
+		$vdrawHomeMenu  = $vmenu['home'] ? $homeHtml : '';
+		$vdrawMainMenu  = '';
+		$vdrawExtraMenu = $vmenu['extraCat'] ? $extraHtml : '';
+		if($vmenu['mainCat']){
+			$vdesktop 	= $menuHtml['desktop'];
+			$vids  = explode(',', $vmenu['notIncludeNav']);
+			foreach ($vids as $id) { unset($vdesktop[$id]); }
+			$vdrawMainMenu = implode("\n", $vdesktop);
+		}
+	?>
+	<div class="vmagicmenu vertical-menu clearfix">
+		<h3 class="v-title"><?php /* @escapeNotVerified */ echo __($this->getRootName())?></h3>
+		<ul class="nav-desktop">
+			<?php echo $vdrawHomeMenu ?>
+			<?php echo $vdrawMainMenu ?>
+			<?php echo $vdrawExtraMenu ?>
+		</ul>
+	</div>
+<?php endif ?>
+<?php if($menu['enabled']) : ?>
+	<?php
+		if($menu['mainCat']){
+			$desktop 	= $menuHtml['desktop'];
+			$ids  = explode(',', $menu['notIncludeNav']);
+			foreach ($ids as $id) { unset($desktop[$id]); }
+			$drawMainMenu = implode("\n", $desktop);
+		}
+	?>
+	<div class="magicmenu clearfix">
+		<ul class="nav-desktop <?php /* @escapeNotVerified */ echo $menu['sticker'] ? 'sticker' : '' ?>" data-fullwidth="<?php /* @escapeNotVerified */ echo $menu['fullWidth'] ?>">
+			<?php echo $drawHomeMenu ?>
+			<?php echo $drawMainMenu ?>
+			<?php echo $drawExtraMenu ?>
+		</ul>
+	</div>
+<?php endif ?>
+<script type="text/javascript">
+	require(['jquery','magiccart/easing','magicmenu']);
+</script>

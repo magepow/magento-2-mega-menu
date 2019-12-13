@@ -1,0 +1,52 @@
+<?php
+/**
+ * Magiccart 
+ * @category 	Magiccart 
+ * @copyright 	Copyright (c) 2014 Magiccart (http://www.magiccart.net/) 
+ * @license 	http://www.magiccart.net/license-agreement.html
+ * @Author: DOng NGuyen<nguyen@dvn.com>
+ * @@Create Date: 2016-02-08 22:57:12
+ * @@Modify Date: 2019-12-02 00:25:34
+ * @@Function:
+ */
+ ?>
+<?php
+
+// $_aloHelper = $this->helper('Magiccart\Magicmenu\Helper\Data');
+// var_dump($_aloHelper->getConfig('magicmenu'));
+
+$vmenu = $this->_sysCfg->vmenu;
+if(!$vmenu['enabled']) return;
+
+// drawMainMenu vs DrowMobileMenu
+$menuHtml = $this->drawMainMenu();
+$mobileMenu = $menuHtml['mobile'];
+$desktop 	= $menuHtml['desktop'];
+$ids  = explode(',', $vmenu['notIncludeNav']);
+foreach ($ids as $id) { unset($desktop[$id]); }
+// drawHomeMenu
+$drawHomeMenu = $vmenu['home'] ? $this->drawHomeMenu() : '';
+// drawMainMenu
+$drawMainMenu = $vmenu['mainCat'] ? implode("\n", $desktop) : '';
+// drawExtMenu ExtraMenu
+$drawExtraMenu = $vmenu['extraCat'] ? $this->drawExtraMenu() : '';
+
+?>
+
+<div class="vmagicmenu clearfix">
+	<ul class="nav-desktop">
+		<?php echo $drawHomeMenu ?>
+		<?php echo $drawMainMenu ?>
+		<?php echo $drawExtraMenu ?>
+	</ul>
+</div>
+<!-- <nav class="navigation" role="navigation">
+	<ul class="nav-mobile" data-alo-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
+		<?php //echo $mobileMenu ?>
+		<?php //echo $drawExtraMenu ?>
+	</ul>
+</nav> -->
+
+<script type="text/javascript">
+	require(['jquery','magiccart/easing','magicmenu']);
+</script>

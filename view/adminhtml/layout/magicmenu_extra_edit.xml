@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- /**
+ * Magiccart 
+ * @category    Magiccart 
+ * @copyright   Copyright (c) 2014 Magiccart (http://www.magiccart.net/) 
+ * @license     http://www.magiccart.net/license-agreement.html
+ * @Author: DOng NGuyen<nguyen@dvn.com>
+ * @@Create Date: 2016-02-23 18:59:34
+ * @@Modify Date: 2016-03-09 17:44:29
+ * @@Function:
+ */ -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Extra Tabs</title>
+    </head>
+    <body>
+        <referenceBlock name="menu">
+            <action method="setActive">
+                <argument name="itemId" xsi:type="string">Magiccart_Magicmenu::magicmenu</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="page.main.actions">
+            <block class="Magento\Backend\Block\Store\Switcher" name="store_switcher">
+                <action method="setUseConfirm">
+                    <argument name="params" xsi:type="string">1</argument>
+                </action>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="content">
+        <block class="Magiccart\Magicmenu\Block\Adminhtml\Extra\Edit" name="extra_edit"/>
+        </referenceContainer>
+        <referenceContainer name="left">
+        <block class="Magiccart\Magicmenu\Block\Adminhtml\Extra\Edit\Tabs" name="extra_edit_tabs">
+            <block class="Magiccart\Magicmenu\Block\Adminhtml\Extra\Edit\Tab\Form" name="extra_edit_tab_form"/>
+            <action method="addTab">
+                <argument name="name" xsi:type="string">main_section</argument>
+                <argument name="block" xsi:type="string">extra_edit_tab_form</argument>
+            </action>
+        </block>
+        </referenceContainer>
+    </body>
+</page>
