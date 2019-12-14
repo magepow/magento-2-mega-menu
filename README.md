@@ -8,7 +8,7 @@ Run the following command in Magento 2 root folder:
 `php bin/magento setup:upgrade`
 
 `php bin/magento setup:static-content:deploy -f`
-## 2. Magiccart Magicmenu user guide
+## Magiccart Magicmenu user guide
 [USE GUIDE](https://docs.alothemes.com/m2/theme/gecko/#sub66)
 
 [![Latest Stable Version](https://poser.pugx.org/magiccart/module-magicmenu/v/stable)](https://packagist.org/packages/magiccart/module-magicmenu)
