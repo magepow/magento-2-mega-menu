@@ -33,7 +33,10 @@ $drawExtraMenu = $menu['extraCat'] ? $this->drawExtraMenu() : '';
 	</ul>
 </nav>
 <div class="magicmenu clearfix">
-	<ul class="nav-desktop <?php /* @escapeNotVerified */ echo $menu['sticker'] ? 'sticker' : '' ?>" data-fullwidth="<?php /* @escapeNotVerified */ echo $menu['fullWidth'] ?>" >
+	<ul class="nav-desktop <?php /* @escapeNotVerified */ echo $menu['sticker'] ? 'sticker' : '' ?>"			
+			data-fullwidth="<?php /* @escapeNotVerified */ echo $menu['fullWidth'] ?>"
+			data-breakpoint="<?php /* @escapeNotVerified */ echo $menu['switcher'] ?>"
+			>
 		<?php echo $drawHomeMenu ?>
 		<?php echo $drawMainMenu ?>
 		<?php echo $drawExtraMenu ?>
