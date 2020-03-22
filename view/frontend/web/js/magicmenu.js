@@ -7,12 +7,11 @@ require(['jquery', 'magiccart/easing'], function($, easing){
      * @license     https://www.magepow.com/license-agreement.html
      * @Author: DOng NGuyen<nguyen@magepow.com>
      * @@Create Date: 2014-04-25 13:16:48
-     * @@Modify Date: 2019-12-04 09:16:29
+     * @@Modify Date: 2020-03-22 09:16:29
      * @@Function:
      */
 
-    !(function($){"use strict";$.fn.magicaccordion=function(options){var defaults={accordion:true,mouseType:false,speed:300,closedSign:'collapse',openedSign:'expand',openedActive:true,};var opts=$.extend(defaults,options);var $this=$(this);$this.find("li").each(function(){if($(this).find("ul").size()!=0){$(this).find("a:first").after("<span class='"+opts.closedSign+"'>"+opts.closedSign+"</span>");if($(this).find("a:first").attr('href')=="#"){$(this).find("a:first").click(function(){return false})}}});if(opts.openedActive){$this.find("li.active").each(function(){$(this).parents("ul").slideDown(opts.speed,opts.easing);$(this).parents("ul").parent("li").find("a:first").next().html(opts.openedSign).removeClass(opts.closedSign).addClass(opts.openedSign);$(this).find("ul:first").slideDown(opts.speed,opts.easing);$(this).find("a:first").next().html(opts.openedSign).removeClass(opts.closedSign).addClass(opts.openedSign)})}if(opts.mouseType){$this.find("li a").mouseenter(function(){if($(this).parent().find("ul").size()!=0){if(opts.accordion){if(!$(this).parent().find("ul").is(':visible')){var parents=$(this).parent().parents("ul");var visible=$this.find("ul:visible");visible.each(function(visibleIndex){var close=true;parents.each(function(parentIndex){if(parents[parentIndex]==visible[visibleIndex]){close=false;return false}});if(close){if($(this).parent().find("ul")!=visible[visibleIndex]){$(visible[visibleIndex]).slideUp(opts.speed,function(){$(this).parent("li").find("a:first").next().html(opts.closedSign).addClass(opts.closedSign)})}}})}}if($(this).parent().find("ul:first").is(":visible")){$(this).parent().find("ul:first").slideUp(opts.speed,function(){$(this).parent("li").find("a:first").next().delay(opts.speed+1000).html(opts.closedSign).removeClass(opts.openedSign).addClass(opts.closedSign)})}else{$(this).parent().find("ul:first").slideDown(opts.speed,function(){$(this).parent("li").find("a:first").next().delay(opts.speed+1000).html(opts.openedSign).removeClass(opts.closedSign).addClass(opts.openedSign)})}}})}else{$this.find("li span").click(function(){if($(this).parent().find("ul").size()!=0){if(opts.accordion){if(!$(this).parent().find("ul").is(':visible')){var parents=$(this).parent().parents("ul");var visible=$this.find("ul:visible");visible.each(function(visibleIndex){var close=true;parents.each(function(parentIndex){if(parents[parentIndex]==visible[visibleIndex]){close=false;return false}});if(close){if($(this).parent().find("ul")!=visible[visibleIndex]){$(visible[visibleIndex]).slideUp(opts.speed,function(){$(this).parent("li").find("a:first").next().html(opts.closedSign).addClass(opts.closedSign)})}}})}}if($(this).parent().find("ul:first").is(":visible")){$(this).parent().find("ul:first").slideUp(opts.speed,opts.easing,function(){$(this).parent("li").find("a:first").next().delay(opts.speed+1000).html(opts.closedSign).removeClass(opts.openedSign).addClass(opts.closedSign)})}else{$(this).parent().find("ul:first").slideDown(opts.speed,opts.easing,function(){$(this).parent("li").find("a:first").next().delay(opts.speed+1000).html(opts.openedSign).removeClass(opts.closedSign).addClass(opts.openedSign)})}}})}var catplus=$this.find('.nav-accordion >.level0:hidden').not('.all-cat');if(catplus.length)$this.find('.all-cat').show().click(function(event){$(this).children().toggle();catplus.slideToggle('slow')});else $this.find('.all-cat').hide()}})(jQuery);
-    
+    !function(l){"use strict";l.fn.magicaccordion=function(i){var d=l.extend({accordion:!0,mouseType:!1,speed:300,closedSign:"collapse",openedSign:"expand",openedActive:!0},i),e=l(this);e.find("li").each(function(){var i=l(this).find("ul");0!=i&&(i.hide(),l(this).find("a:first").after("<span class='"+d.closedSign+"'>"+d.closedSign+"</span>"),"#"==l(this).find("a:first").attr("href")&&l(this).find("a:first").click(function(){return!1}))}),d.openedActive&&e.find("li.active").each(function(){l(this).parents("ul").slideDown(d.speed,d.easing),l(this).parents("ul").parent("li").find("a:first").next().html(d.openedSign).removeClass(d.closedSign).addClass(d.openedSign),l(this).find("ul:first").slideDown(d.speed,d.easing),l(this).find("a:first").next().html(d.openedSign).removeClass(d.closedSign).addClass(d.openedSign)}),d.mouseType?e.find("li a").mouseenter(function(){if(0!=l(this).parent().find("ul").size()){if(d.accordion&&!l(this).parent().find("ul").is(":visible")){var s=l(this).parent().parents("ul"),t=e.find("ul:visible");t.each(function(e){var n=!0;s.each(function(i){if(s[i]==t[e])return n=!1}),n&&l(this).parent().find("ul")!=t[e]&&l(t[e]).slideUp(d.speed,function(){l(this).parent("li").find("a:first").next().html(d.closedSign).addClass(d.closedSign)})})}l(this).parent().find("ul:first").is(":visible")?l(this).parent().find("ul:first").slideUp(d.speed,function(){l(this).parent("li").find("a:first").next().delay(d.speed+1e3).html(d.closedSign).removeClass(d.openedSign).addClass(d.closedSign)}):l(this).parent().find("ul:first").slideDown(d.speed,function(){l(this).parent("li").find("a:first").next().delay(d.speed+1e3).html(d.openedSign).removeClass(d.closedSign).addClass(d.openedSign)})}}):e.find("li span").click(function(){if(0!=l(this).parent().find("ul").size()){if(d.accordion&&!l(this).parent().find("ul").is(":visible")){var s=l(this).parent().parents("ul"),t=e.find("ul:visible");t.each(function(e){var n=!0;s.each(function(i){if(s[i]==t[e])return n=!1}),n&&l(this).parent().find("ul")!=t[e]&&l(t[e]).slideUp(d.speed,function(){l(this).parent("li").find("a:first").next().html(d.closedSign).addClass(d.closedSign)})})}l(this).parent().find("ul:first").is(":visible")?l(this).parent().find("ul:first").slideUp(d.speed,d.easing,function(){l(this).parent("li").find("a:first").next().delay(d.speed+1e3).html(d.closedSign).removeClass(d.openedSign).addClass(d.closedSign)}):l(this).parent().find("ul:first").slideDown(d.speed,d.easing,function(){l(this).parent("li").find("a:first").next().delay(d.speed+1e3).html(d.openedSign).removeClass(d.closedSign).addClass(d.openedSign)})}});var n=e.find(".nav-accordion >.level0:hidden").not(".all-cat");n.length?e.find(".all-cat").show().click(function(i){l(this).children().toggle(),n.slideToggle("slow")}):e.find(".all-cat").hide()}}(jQuery);
     (function ($) {
         "use strict";
         $.fn.magicmenu = function (options) {
@@ -49,7 +48,17 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                         var topmenu = $(hSelector);
                         var navDesktop = topmenu.find('.nav-desktop');
                         if(navDesktop.hasClass('sticker')) methods.sticky(topmenu);
-                        var fullWidth = navDesktop.data('fullwidth');
+                        /* Active menu top-vmega */
+                        topmenu.find('.vmega .category-item').hover(function() {
+                            $(this).siblings().removeClass('over');
+                            $(this).addClass('over');
+                        }, function() {
+                            // $(this).removeClass('over');
+                            // $(this).parent().children(":first").addClass('over');
+                        });
+
+                        var fullWidth  = navDesktop.data('fullwidth');
+                        if( navDesktop.data('breakpoint') ) breakpoint = navDesktop.data('breakpoint');
                         var leveltop = topmenu.find('li.level0.hasChild, li.level0.home').not('.dropdown');
                         methods.horizontal(leveltop, fullWidth, true);
 
@@ -59,25 +68,28 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                         var vLeveltop = vmenu.find('li.level0.hasChild, li.level0.home').not('.dropdown');
                         methods.vertical(vLeveltop, fullWidth, true);
                         // Responsive
+                        var body = $('body');
+                        if ( breakpoint > $(window).width() ) body.addClass('nav-mobile-display');
                         $(window).resize(function(){
-                            if ( breakpoint <= $(window).width()){
+                            if ( breakpoint > $(window).width()){
+                                body.addClass('nav-mobile-display');
+                                $('.nav-mobile').show();
+                                navDesktop.hide();
+                            } else {
+                                body.removeClass('nav-mobile-display');
                                 $('.nav-mobile').hide();
                                 navDesktop.show();
                                 methods.horizontal(leveltop, fullWidth, false);
                                 methods.vertical(vLeveltop, fullWidth, false);
-                            } else {
-                                $('.nav-mobile').show();
-                                navDesktop.hide();
                             }
                         })
                     });
                 },
 
                 sticky: function(topmenu){
-                    var menuHeight  = topmenu.height();
-                    var postionTop  = topmenu.offset().top + menuHeight;
-                    var fixedMenu   = $(sticky);
-                    var parrentMenu = fixedMenu.parent();
+                    var menuSticky  = $(sticky);
+                    var menuHeight  = menuSticky.innerHeight();
+                    var postionTop  = topmenu.offset().top;
                     var body        = $('body');
                     var heightItem  =  0;
                     var heightAIO   = 0
@@ -90,11 +102,11 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                             function() { menuAIO.removeClass('over').css({"overflow": "hidden", "height": heightAIO}); }
                         );
                     }
-                    $('<div class="fixed-height-sticky"></div>').insertBefore(fixedMenu).height(fixedMenu.height()).hide();
+                    $('<div class="fixed-height-sticky" style="display:none;height: ' + menuHeight + 'px"></div>').insertBefore(menuSticky);
                     $(window).scroll(function () {
                         var postion = $(this).scrollTop();
-                        if (postion > postionTop ){
-                            fixedMenu.addClass('header-container-fixed').parent('.fixed-height-sticky').show();
+                        if (postion > postionTop ){ /* not use = */
+                            menuSticky.addClass('header-container-fixed').parent().find('.fixed-height-sticky').show();
                             if(heightItem && !menuAIO.hasClass('over')){
                                 heightAIO = heightItem - (postion - postionTop) - menuHeight;
                                 if(heightAIO > 0 )menuAIO.css({"height": heightAIO, "overflow": "hidden", "display": ''});
@@ -105,7 +117,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                                 menuAIO.css({"height": 'auto', "display": '', "overflow": "" });
                             }
                         } else {
-                            fixedMenu.removeClass('header-container-fixed').parent('.fixed-height-sticky').hide();
+                            menuSticky.removeClass('header-container-fixed').parent().find('.fixed-height-sticky').hide();
                             menuAIO.css({"height": 'auto'});
                         }
                     });
@@ -144,9 +156,10 @@ require(['jquery', 'magiccart/easing'], function($, easing){
 
                 horizontal: function ($navtop, fullWidth, init) {
                     if(init) methods.initMenu($navtop, fullWidth);
-                    var menuBox = $('.container');
-                    var maxW      = fullWidth ? $('body').width() : menuBox.width();
-                    var wMenuBox  = menuBox.width();
+                    var menuBox     = $navtop.closest('.magicmenu');
+                    var menuBoxMax  = fullWidth ? $('body'): $('.container');
+                    var maxW        = menuBoxMax.width();
+                    var float       = $('body').hasClass('rtl') ? 'right' : 'left';
                     $navtop.hover(function(){
                         var $item       = $(this);
                         var options     = $item.data('options');
@@ -168,11 +181,16 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                         if(topMega.length){
                             var offsetMenuBox        = menuBox.offset();
                             var offsetMega           = $item.offset();
-                            var itemLeft             = offsetMega.left - $item.width();
-                            var xLeft                = wMenuBox - topMega.outerWidth(true);
-                            var left                 = xLeft + offsetMenuBox.left;
+                            var itemLeft             = offsetMega.left - offsetMenuBox.left;
+                            var xLeft                = maxW - topMega.outerWidth(true);
+                            var left                 = fullWidth ? xLeft - offsetMenuBox.left : xLeft;
                             if(xLeft < 0) left       = left/2;
-                            if(left < itemLeft) topMega.css('left',left);                    
+                            if(left < itemLeft){
+                                topMega.css(float,left);
+                            }else {
+                                /* Fix error sticky menu position */
+                                topMega.css(float, 'auto');
+                            }                   
                         }
                     })
                 },
