@@ -94,14 +94,13 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                     categories.on('touchstart', function (e) {
                         'use strict'; //satisfy code inspectors
                         var link = $(this); //preselect the link
-                        link.siblings().removeClass('over');
                         link.trigger('mouseenter');
                         if (link.hasClass('over')) {
                             return true;
                         } else {
                             link.addClass('over');
-                            el.find('.category-item.level0').removeClass('over');
-                            link.closest('.category-item.level0').addClass('over');
+                            categories.not(this).removeClass('over');
+                            link.parents('.category-item').addClass('over');
                             e.preventDefault();
                             return false; //extra, and to make sure the function has consistent return points
                         }
