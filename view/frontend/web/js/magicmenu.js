@@ -7,7 +7,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
      * @license     https://www.magepow.com/license-agreement.html
      * @Author: DOng NGuyen<nguyen@magepow.com>
      * @@Create Date: 2014-04-25 13:16:48
-     * @@Modify Date: 2020-03-22 09:16:29
+     * @@Modify Date: 2020-04-02 09:16:29
      * @@Function:
      */
 
@@ -50,7 +50,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                         var navDesktop = topmenu.find('.nav-desktop');
                         if(navDesktop.hasClass('sticker')) methods.sticky(topmenu);
                         /* Active menu top-vmega */
-                        topmenu.find('.vmega .category-item').hover(function() {
+                        topmenu.find('.vmega .category-item').on('hover mouseenter', function() {
                             $(this).siblings().removeClass('over');
                             $(this).addClass('over');
                         }, function() {
@@ -84,6 +84,27 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                                 methods.vertical(vLeveltop, fullWidth, false);
                             }
                         })
+
+                        methods.taphover(topmenu);
+                        methods.taphover(vmenu);
+                    });
+                },
+
+                taphover: function(el){
+                    var categories = el.find('.category-item');
+                    categories.on('touchstart', function (e) {
+                        'use strict'; //satisfy code inspectors
+                        var link = $(this); //preselect the link
+                        link.siblings().removeClass('over');
+                        link.trigger('mouseenter');
+                        if (link.hasClass('over')) {
+                            return true;
+                        } else {
+                            link.addClass('over');
+                            // categories.not(this).removeClass('over');
+                            e.preventDefault();
+                            return false; //extra, and to make sure the function has consistent return points
+                        }
                     });
                 },
 
@@ -161,7 +182,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                     var menuBoxMax  = fullWidth ? $('body'): $('.container');
                     var maxW        = menuBoxMax.width();
                     var float       = $('body').hasClass('rtl') ? 'right' : 'left';
-                    $navtop.hover(function(){
+                    $navtop.on('hover mouseenter', function(){
                         var $item       = $(this);
                         var options     = $item.data('options');
                         var $children   = $item.find('.cat-mega .children');
@@ -200,7 +221,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                     if(init) methods.initMenu($navtop, fullWidth);
                     var menuBox = $('.container');
                     var maxW    = menuBox.width();
-                    $navtop.hover(function(){
+                    $navtop.on('hover mouseenter', function(){
                         var $item       = $(this);
                         var options     = $item.data('options');
                         var $children   = $item.find('.cat-mega .children');
