@@ -84,9 +84,8 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                                 methods.vertical(vLeveltop, fullWidth, false);
                             }
                         })
-
-                        methods.taphover(topmenu);
-                        methods.taphover(vmenu);
+                        
+                        methods.taphover(topmenu.add(vmenu));
                     });
                 },
 
@@ -101,7 +100,8 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                             return true;
                         } else {
                             link.addClass('over');
-                            // categories.not(this).removeClass('over');
+                            el.find('.category-item.level0').removeClass('over');
+                            link.closest('.category-item.level0').addClass('over');
                             e.preventDefault();
                             return false; //extra, and to make sure the function has consistent return points
                         }
