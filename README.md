@@ -1,5 +1,5 @@
 # Magento 2 Extention Magicmenu
-**Magicmenu Magento extension** (Magiccart Magicmenu Extension)
+**Magicmenu Magento extension** (Magiccart Magicmenu Extension) allows you create a beautifull menu with rich of features such as Megamenu or Dropdown Menu. The extension allow you show the custom block on the top/bottom/left/right of the menu.
 ### ✓ Install Magiccart Magicmenu via composer (recommend)
 Run the following command in Magento 2 root folder:
 
