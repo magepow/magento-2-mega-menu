@@ -93,5 +93,5 @@ Run the following command in Magento 2 root folder:
 * [Hire Magento Developer](https://magepow.com/hire-magento-developer.html)
 
 
-[![Latest Stable Version](https://poser.pugx.org/magiccart/module-magicmenu/v/stable)](https://packagist.org/packages/magiccart/module-magicmenu)
-[![Total Downloads](https://poser.pugx.org/magiccart/module-magicmenu/downloads)](https://packagist.org/packages/magiccart/module-magicmenu)
+[![Latest Stable Version](https://poser.pugx.org/magiccart/magicmenu/v/stable)](https://packagist.org/packages/magiccart/magicmenu)
+[![Total Downloads](https://poser.pugx.org/magiccart/magicmenu/downloads)](https://packagist.org/packages/magiccart/magicmenu)
