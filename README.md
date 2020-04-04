@@ -3,7 +3,7 @@
 ### ✓ Install Magiccart Magicmenu via composer (recommend)
 Run the following command in Magento 2 root folder:
 
-`composer require magiccart/magicproduct`
+`composer require magiccart/magicmenu`
 
 `php bin/magento setup:upgrade`
 
