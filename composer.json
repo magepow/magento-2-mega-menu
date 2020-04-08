@@ -12,6 +12,14 @@
     "OSL-3.0",
     "AFL-3.0"
   ],
+  "authors": [
+    {
+      "name": "Alothemes",
+      "email": "support@alothemes.com",
+      "homepage": "https://alothemes.com",
+      "role": "Technical Support"
+    }
+  ],
   "autoload": {
     "files": [ "registration.php" ],
     "psr-4": {
