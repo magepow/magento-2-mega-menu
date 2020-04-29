@@ -347,8 +347,9 @@ class Menu extends \Magento\Catalog\Block\Navigation
                 $url = (filter_var($link, FILTER_VALIDATE_URL)) ? $link : $this->getUrl('', array('_direct'=>$link));
                 $active = ( $link && $url == $currentUrl) ? ' active' : '';
                 $html = $this->getStaticBlock($ext->getExtContent());
+                $class .= $ext->getCatCol() ? ' ' . $ext->getCatCol() : ' dropdown';
                 if($html) $active .=' hasChild parent';
-                $drawExtraMenu .= "<li class='level0 category-item level-top dropdown ext $active $class'>";
+                $drawExtraMenu .= "<li class='level0 category-item level-top ext $active $class'>";
                     if($link) $drawExtraMenu .= '<a class="level-top" href="' .$url. '"><span>' .__($ext->getName()) . $this->getCatLabel($ext). '</span></a>';
                     else $drawExtraMenu .= '<span class="level-top"><span>' .__($ext->getName()) . $this->getCatLabel($ext). '</span></span>';
                     if($html) $drawExtraMenu .= $html; //$drawExtraMenu .= '<div class="level-top-mega">'.$html.'</div>';
@@ -376,7 +377,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
     {
         $store = $this->_storeManager->getStore()->getStoreId();
         $collection = $this->_magicmenuCollectionFactory->create()
-                        ->addFieldToSelect(array('link','name','magic_label','ext_content','order'))
+                        ->addFieldToSelect(array('link','name', 'cat_col', 'magic_label','ext_content','order'))
                         ->addFieldToFilter('extra', 1)
                         ->addFieldToFilter('status', 1);
         $collection->getSelect()->where('find_in_set(0, stores) OR find_in_set(?, stores)', $store)->order('order');

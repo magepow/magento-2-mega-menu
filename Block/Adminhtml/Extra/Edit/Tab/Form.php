@@ -118,6 +118,17 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
             ]
         );
 
+        $fieldset->addField('cat_col', 'text',
+            [
+                'label' => __('Classes'),
+                'title' => __('Classes'),
+                'name'  => 'cat_col',
+                'after_element_html' => '
+                <p class="nm"><small>Example: dropdown</small></p>',
+                'value' => 'dropdown',
+            ]
+        );
+
         $fieldset->addField('ext_content', 'select',
             [
                 'label' => __('Extra Content'),
