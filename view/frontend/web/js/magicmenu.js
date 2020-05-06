@@ -180,7 +180,8 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                     var menuBox     = $navtop.closest('.magicmenu');
                     var menuBoxMax  = fullWidth ? $('body'): $('.container');
                     var maxW        = menuBoxMax.width();
-                    var float       = $('body').hasClass('rtl') ? 'right' : 'left';
+                    var isRTL       = $('body').hasClass('rtl');
+                    var dir         = isRTL ? 'right' : 'left';
                     $navtop.on('hover mouseenter', function(){
                         var $item       = $(this);
                         var options     = $item.data('options');
@@ -202,15 +203,20 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                         if(topMega.length){
                             var offsetMenuBox        = menuBox.offset();
                             var offsetMega           = $item.offset();
-                            var itemLeft             = offsetMega.left - offsetMenuBox.left;
-                            var xLeft                = maxW - topMega.outerWidth(true);
-                            var left                 = fullWidth ? xLeft - offsetMenuBox.left : xLeft;
-                            if(xLeft < 0) left       = left/2;
-                            if(left < itemLeft){
-                                topMega.css(float,left);
+                            var xSpace               = maxW - topMega.outerWidth(true);
+                            if(isRTL){
+                                var itemSpace        = offsetMega.right - offsetMenuBox.right;
+                                var space            = fullWidth ? xSpace - offsetMenuBox.right : xSpace;                                
+                            }else {
+                                var itemSpace         = offsetMega.left - offsetMenuBox.left;
+                                var space            = fullWidth ? xSpace - offsetMenuBox.left : xSpace;
+                            }
+                            if(xSpace < 0) space       = space/2;
+                            if(space < itemSpace){
+                                topMega.css(dir, space);
                             }else {
                                 /* Fix error sticky menu position */
-                                topMega.css(float, 'auto');
+                                topMega.css(dir, 'auto');
                             }                   
                         }
                     })
