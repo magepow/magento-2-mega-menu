@@ -7,7 +7,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
      * @license     https://www.magepow.com/license-agreement.html
      * @Author: DOng NGuyen<nguyen@magepow.com>
      * @@Create Date: 2014-04-25 13:16:48
-     * @@Modify Date: 2020-04-02 09:16:29
+     * @@Modify Date: 2020-05-11 09:16:29
      * @@Function:
      */
 
@@ -178,7 +178,17 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                 horizontal: function ($navtop, fullWidth, init) {
                     if(init) methods.initMenu($navtop, fullWidth);
                     var menuBox     = $navtop.closest('.magicmenu');
-                    var menuBoxMax  = fullWidth ? $('body'): $('.container');
+                    var menuBoxMax  = $('body');
+                    if(!fullWidth){
+                        var maxWidth = 0;
+                        $('.container').each(function(){
+                                var width = parseInt($(this).width());
+                                if (width > maxWidth) {
+                                    maxWidth    = width;
+                                    menuBoxMax  = $(this);
+                                }
+                        });
+                    }
                     var maxW        = menuBoxMax.width();
                     var isRTL       = $('body').hasClass('rtl');
                     var dir         = isRTL ? 'right' : 'left';
@@ -201,23 +211,30 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                         $item.find('.content-mega-horizontal').width(wMega);
                         var topMega     = $item.find('.level-top-mega');
                         if(topMega.length){
-                            var offsetMenuBox        = menuBox.offset();
-                            var offsetMega           = $item.offset();
-                            var xSpace               = maxW - topMega.outerWidth(true);
+                            var offsetMega          = $item.offset();
+                            var offsetMenuBox       = menuBox.offset();
+                            var offsetmenuBoxMax    = menuBoxMax.offset();
                             if(isRTL){
-                                var itemSpace        = offsetMega.right - offsetMenuBox.right;
-                                var space            = fullWidth ? xSpace - offsetMenuBox.right : xSpace;                                
-                            }else {
-                                var itemSpace         = offsetMega.left - offsetMenuBox.left;
-                                var space            = fullWidth ? xSpace - offsetMenuBox.left : xSpace;
+                                var wWidth                  = $(window).width();
+                                var offsetMegaRight         = wWidth - (offsetMega.left         + $item.outerWidth());
+                                var offsetMenuBoxRight      = wWidth - (offsetMenuBox.left      + menuBox.outerWidth());
+                                var offsetmenuBoxMaxRight   = wWidth - (offsetmenuBoxMax.left   + menuBoxMax.outerWidth());
+                                var itemSpace               = offsetMegaRight                   - offsetMenuBoxRight;
+                                var xMaxOffset              = offsetmenuBoxMaxRight             + maxW;
+                                var xItemOffset             = offsetMegaRight                   + topMega.outerWidth();     
+                            } else {
+                                var itemSpace               = offsetMega.left                   - offsetMenuBox.left;
+                                var xMaxOffset              = offsetmenuBoxMax.left             + maxW;
+                                var xItemOffset             = offsetMega.left                   + topMega.outerWidth();                                
                             }
-                            if(xSpace < 0) space       = space/2;
+                            var xSpace                      = xItemOffset - xMaxOffset;
+                            var space                       = itemSpace   - xSpace
                             if(space < itemSpace){
                                 topMega.css(dir, space);
                             }else {
                                 /* Fix error sticky menu position */
                                 topMega.css(dir, 'auto');
-                            }                   
+                            }
                         }
                     })
                 },
