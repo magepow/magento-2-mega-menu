@@ -7,7 +7,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
      * @license     https://www.magepow.com/license-agreement.html
      * @Author: DOng NGuyen<nguyen@magepow.com>
      * @@Create Date: 2014-04-25 13:16:48
-     * @@Modify Date: 2020-05-11 09:16:29
+     * @@Modify Date: 2020-06-04 09:16:29
      * @@Function:
      */
 
@@ -71,7 +71,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                         // Responsive
                         var body = $('body');
                         if ( breakpoint > $(window).width() ) body.addClass('nav-mobile-display');
-                        $(window).resize(function(){
+                        $(window).on("magicmenu:refresh", function( event ) {
                             if ( breakpoint > $(window).width()){
                                 body.addClass('nav-mobile-display');
                                 $('.nav-mobile').show();
@@ -83,7 +83,9 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                                 methods.horizontal(leveltop, fullWidth, false);
                                 methods.vertical(vLeveltop, fullWidth, false);
                             }
-                        })
+                        });
+
+                        $(window).resize(function(){ $(this).trigger('magicmenu:refresh')});
                         
                         methods.taphover(topmenu.add(vmenu));
                     });
@@ -126,6 +128,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                     $('<div class="fixed-height-sticky" style="display:none;height: ' + menuHeight + 'px"></div>').insertBefore(menuSticky);
                     $(window).scroll(function () {
                         var postion = $(this).scrollTop();
+                        $(this).trigger('magicmenu:refresh');
                         if (postion > postionTop ){ /* not use = */
                             menuSticky.addClass('header-container-fixed').parent().find('.fixed-height-sticky').show();
                             if(heightItem && !menuAIO.hasClass('over')){
