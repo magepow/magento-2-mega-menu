@@ -31,6 +31,7 @@
                 <field id="dropdown" translate="label comment" type="multiselect" sortOrder="5"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Dropdown Navigation : </label>
                     <comment>Use Dropdown menu</comment>
+                    <comment>Use Ctrl+Click for check several values or uncheck value. Display category as dropdown menu</comment>
                     <source_model>Magiccart\Magicmenu\Model\System\Config\Category</source_model>
                     <can_be_empty>1</can_be_empty>
                 </field>                
