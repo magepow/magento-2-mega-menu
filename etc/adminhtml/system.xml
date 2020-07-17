@@ -79,7 +79,7 @@
                 </field>
                 <field id="notIncludeNav" translate="label comment" type="multiselect" sortOrder="40"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Not Include in Navigation Top : </label>
-                    <comment>Disable category in topmenu</comment>
+                    <comment>Use Ctrl+Click for check several values or uncheck value. Hidden category in topmenu</comment>
                     <source_model>Magiccart\Magicmenu\Model\System\Config\Category</source_model>
                     <can_be_empty>1</can_be_empty>
                 </field>
@@ -113,7 +113,7 @@
                 </field>
                 <field id="notIncludeNav" translate="label comment" type="multiselect" sortOrder="40"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Not Include in Navigation Top : </label>
-                    <comment>Disable category in topmenu</comment>
+                    <comment>Use Ctrl+Click for check several values or uncheck value. Hidden category in vertical menu</comment>
                     <source_model>Magiccart\Magicmenu\Model\System\Config\Category</source_model>
                     <can_be_empty>1</can_be_empty>
                 </field>
