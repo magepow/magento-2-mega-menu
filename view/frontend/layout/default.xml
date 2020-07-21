@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!-- /**
+ * Magiccart 
+ * @category    Magiccart 
+ * @copyright   Copyright (c) 2014 Magiccart (http://www.magiccart.net/) 
+ * @license     http://www.magiccart.net/license-agreement.html
+ * @Author: DOng NGuyen<nguyen@dvn.com>
+ * @@Create Date: 2016-02-23 18:59:34
+ * @@Modify Date: 2020-07-21 11:40:46
+ * @@Function:
+ */ -->
+ 
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="store.menu">
+            <block class="Magiccart\Magicmenu\Block\Menu" name="catalog.topnav" template="aio-topmenu.phtml">
+                <block class="Magento\Theme\Block\Html\Topmenu" name="catalog.topnav.default" template="Magento_Theme::html/topmenu.phtml"/>
+            </block>
+        </referenceBlock>
+        <referenceContainer name="div.sidebar.main">
+            <block class="Magiccart\Magicmenu\Block\Menu" ifconfig="magicmenu/accordion/enabled" name="accordion.sidebar" before="-"
+                   template="accordion.phtml" />
+        </referenceContainer>
+    </body>
+</page>

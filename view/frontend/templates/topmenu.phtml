@@ -6,13 +6,16 @@
  * @license 	http://www.magiccart.net/license-agreement.html
  * @Author: DOng NGuyen<nguyen@dvn.com>
  * @@Create Date: 2016-02-08 22:57:12
- * @@Modify Date: 2019-12-02 14:19:25
+ * @@Modify Date: 2020-07-21 14:19:25
  * @@Function:
  */
 
 $menu = $this->_sysCfg->topmenu;
-if(!$menu['enabled']) return;
 
+if( !$menu['enabled']){
+	echo $this->getChildHtml();
+	return;
+}
 // drawMainMenu vs DrowMobileMenu
 $menuHtml = $this->drawMainMenu();
 $mobileMenu = $menuHtml['mobile'];

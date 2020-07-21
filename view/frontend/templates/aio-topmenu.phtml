@@ -12,6 +12,12 @@
 
 $menu = $this->_sysCfg->topmenu;
 $vmenu = $this->_sysCfg->vmenu;
+
+if( !$menu['enabled'] && !$vmenu['enabled'] ){
+	echo $this->getChildHtml();
+	return;
+}
+
 // drawMainMenu vs DrowMobileMenu
 $homeHtml  	= $this->drawHomeMenu();
 $menuHtml  	= $this->drawMainMenu();
@@ -40,12 +46,24 @@ $drawExtraMenu = $menu['extraCat'] ? $extraHtml : '';
 		}
 	?>
 	<div class="vmagicmenu vertical-menu clearfix">
-		<h3 class="v-title"><?php /* @escapeNotVerified */ echo __($this->getRootName())?></h3>
-		<ul class="nav-desktop">
-			<?php echo $vdrawHomeMenu ?>
-			<?php echo $vdrawMainMenu ?>
-			<?php echo $vdrawExtraMenu ?>
-		</ul>
+		<div class="block-title block-title-vmagicmenu v-title">
+	        <strong>
+	        	<span class="vmagicmenu-subtitle"><?php echo __($this->getRootName())?></span>
+	            <span class="icon-menu">
+	                <span></span>
+	                <span></span>
+	                <span></span>
+	            </span>
+	        </strong>
+	    </div>
+		<div class="block-vmagicmenu-content">
+			<ul class="nav-desktop vmagicmenu-narrow clearfix">
+				<?php echo $vdrawHomeMenu ?>
+				<?php echo $vdrawMainMenu ?>
+				<?php echo $vdrawExtraMenu ?>
+				<li class="all-cat"><span><?php echo __('All Categories')?></span><span style="display:none"><?php echo __('Close')?></span></li>
+			</ul>
+		</div>
 	</div>
 <?php endif ?>
 <?php if($menu['enabled']) : ?>
@@ -58,9 +76,10 @@ $drawExtraMenu = $menu['extraCat'] ? $extraHtml : '';
 		}
 	?>
 	<div class="magicmenu clearfix">
-		<ul class="nav-desktop <?php /* @escapeNotVerified */ echo $menu['sticker'] ? 'sticker' : '' ?>"			
-				data-fullwidth="<?php /* @escapeNotVerified */ echo $menu['fullWidth'] ?>"
-				data-breakpoint="<?php /* @escapeNotVerified */ echo $menu['switcher'] ?>"
+		<ul class="nav-desktop 
+			<?php /* @escapeNotVerified */ echo $menu['sticker'] ? 'sticker' : '' ?>" 
+			data-fullwidth="<?php /* @escapeNotVerified */ echo $menu['fullWidth'] ?>"
+			data-breakpoint="<?php /* @escapeNotVerified */ echo $menu['switcher'] ?>"
 			>
 			<?php echo $drawHomeMenu ?>
 			<?php echo $drawMainMenu ?>
