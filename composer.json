@@ -1,6 +1,9 @@
 {
   "name": "magiccart/magicmenu",
   "description": "Make megamenu, dropdown menu, mobile menu easy all in one.",
+  "require": {
+    "magiccart/community" : ">=1.0.1"
+  },
   "type": "magento2-module",
   "license": [
     "OSL-3.0",
