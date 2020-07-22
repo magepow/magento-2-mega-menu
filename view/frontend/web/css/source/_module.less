@@ -152,7 +152,7 @@
 	ul.nav-accordion li > ul.submenu > li > a {padding-left: 20px;}
 	ul.nav-accordion li ul li ul li.parent > a{padding:0 0 0 20px;}
 	ul.nav-accordion li ul li.parent > a span:before {display: none;}
-	ul.nav-accordion ul{margin: 0;padding: 0px;}
+	ul.nav-accordion ul{margin: 0;padding: 0px;list-style: none;}
 	ul.nav-accordion ul.submenu, ul.nav-mobile ul.submenu{display: none;}
 	ul.nav-accordion ul li{clear:both;margin:0;padding:0}
 	ul.nav-accordion ul li a{outline:none;}
@@ -177,12 +177,10 @@
 		.nav-sections-item-content > .navigation .nav-mobile,.sections .nav-sections-item-content > .navigation{display: block !important;padding: 0;}
 	}
 	@media (max-width: 992px) {.nav-sections-item-content {display: block !important; } }
-	/* when under viewport size,.nav-sections is added to body */
-	.nav-sections .mean-nav{float:left;width: 100%;position: absolute;background-color: #666;z-index: 2;left: 0;}
+	.nav-sections .mean-nav{float:left;width: 100%;position: absolute;z-index: 2;left: 0;}
 	.nav-sections .mean-nav .mobi-title{color:#242628;font-size:16px;line-height:52px;margin:0;padding:0 0 0 50px;text-align:left;text-transform:uppercase;font-weight: 400;position: absolute;top: -56px;z-index: 0;display: none;}
 	.nav-sections .mean-nav ul{padding:0;margin:0;width:100%;list-style-type:none}
 	.nav-sections .mean-nav ul li{position:relative;float:left;width:100%;margin: 0;}
-	.nav-sections .mean-nav ul li a{display:block;padding:10px 0;margin:0;text-align:left;color:#fff;border-bottom:1px solid #888;text-decoration:none;line-height: 23px;}
 	.nav-sections .mean-nav ul li a span, .nav-sections .mean-nav ul li .level-top span{font-size:15px;padding:0 14px;}
 	.nav-sections .mean-nav ul li a span.icon.fa-home{padding-right: 0;}
 	.nav-sections .mean-nav ul li li a{font-size: 14px; padding: 10px 0 10px 25px;filter:alpha(opacity=75);visibility:visible;}
@@ -270,18 +268,10 @@
 	    width: auto;
 	}
 	.vmagicmenu .vmagicmenu-narrow {
-		
 		background-color: #ffffff;
 	}
-	.nav-open .nav-sections .mean-nav ul li a {
-	    color: #ffffff;
-	    border-color: #888888;
-	}
-	.nav-sections .mean-nav {
-	    background-color: #445268;
-	}
-	ul.nav-accordion ul {
-		list-style: none;
+	.nav-open .navigation .level0 .submenu {
+		position: static;
 	}
 	@media (max-width: 991px) {
 		.nav-sections .mean-container .mean-nav ul li.home a span.icon, 
@@ -291,9 +281,11 @@
 		    display: none !important;
 		    visibility: hidden;
 		}
+		.navigation .submenu:not(:first-child) ul {
+		    display: block;
+		    padding-left: 15px;
+		}
 		.nav-sections {
-		    background: #666 none repeat scroll 0 0;
-		    background: #445268 none repeat scroll 0 0;
 		    height: 100%;
 		    left: calc(~"-1 * (100% - 54px)");
 		    overflow: auto;
@@ -329,7 +321,7 @@
 		    line-height: normal;
 		    padding: 0px;
 		    vertical-align: middle;
-		    top: 50%;
+		    top: calc(50% - 15px);
 		    left: 15px;
 		}
 		.page-header .nav-toggle {
@@ -378,9 +370,9 @@
 		}
 		.nav-open .navigation .level0.active > .level-top, 
 		.nav-open .navigation .level0.has-active > .level-top {
-			border-width:0 0 1px;
+			border-width:0 0 0px;
 			border-color: #888;
-			color: #ffffff;
+			/*color: #ffffff;*/
 		}
 		.nav-open .navigation .level0 .submenu {
 			border: none;
