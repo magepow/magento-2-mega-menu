@@ -7,7 +7,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
      * @license     https://www.magepow.com/license-agreement.html
      * @Author: DOng NGuyen<nguyen@magepow.com>
      * @@Create Date: 2014-04-25 13:16:48
-     * @@Modify Date: 2020-07-21 09:16:29
+     * @@Modify Date: 2020-07-25 09:16:29
      * @@Function:
      */
 
@@ -263,9 +263,12 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                             var wRight  = Math.ceil($item.data('wright')*wMega/wCat);
                             if( wLeft || wRight ) wMega = wMega + wLeft + wRight;
                         }
-                        var offsetMega      = $item.offset();
-                        var xSpace          = offsetMega.left;
-                        var wMageMax        = maxW - (xSpace + $item.width())- (topMega.outerWidth(true) - topMega.width());
+                        var wMageMax        = maxW - (topMega.outerWidth(true) - topMega.width());
+                        if(fullWidth || menuBox.is('body')){
+                            var offsetMega      = $item.offset();
+                            var xSpace          = offsetMega.left;
+                            wMageMax            = wMageMax - xSpace - $item.width();
+                        }
                         if(wMega > wMageMax) wMega = Math.floor(wMageMax / wChild)*wChild;
                         $item.find('.content-mega-horizontal').width(wMega);
                     })
