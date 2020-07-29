@@ -26,6 +26,12 @@ php bin/magento setup:static-content:deploy -f
 ## Magiccart Magicmenu User Guide
 [USE GUIDE](https://docs.alothemes.com/m2/theme/gecko/#sub66)
 
+## Donation
+
+If this project help you reduce time to develop, you can give me a cup of coffee :) 
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/paypalme/alopay)
+
 
 **Free Extensions List**
 
