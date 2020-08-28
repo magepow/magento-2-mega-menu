@@ -7,7 +7,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
      * @license     https://www.magepow.com/license-agreement.html
      * @Author: DOng NGuyen<nguyen@magepow.com>
      * @@Create Date: 2014-04-25 13:16:48
-     * @@Modify Date: 2020-07-25 09:16:29
+     * @@Modify Date: 2020-08-28 09:16:29
      * @@Function:
      */
 
@@ -147,10 +147,15 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                     });
                 },
 
-                initMenu: function($navtop, fullWidth){
+                initMenu: function($navtop, fullWidth, horizontal=true){
                     $navtop.each(function(index, val) {
                         var $item     = $(this);
-                        if(fullWidth) $item.find('.level-top-mega').addClass('parent-full-width').wrap( '<div class="full-width"></div>' );
+                        if(fullWidth){
+                            var mageWrap = $item.find('.level-top-mega').addClass('parent-full-width').wrap( '<div class="full-width"></div>' );
+                            if(fullWidth == 2 && horizontal ){
+                                mageWrap.width($('body').width());                           
+                            }
+                        }
                         var options   = $item.data('options');
                         var $catMega = $item.find('.cat-mega');
                         var $children = $catMega.find('.children');
@@ -184,7 +189,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                     var menuBoxMax  = $('body');
                     if(!fullWidth){
                         var maxWidth = 0;
-                        $('.container').each(function(){
+                        $('#maincontent, .container').each(function(){
                                 var width = parseInt($(this).width());
                                 if (width > maxWidth) {
                                     maxWidth    = width;
@@ -243,7 +248,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                 },
 
                 vertical: function ($navtop, fullWidth, init)  {
-                    if(init) methods.initMenu($navtop, fullWidth);
+                    if(init) methods.initMenu($navtop, fullWidth, false);
                     var menuBox = $('.container');
                     if(!menuBox.length) menuBox  = $('body');
                     var maxW    = menuBox.width();

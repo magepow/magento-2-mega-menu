@@ -43,9 +43,8 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="fullWidth" translate="label comment" type="select" sortOrder="5"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Mega Menu Full Width : </label>
-                    <comment>Mega Menu Full Width</comment>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <label>Mega Menu Width : </label>
+                    <source_model>Magiccart\Magicmenu\Model\System\Config\Width</source_model>
                 </field>
                 <field id="sticker" translate="label comment" type="select" sortOrder="10"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Sticky Menu : </label>
