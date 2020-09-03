@@ -7,7 +7,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
      * @license     https://www.magepow.com/license-agreement.html
      * @Author: DOng NGuyen<nguyen@magepow.com>
      * @@Create Date: 2014-04-25 13:16:48
-     * @@Modify Date: 2020-08-28 09:16:29
+     * @@Modify Date: 2020-09-03 09:16:29
      * @@Function:
      */
 
@@ -249,9 +249,18 @@ require(['jquery', 'magiccart/easing'], function($, easing){
 
                 vertical: function ($navtop, fullWidth, init)  {
                     if(init) methods.initMenu($navtop, fullWidth, false);
-                    var menuBox = $('.container');
-                    if(!menuBox.length) menuBox  = $('body');
-                    var maxW    = menuBox.width();
+                    var menuBoxMax  = $('body');
+                    if(!fullWidth){
+                        var maxWidth = 0;
+                        $('#maincontent, .container').each(function(){
+                                var width = parseInt($(this).width());
+                                if (width > maxWidth) {
+                                    maxWidth    = width;
+                                    menuBoxMax  = $(this);
+                                }
+                        });
+                    }
+                    var maxW        = menuBoxMax.width();
                     $navtop.on('hover mouseenter', function(){
                         var $item       = $(this);
                         var options     = $item.data('options');
@@ -269,12 +278,17 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                             if( wLeft || wRight ) wMega = wMega + wLeft + wRight;
                         }
                         var wMageMax        = maxW - (topMega.outerWidth(true) - topMega.width());
-                        if(fullWidth || menuBox.is('body')){
+                        if(fullWidth || menuBoxMax.is('body')){
                             var offsetMega      = $item.offset();
                             var xSpace          = offsetMega.left;
                             wMageMax            = wMageMax - xSpace - $item.width();
                         }
+                        console.log(wMega);
                         if(wMega > wMageMax) wMega = Math.floor(wMageMax / wChild)*wChild;
+
+                        console.log(wMega);
+                        console.log(wMageMax);
+                        console.log(wChild);
                         $item.find('.content-mega-horizontal').width(wMega);
                     })
                 },
