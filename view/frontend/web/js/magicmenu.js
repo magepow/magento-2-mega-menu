@@ -7,7 +7,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
      * @license     https://www.magepow.com/license-agreement.html
      * @Author: DOng NGuyen<nguyen@magepow.com>
      * @@Create Date: 2014-04-25 13:16:48
-     * @@Modify Date: 2020-09-03 09:16:29
+     * @@Modify Date: 2020-09-04 09:16:29
      * @@Function:
      */
 
@@ -189,7 +189,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                     var menuBoxMax  = $('body');
                     if(!fullWidth){
                         var maxWidth = 0;
-                        $('#maincontent, .container').each(function(){
+                        $('.navigation, .container').each(function(){
                                 var width = parseInt($(this).width());
                                 if (width > maxWidth) {
                                     maxWidth    = width;
@@ -252,7 +252,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                     var menuBoxMax  = $('body');
                     if(!fullWidth){
                         var maxWidth = 0;
-                        $('#maincontent, .container').each(function(){
+                        $('.navigation, .container').each(function(){
                                 var width = parseInt($(this).width());
                                 if (width > maxWidth) {
                                     maxWidth    = width;
