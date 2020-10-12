@@ -7,7 +7,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
      * @license     https://www.magepow.com/license-agreement.html
      * @Author: DOng NGuyen<nguyen@magepow.com>
      * @@Create Date: 2014-04-25 13:16:48
-     * @@Modify Date: 2020-09-03 09:16:29
+     * @@Modify Date: 2020-09-19 09:16:29
      * @@Function:
      */
 
@@ -151,9 +151,10 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                     $navtop.each(function(index, val) {
                         var $item     = $(this);
                         if(fullWidth){
-                            var mageWrap = $item.find('.level-top-mega').addClass('parent-full-width').wrap( '<div class="full-width"></div>' );
                             if(fullWidth == 2 && horizontal ){
-                                mageWrap.width($('body').width());                           
+                                $item.find('.level-top-mega').addClass('parent-full-width').wrap('<div class="full-width"></div>').width($('body').width());                       
+                            }else {
+                                $item.find('.level-top-mega').addClass('parent-auto-width').wrap('<div class="auto-width"></div>');
                             }
                         }
                         var options   = $item.data('options');
