@@ -82,6 +82,8 @@ class Menu extends \Magento\Catalog\Block\Navigation
 
     protected $_recursionLevel;
 
+    protected $_cacheHelper;
+
     protected $extData = array();
 
     /**
@@ -101,6 +103,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
         \Magento\Catalog\Helper\Category $catalogCategory,
         \Magento\Framework\Registry $registry,
         \Magento\Catalog\Model\Indexer\Category\Flat\State $flatState,
+        \Magiccart\Magicmenu\Helper\Cache $cacheHelper,
 
         // +++++++++add new +++++++++
         // \Magiccart\Magicmenu\Model\CategoryFactory $categoryFactory,
@@ -112,6 +115,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
         $this->_productCollectionFactory = $productCollectionFactory;
         $this->_catalogLayer = $layerResolver->get();
         $this->httpContext = $httpContext;
+        $this->_cacheHelper = $cacheHelper;
         $this->_catalogCategory = $catalogCategory;
         $this->_registry = $registry;
         $this->flatState = $flatState;
@@ -228,6 +232,28 @@ class Menu extends \Magento\Catalog\Block\Navigation
     public function drawMainMenu()
     {
         if($this->hasData('mainMenu')) return $this->getData('mainMenu');
+
+        /*
+            * Check if menu is saved in cache
+        */
+        $cacheId = $this->_cacheHelper->getId("mainMenu");
+        $mobilecacheId = $this->_cacheHelper->getId("mobileMenu");
+
+        if($cache = $this->_cacheHelper->load($cacheId)){
+
+            $menu = array();
+
+            $mobilecache = $this->_cacheHelper->load($mobilecacheId);
+
+            $menu['desktop'] = explode("\n", $cache);
+            $menu['mobile'] = $mobilecache;
+
+            $this->setData('mainMenu', $menu);
+
+            return $menu;
+
+        }
+
         $desktopHtml = array();
         $mobileHtml  = array();
         $rootCatId = $this->_storeManager->getStore()->getRootCategoryId();
@@ -289,6 +315,10 @@ class Menu extends \Magento\Catalog\Block\Navigation
         }
         $menu['desktop'] = $desktopHtml;
         $menu['mobile'] = implode("\n", $mobileHtml);
+
+        $this->_cacheHelper->save(implode("\n", $desktopHtml), $cacheId);
+        $this->_cacheHelper->save(implode("\n", $mobileHtml), $mobilecacheId);
+
         $this->setData('mainMenu', $menu);
         return $menu;
     }
