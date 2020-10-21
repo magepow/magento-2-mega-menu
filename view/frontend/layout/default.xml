@@ -21,5 +21,8 @@
             <block class="Magiccart\Magicmenu\Block\Menu" ifconfig="magicmenu/accordion/enabled" name="accordion.sidebar" before="-"
                    template="accordion.phtml" />
         </referenceContainer>
+        <referenceContainer name="content">
+            <block class="Magiccart\Magicmenu\Block\Menu" name="megamenu.active" after="-" template="active.phtml" />
+        </referenceContainer>
     </body>
 </page>

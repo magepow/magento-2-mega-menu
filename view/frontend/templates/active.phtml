@@ -1,0 +1,13 @@
+<?php
+$categoryId = ($this->getCurrentCategory()->getId())? $this->getCurrentCategory()->getId() : '';
+?>
+
+<script type="text/javascript">
+    require(['jquery'], function($) {
+        $(document).ready(function () {
+
+            $(".magicmenu ul").find("[data-categoryid='<?php echo $categoryId ?>']").parent('li').addClass('active');
+
+        });
+    });
+</script>
