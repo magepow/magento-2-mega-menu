@@ -146,7 +146,6 @@ class Menu extends \Magento\Catalog\Block\Navigation
 
     }
 
-
     protected function getCacheLifetime()
     {
         return parent::getCacheLifetime() ?: 86400;
