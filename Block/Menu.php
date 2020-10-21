@@ -6,13 +6,15 @@
  * @license   http://www.magiccart.net/license-agreement.html
  * @Author: Magiccart<team.magiccart@gmail.com>
  * @@Create Date: 2016-02-28 10:10:00
- * @@Modify Date: 2018-10-13 09:09:06
+ * @@Modify Date: 2020-10-21 09:09:06
  * @@Function:
  */
 namespace Magiccart\Magicmenu\Block;
 
 class Menu extends \Magento\Catalog\Block\Navigation
 {
+
+    const DEFAULT_CACHE_TAG = 'MAGICCART_MAGICMENU';
 
     /**
      * @var Category
@@ -142,6 +144,27 @@ class Menu extends \Magento\Catalog\Block\Navigation
 
 
 
+    }
+
+
+    protected function getCacheLifetime()
+    {
+        return parent::getCacheLifetime() ?: 86400;
+    }
+
+    public function getCacheKeyInfo()
+    {
+        $keyInfo     =  parent::getCacheKeyInfo();
+        $keyInfo[]   =  $this->getCurrentCategory()->getId();
+        return $keyInfo;
+    }
+
+    /**
+     * @return array
+     */
+    public function getIdentities()
+    {
+        return [self::DEFAULT_CACHE_TAG, self::DEFAULT_CACHE_TAG . '_' . $this->getCurrentCategory()->getId()];
     }
 
     public function getIsHomePage()
