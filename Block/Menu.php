@@ -322,8 +322,8 @@ class Menu extends \Magento\Catalog\Block\Navigation
                     $url = '<a href="' . $child->getUrl() . '"><span>' . __($child->getName()) . $this->getCatLabel($child) . '</span></a>';
                     $childHtml = ($this->_recursionLevel != 2) ? $this->getTreeCategoriesExt($child->getId(), $itemPositionClassPrefixChild) : ''; // include magic_label
                     // $childHtml = ($this->_recursionLevel != 2 ) ? $this->getTreeCategoriesExtra($child->getId()) : ''; // include magic_label and Maximal Depth
-                    $desktopTmp .= '<li class="children ' . $class . '" data-categoryid="' . $child->getId() . ' ">' . $this->getImage($child) . $url . $childHtml . '</li>';
-                    $mobileTmp .= '<li class="' . $class . '">' . $url . $childHtml . '</li>';
+                    $desktopTmp .= '<li class="children ' . $class . '" data-categoryid="' . $child->getId() . '">' . $this->getImage($child) . $url . $childHtml . '</li>';
+                    $mobileTmp .= '<li class="' . $class . '" data-categoryid="' . $child->getId() . '">' . $url . $childHtml . '</li>';
                     $counter++;
                 }
                 //$desktopTmp .= '<li>'  .$blocks['bottom']. '</li>';
@@ -422,7 +422,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
             $childHtml = ($this->_recursionLevel == 0 || ($level - 1 < $this->_recursionLevel)) ? $this->getTreeCategoriesExt($category->getId(), $itemPositionClassPrefix) : '';
             $childClass = $childHtml ? ' hasChild parent category-item ' : ' category-item ';
             $childClass .= $itemPositionClassPrefix . '-' . $counter;
-            $html .= '<li class="level' . ($level - 2) . $childClass . '" data-categoryid="' . $category->getId() . ' "><a href="' . $category->getUrl() . '"><span>' . $category->getName() . $this->getCatLabel($category) . "</span></a>\n" . $childHtml . '</li>';
+            $html .= '<li class="level' . ($level - 2) . $childClass . '" data-categoryid="' . $category->getId() . '"><a href="' . $category->getUrl() . '"><span>' . $category->getName() . $this->getCatLabel($category) . "</span></a>\n" . $childHtml . '</li>';
             $counter++;
         }
         if ($html) $html = '<ul class="level' . ($level - 3) . ' submenu">' . $html . '</ul>';
@@ -441,7 +441,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
             $childHtml = ($this->_recursionLevel == 0 || ($level - 1 < $this->_recursionLevel)) ? $this->getTreeCategoriesExtra($category->getId(), $itemPositionClassPrefix) : '';
             $childClass = $childHtml ? ' hasChild parent' : '';
             $childClass .= $itemPositionClassPrefix . '-' . $counter;
-            $html .= '<li class="level' . ($level - 2) . $childClass . '" data-=categoryid"' . $category->getId() . ' "><a href="' . $this->getCategoryUrl($category) . '"><span>' . $cat->getName() . "(" . $count . ")" . $this->getCatLabel($cat) . "</span></a>\n";
+            $html .= '<li class="level' . ($level - 2) . $childClass . '" data-=categoryid"' . $category->getId() . '"><a href="' . $this->getCategoryUrl($category) . '"><span>' . $cat->getName() . "(" . $count . ")" . $this->getCatLabel($cat) . "</span></a>\n";
             $html .= $childHtml;
             $html .= '</li>';
             $counter++;
