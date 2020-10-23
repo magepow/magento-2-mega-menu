@@ -303,6 +303,8 @@ class Menu extends \Magento\Catalog\Block\Navigation
     {
         // Draw Mega Menu
         $idTop = $catTop->getEntityId();
+        if(count($this->getChildExt($idTop)) < 1) return;
+
         $hasChild = $catTop->hasChildren();
         $desktopTmp = $mobileTmp = '';
         if ($hasChild || $blocks['top'] || $blocks['left'] || $blocks['right'] || $blocks['bottom']) :
