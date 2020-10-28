@@ -7,7 +7,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
      * @license     https://www.magepow.com/license-agreement.html
      * @Author: DOng NGuyen<nguyen@magepow.com>
      * @@Create Date: 2014-04-25 13:16:48
-     * @@Modify Date: 2020-09-19 09:16:29
+     * @@Modify Date: 2020-10-28 09:16:29
      * @@Function:
      */
 
@@ -126,11 +126,18 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                         );
                     }
                     $('header').css('min-height', menuHeight);
+                    $(window).resize(function(){ 
+                        if(!menuSticky.hasClass('header-container-fixed')){
+                            $('header').css('min-height', function(){
+                                return $(sticky).innerHeight();
+                            });
+                        }
+                    });
                     $(window).scroll(function () {
                         var postion = $(this).scrollTop();
                         $(this).trigger('magicmenu:refresh');
                         if (postion > postionTop ){ /* not use = */
-                            menuSticky.addClass('header-container-fixed').parent().find('.fixed-height-sticky').show();
+                            menuSticky.addClass('header-container-fixed');
                             if(heightItem && !menuAIO.hasClass('over')){
                                 heightAIO = heightItem - (postion - postionTop) - menuHeight;
                                 if(heightAIO > 0 )menuAIO.css({"height": heightAIO, "overflow": "hidden", "display": ''});
@@ -141,7 +148,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                                 menuAIO.css({"height": 'auto', "display": '', "overflow": "" });
                             }
                         } else {
-                            menuSticky.removeClass('header-container-fixed').parent().find('.fixed-height-sticky').hide();
+                            menuSticky.removeClass('header-container-fixed');
                             menuAIO.css({"height": 'auto'});
                         }
                     });
