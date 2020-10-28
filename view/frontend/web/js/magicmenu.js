@@ -125,7 +125,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                             function() { menuAIO.removeClass('over').css({"overflow": "hidden", "height": heightAIO}); }
                         );
                     }
-                    $('<div class="fixed-height-sticky" style="display:none;height: ' + menuHeight + 'px"></div>').insertBefore(menuSticky);
+                    $('header').css('min-height', menuHeight);
                     $(window).scroll(function () {
                         var postion = $(this).scrollTop();
                         $(this).trigger('magicmenu:refresh');
