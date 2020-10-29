@@ -125,10 +125,11 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                             function() { menuAIO.removeClass('over').css({"overflow": "hidden", "height": heightAIO}); }
                         );
                     }
-                    $('header').css('min-height', menuHeight);
+                    var header = $('header.page-header');
+                    header.css('min-height', menuHeight);
                     $(window).resize(function(){ 
                         if(!menuSticky.hasClass('header-container-fixed')){
-                            $('header').css('min-height', function(){
+                            header.css('min-height', function(){
                                 return $(sticky).innerHeight();
                             });
                         }
