@@ -110,6 +110,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                 },
 
                 sticky: function(topmenu){
+                    if ($(document).height() <= $(window).height()) return;
                     var menuSticky  = $(sticky);
                     var menuHeight  = menuSticky.innerHeight();
                     var postionTop  = topmenu.offset().top;
