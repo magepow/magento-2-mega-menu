@@ -51,6 +51,6 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 Table::TYPE_INTEGER, null,
                 ['unsigned' => true, 'nullable' => false, 'default' => 0], 'Extra Menu Visibility');
 
-        $installer->getConnection()->createTable($table);
+        $installer->endSetup();
     }
 }
