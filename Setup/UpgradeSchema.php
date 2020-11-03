@@ -43,7 +43,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
      */
     private function addExtraMenuVisibility(SchemaSetupInterface $installer)
     {
-        $table = $installer
+        $installer
             ->getConnection()
             ->getTable($installer->getTable('magiccart_magicmenu'))
             ->addColumn(
