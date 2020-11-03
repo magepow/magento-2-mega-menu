@@ -26,11 +26,13 @@ $mobileMenu = $menuHtml['mobile'];
 $drawHomeMenu  = $menu['home'] ? $homeHtml : '';
 $drawMainMenu  = '';
 $drawExtraMenu = $menu['extraCat'] ? $extraHtml : '';
+$drawExtraMobileMenu = $menu['extraCat'] ? $this->drawExtraMenu('mobile') : '';
+
 ?>
 <nav class="navigation mean-nav navigation-mobile" role="navigation" data-action="navigation">
 	<ul class="nav-mobile" data-alo-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
 		<?php echo $mobileMenu ?>
-		<?php echo $drawExtraMenu ?>
+		<?php echo $drawExtraMobileMenu ?>
 	</ul>
 </nav>
 <?php if($vmenu['enabled']) : ?>

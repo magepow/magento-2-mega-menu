@@ -22,8 +22,13 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
 
     /**
      * @var \Magento\Catalog\Model\Category\Attribute\Source\Page
-     */    
+     */
     protected $_blocks;
+
+    /**
+     * @var \Magiccart\Magicmenu\Model\System\Config\Visibility
+     */
+    protected $_visibility;
 
     /**
      * @var \Magiccart\Magicmenu\Model\Magicmenu
@@ -44,11 +49,13 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
         \Magento\Store\Model\System\Store $systemStore,
         \Magiccart\Magicmenu\Model\Magicmenu $magicmenu,
         \Magiccart\Magicmenu\Model\System\Config\Blocks $blocks,
+        \Magiccart\Magicmenu\Model\System\Config\Visibility $visibility,
         array $data = []
     ) {
         $this->_objectFactory = $objectFactory;
         $this->_magicmenu = $magicmenu;
         $this->_blocks = $blocks;
+        $this->_visibility = $visibility;
         $this->_systemStore = $systemStore;
         parent::__construct($context, $registry, $formFactory, $data);
     }
@@ -126,6 +133,16 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'after_element_html' => '
                 <p class="nm"><small>Example: dropdown</small></p>',
                 'value' => 'dropdown',
+            ]
+        );
+
+        $fieldset->addField('visibility', 'select',
+            [
+                'label' => __('Visibility Location'),
+                'title' => __('Visibility Location'),
+                'name'  => 'visibility',
+                'values' => $this->_visibility->toOptionArray(),
+                'after_element_html' => '<p class="nm"><small>Show Extra Menu Locations</small></p>',
             ]
         );
 
