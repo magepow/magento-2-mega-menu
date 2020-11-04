@@ -40,8 +40,8 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                 },
                 init : function() {
                     methods.controls = {
-                        toggleBtn: $('[data-action="toggle-nav"]'),
-                        swipeArea: $('.nav-sections')
+                        toggleBtn: $('[data-action="toggle-nav"],[data-action="toggle-topmenu"]'),
+                        swipeArea: $('.nav-sections,.topmenu-close')
                     };
                     methods._listen();
                     return this.each(function() {
