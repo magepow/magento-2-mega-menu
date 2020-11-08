@@ -301,12 +301,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                             var xSpace          = offsetMega.left;
                             wMageMax            = wMageMax - xSpace - $item.width();
                         }
-                        console.log(wMega);
                         if(wMega > wMageMax) wMega = Math.floor(wMageMax / wChild)*wChild;
-
-                        console.log(wMega);
-                        console.log(wMageMax);
-                        console.log(wChild);
                         $item.find('.content-mega-horizontal').width(wMega);
                     })
                 },
