@@ -25,6 +25,7 @@ With magicmenu, you can create new and customized menus according to the needs o
 
 ### 4: Professional and user-friendly interface customization
 Besides the flexible navigation of the Magicmenu, the professional and user-friendly interface is also an important factor to keep customers wiping more on your website. This extension allows you add Thumbnail, Image to category in mega menu, or add thumbnail to category(only for level 1 of vertical menu), at the same time can add custom block to mage menu.
+
 Depending on the needs and characteristics of the website, administrators can choose to customize magicmenu as desired.
 
 ## ✓ Install Magiccart Magicmenu via composer (recommend)
