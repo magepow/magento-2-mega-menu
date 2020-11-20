@@ -21,7 +21,9 @@ This is a menu type that is highly appreciated by customers. With a horizontal a
 ![widget-img](https://github.com/magiccart/magento2-magicmenu/blob/master/media/dropdownmenu.jpg)
 
 ### 3: Allow to add Extra Menu
-With magicmenu, you can create new and customized menus according to the needs of your magento. 
+You can log in Admin > Magiccart > Magic Menu > Extra Menu. It will look like this:
+![widget-img](https://github.com/magiccart/magento2-magicmenu/blob/master/media/managemenu.jpg)
+Then, you can click Add New Menu or Edit. After that, click Save to finish.
 
 ### 4: Professional and user-friendly interface customization
 Besides the flexible navigation of the Magicmenu, the professional and user-friendly interface is also an important factor to keep customers wiping more on your website. This extension allows you add Thumbnail, Image to category in mega menu, or add thumbnail to category(only for level 1 of vertical menu), at the same time can add custom block to mage menu.
