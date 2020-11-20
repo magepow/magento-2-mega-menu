@@ -1,6 +1,33 @@
-# Magento 2 Extention Magicmenu
-**Magicmenu Magento extension** (Magiccart Magicmenu Extension) allows you create a beautifull menu with rich of features such as Megamenu or Dropdown Menu. On a Mega Menu, the extension allow you show the custom block on the top/bottom/left/right of the menu.
-### ✓ Install Magiccart Magicmenu via composer (recommend)
+# Magicmenu - Magento 2 Menu extension
+
+**Magento 2 Menu** is an indispensable component, and plays the role of website navigation to help customers easily categorize and find information. Without a menu, visitors to the page will have to spend time searching for each content on your website, thereby making them find it difficult, difficult to access and do not know what your website has main content. This will increase the user's bounce rate, thereby reducing the SEO quality of the website.
+
+**Magicmenu Magento extension** (Magiccart Magicmenu Extension) allows you to create a beautiful menu with rich features such as Megamenu or Drop Down Menu. On a Mega Menu, the extension allows you to show the custom block on the top/bottom/left/right of the menu.
+Why can it do that?
+
+## Highlight Features
+
+### 1: Insert easily magicmenu by Widget
+Magiccart menu extension allows you to customize the menu to your liking:
+Put widgets in the menu, any widgets you have installed on the website
+Drag and drop widgets allowed
+
+### 2: Ability to choose two type of menu: Mega menu or Dropdown Menu
+**Mega Menu**
+This is the type of menu commonly used in magento websites. The advantage of this type of menu is to save the maximum space for the website and clearly display the website's themes.
+![widget-img](https://github.com/magiccart/magento2-magicmenu/blob/master/media/megamenu.jpg)
+**Dropdown Menu**
+This is a menu type that is highly appreciated by customers. With a horizontal and vertical navigation business structure, the drop-down menu can contain more categories, suitable for websites containing many product catalogs.
+![widget-img](https://github.com/magiccart/magento2-magicmenu/blob/master/media/dropdownmenu.jpg)
+
+### 3: Allow to add Extra Menu
+With magicmenu, you can create new and customized menus according to the needs of your magento. 
+
+### 4: Professional and user-friendly interface customization
+Besides the flexible navigation of the Magicmenu, the professional and user-friendly interface is also an important factor to keep customers wiping more on your website. This extension allows you add Thumbnail, Image to category in mega menu, or add thumbnail to category(only for level 1 of vertical menu), at the same time can add custom block to mage menu.
+Depending on the needs and characteristics of the website, administrators can choose to customize magicmenu as desired.
+
+## ✓ Install Magiccart Magicmenu via composer (recommend)
 Run the following command in Magento 2 root folder:
 
 ```
@@ -8,20 +35,6 @@ composer require magiccart/magicmenu
 php bin/magento setup:upgrade
 php bin/magento setup:static-content:deploy -f
 ```
-
-## Look In Frontend
-### Mega Menu
-![widget-img](https://github.com/magiccart/magento2-magicmenu/blob/master/media/megamenu.jpg)
-### Dropdown Menu
-![widget-img](https://github.com/magiccart/magento2-magicmenu/blob/master/media/dropdownmenu.jpg)
-
-## Highlight Features
-- Insert easily magicmenu by Widget
-- Ability to choose two type of menu: Mega menu or Dropdown Menu
-- Allow to add Extra Menu
-- Ability to add Thumbnail, image to category in Mega menu
-- Ability to add custom block to Mega menu (Top, right, bottom or left)
-
 
 ## Magiccart Magicmenu User Guide
 [USE GUIDE](https://docs.alothemes.com/m2/theme/gecko/#sub66)
@@ -35,30 +48,30 @@ If this project help you reduce time to develop, you can give me a cup of coffee
 
 **Free Extensions List**
 
-* [Magento 2 Recent Sales Notification](https://magepow.com/magento-2-recent-sales-notification.html)
+* [Magento 2 Recent Sales Notification](https://alothemes.com/magento-2-recent-sales-notification.html)
 
-* [Magento Categories Extension](https://magepow.com/magento-categories-extension.html)
+* [Magento Categories Extension](https://alothemes.com/magento-categories-extension.html)
 
-* [Magento Sticky Cart](https://magepow.com/magento-sticky-cart.html)
+* [Magento Sticky Cart](https://alothemes.com/magento-sticky-cart.html)
 
-* [Magento Ajax Contact](https://magepow.com/magento-ajax-contact-form.html)
+* [Magento Ajax Contact](https://alothemes.com/magento-ajax-contact-form.html)
 
-* [Magento Lazy Load](https://magepow.com/magento-lazy-load.html)
+* [Magento Lazy Load](https://alothemes.com/magento-lazy-load.html)
 
 
 **Premium Extensions List**
 
-* [Magento Speed Optimizer](https://magepow.com/magento-speed-optimizer.html)
+* [Magento Speed Optimizer](https://alothemes.com/magento-speed-optimizer.html)
 
-* [Magento 2 Mutil Translate](https://magepow.com/magento-multi-translate.html)
+* [Magento 2 Mutil Translate](https://alothemes.com/magento-multi-translate.html)
 
-* [Magento 2 Instagram Integration](https://magepow.com/magento-2-instagram.html)
+* [Magento 2 Instagram Integration](https://alothemes.com/magento-2-instagram.html)
 
-* [Lookbook Pin Products](https://magepow.com/lookbook-pin-products.html)
+* [Lookbook Pin Products](https://alothemes.com/lookbook-pin-products.html)
 
-* [Magento Product Slider](https://magepow.com/magento-product-slider.html)
+* [Magento Product Slider](https://alothemes.com/magento-product-slider.html)
 
-* [Magento Product Banner](https://magepow.com/magento-banner-slider.html)
+* [Magento Product Banner](https://alothemes.com/magento-banner-slider.html)
 
 
 **Featured Magento Themes**
@@ -82,21 +95,21 @@ If this project help you reduce time to develop, you can give me a cup of coffee
 
 **Featured Magento Services**
 
-* [PSD to Magento 2 Theme Conversion](https://magepow.com/psd-to-magento-theme-conversion.html)
+* [PSD to Magento 2 Theme Conversion](https://alothemes.com/psd-to-magento-theme-conversion.html)
 
-* [Magento Speed Optimization Service](https://magepow.com/magento-speed-optimization-service.html)
+* [Magento Speed Optimization Service](https://alothemes.com/magento-speed-optimization-service.html)
 
-* [Magento Security Patch Installation](https://magepow.com/magento-security-patch-installation.html)
+* [Magento Security Patch Installation](https://alothemes.com/magento-security-patch-installation.html)
 
-* [Magento Website Maintenance Service](https://magepow.com/website-maintenance-service.html)
+* [Magento Website Maintenance Service](https://alothemes.com/website-maintenance-service.html)
 
-* [Magento Professional Installation Service](https://magepow.com/professional-installation-service.html)
+* [Magento Professional Installation Service](https://alothemes.com/professional-installation-service.html)
 
-* [Magento Upgrade Service](https://magepow.com/magento-upgrade-service.html)
+* [Magento Upgrade Service](https://alothemes.com/magento-upgrade-service.html)
 
-* [Customization Service](https://magepow.com/customization-service.html)
+* [Customization Service](https://alothemes.com/customization-service.html)
 
-* [Hire Magento Developer](https://magepow.com/hire-magento-developer.html)
+* [Hire Magento Developer](https://alothemes.com/hire-magento-developer.html)
 
 
 [![Latest Stable Version](https://poser.pugx.org/magiccart/magicmenu/v/stable)](https://packagist.org/packages/magiccart/magicmenu)
