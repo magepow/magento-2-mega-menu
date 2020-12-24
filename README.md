@@ -5,6 +5,10 @@
 **Magicmenu Magento extension** (Magiccart Magicmenu Extension) allows you to create a beautiful menu with rich features such as Megamenu or Drop Down Menu. On a Mega Menu, the extension allows you to show the custom block on the top/bottom/left/right of the menu.
 Why can it do that?
 
+[![Latest Stable Version](https://poser.pugx.org/magiccart/magicmenu/v/stable)](https://packagist.org/packages/magiccart/magicmenu)
+[![Total Downloads](https://poser.pugx.org/magiccart/magicmenu/downloads)](https://packagist.org/packages/magiccart/magicmenu)
+[![Daily Downloads](https://poser.pugx.org/magiccart/magicmenu/d/daily)](https://packagist.org/packages/magiccart/magicmenu)
+
 ## Highlight Features
 
 ### 1: Insert easily magicmenu by Widget
@@ -113,7 +117,3 @@ If this project help you reduce time to develop, you can give me a cup of coffee
 * [Customization Service](https://alothemes.com/customization-service.html)
 
 * [Hire Magento Developer](https://alothemes.com/hire-magento-developer.html)
-
-
-[![Latest Stable Version](https://poser.pugx.org/magiccart/magicmenu/v/stable)](https://packagist.org/packages/magiccart/magicmenu)
-[![Total Downloads](https://poser.pugx.org/magiccart/magicmenu/downloads)](https://packagist.org/packages/magiccart/magicmenu)
