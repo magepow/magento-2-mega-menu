@@ -1,0 +1,20 @@
+<?php
+$categoryId = ($this->getCurrentCategory()->getId())? $this->getCurrentCategory()->getId() : '';
+?>
+
+<script type="text/javascript">
+    require(['jquery'], function($) {
+        $(document).ready(function () {
+
+            $(".magicmenu ul").find("[data-categoryid='<?php echo $categoryId ?>']").parents('li').addClass('active');
+
+         <?php
+            $accordion = $this->_sysCfg->accordion;
+            if($accordion['enabled']):
+            ?>
+                $(".accordion").find("[data-categoryid='<?php echo $categoryId ?>']").addClass('active');
+                $(".accordion").find("[data-categoryid='<?php echo $categoryId ?>']").parents('li').addClass('active');
+            <?php endif; ?>
+        });
+    });
+</script>
