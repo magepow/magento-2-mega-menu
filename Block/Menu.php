@@ -475,7 +475,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
         $html = '';
         $label = explode(',', $cat->getMagicLabel());
         foreach ($label as $lab) {
-          if($lab) $html .= '<span class="cat_label '.$lab.'">'.__(trim($lab)) .'</span>';
+            if($lab) $html .= '<span class="cat_label '.$lab.'" rel='.__(trim($lab)).'></span>';
         }
         return $html;
     }
