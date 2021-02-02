@@ -6,7 +6,7 @@
  * @license     http://www.magiccart.net/license-agreement.html
  * @Author: DOng NGuyen<nguyen@dvn.com>
  * @@Create Date: 2016-02-23 18:59:34
- * @@Modify Date: 2016-04-28 15:54:48
+ * @@Modify Date: 2020-02-02 15:54:48
  * @@Function:
  */ -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
@@ -25,6 +25,8 @@
                 <mainCat>1</mainCat>
                 <extraCat>1</extraCat>
                 <notIncludeNav>0</notIncludeNav>
+                <exclude_html_desktop>1</exclude_html_desktop>
+                <exclude_html_mobile>1</exclude_html_mobile>
             </topmenu>
             <vmenu>
                 <enabled>0</enabled>
@@ -32,6 +34,8 @@
                 <mainCat>1</mainCat>
                 <extraCat>0</extraCat>
                 <notIncludeNav>0</notIncludeNav>
+                <exclude_html_desktop>1</exclude_html_desktop>
+                <exclude_html_mobile>1</exclude_html_mobile>
             </vmenu>
             <accordion>
                 <enabled>1</enabled>

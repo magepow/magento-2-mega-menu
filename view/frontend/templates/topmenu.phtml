@@ -29,7 +29,7 @@ $drawMainMenu = $menu['mainCat'] ? implode("\n", $desktop) : '';
 // drawExtMenu ExtraMenu
 $drawExtraMenu = $menu['extraCat'] ? $this->drawExtraMenu() : '';
 ?>
-<nav class="navigation mean-nav navigation-mobile" role="navigation" data-action="navigation">
+<nav class="navigation mean-nav navigation-mobile" role="navigation" data-action="navigation" <?php echo $menu['exclude_html_desktop'] ? 'data-exclude_html_desktop="1"' : '' ?> >
 	<ul class="nav-mobile" data-alo-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
 		<?php echo $mobileMenu ?>
 		<?php echo $drawExtraMenu ?>
@@ -39,7 +39,7 @@ $drawExtraMenu = $menu['extraCat'] ? $this->drawExtraMenu() : '';
 	$classes  = $menu['sticker'] ? 'sticker' : '';
 	$classes .= ($menu['fullWidth'] == 2) ? ' menufullwidth' : '';
 ?>
-<div class="magicmenu clearfix">
+<div class="magicmenu clearfix" <?php echo $menu['exclude_html_mobile'] ? 'data-exclude_html_mobile="1"' : '' ?> >
 	<ul class="nav-desktop <?php /* @escapeNotVerified */ echo $classes; ?>"			
 			data-fullwidth="<?php /* @escapeNotVerified */ echo $menu['fullWidth'] ?>"
 			data-breakpoint="<?php /* @escapeNotVerified */ echo $menu['switcher'] ?>"

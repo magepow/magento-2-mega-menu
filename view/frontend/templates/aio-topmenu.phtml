@@ -27,7 +27,7 @@ $drawHomeMenu  = $menu['home'] ? $homeHtml : '';
 $drawMainMenu  = '';
 $drawExtraMenu = $menu['extraCat'] ? $extraHtml : '';
 ?>
-<nav class="navigation mean-nav navigation-mobile" role="navigation" data-action="navigation">
+<nav class="navigation mean-nav navigation-mobile" role="navigation" data-action="navigation" <?php echo $menu['exclude_html_desktop'] ? 'data-exclude_html_desktop="1"' : '' ?> >
 	<ul class="nav-mobile" data-alo-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
 		<?php echo $mobileMenu ?>
 		<?php echo $drawExtraMenu ?>
@@ -45,7 +45,7 @@ $drawExtraMenu = $menu['extraCat'] ? $extraHtml : '';
 			$vdrawMainMenu = implode("\n", $vdesktop);
 		}
 	?>
-	<div class="vmagicmenu vertical-menu clearfix">
+	<div class="vmagicmenu vertical-menu clearfix" <?php echo $vmenu['exclude_html_mobile'] ? 'data-exclude_html_mobile="1"' : '' ?> >
 		<div class="block-title block-title-vmagicmenu v-title">
 	        <strong>
 	        	<span class="vmagicmenu-subtitle"><?php echo __($this->getRootName())?></span>
@@ -79,7 +79,7 @@ $drawExtraMenu = $menu['extraCat'] ? $extraHtml : '';
 		$classes  = $menu['sticker'] ? 'sticker' : '';
 		$classes .= ($menu['fullWidth'] == 2) ? ' menufullwidth' : '';
 	?>
-	<div class="magicmenu clearfix">
+	<div class="magicmenu clearfix" <?php echo $menu['exclude_html_mobile'] ? 'data-exclude_html_mobile="1"' : '' ?> >
 		<ul class="nav-desktop  <?php /* @escapeNotVerified */ echo $classes; ?>"
 			data-fullwidth="<?php /* @escapeNotVerified */ echo $menu['fullWidth'] ?>"
 			data-breakpoint="<?php /* @escapeNotVerified */ echo $menu['switcher'] ?>"

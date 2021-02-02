@@ -82,6 +82,16 @@
                     <source_model>Magiccart\Magicmenu\Model\System\Config\Category</source_model>
                     <can_be_empty>1</can_be_empty>
                 </field>
+                <field id="exclude_html_desktop" translate="label comment" type="select" sortOrder="50"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Exclude Menu Desktop in Mobile version : </label>
+                    <comment model="Magiccart\Magicmenu\Block\Adminhtml\System\DynamicComment" />
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="exclude_html_mobile" translate="label comment" type="select" sortOrder="60"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Exclude Menu Mobile in Desktop version : </label>
+                    <comment model="Magiccart\Magicmenu\Block\Adminhtml\System\DynamicComment" />
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>                
             </group>
             <group id="vmenu" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Vertical Menu</label>
@@ -116,6 +126,16 @@
                     <source_model>Magiccart\Magicmenu\Model\System\Config\Category</source_model>
                     <can_be_empty>1</can_be_empty>
                 </field>
+                <field id="exclude_html_desktop" translate="label comment" type="select" sortOrder="50"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Exclude Menu Desktop in Mobile version : </label>
+                    <comment model="Magiccart\Magicmenu\Block\Adminhtml\System\DynamicComment" />
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="exclude_html_mobile" translate="label comment" type="select" sortOrder="60"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Exclude Menu Mobile in Desktop version : </label>
+                    <comment model="Magiccart\Magicmenu\Block\Adminhtml\System\DynamicComment" />
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field> 
             </group>
             <group id="accordion" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Accordion Menu</label>
