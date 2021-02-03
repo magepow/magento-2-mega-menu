@@ -27,7 +27,7 @@ $drawMainMenu = $vmenu['mainCat'] ? implode("\n", $desktop) : '';
 // drawExtMenu ExtraMenu
 $drawExtraMenu = $vmenu['extraCat'] ? $this->drawExtraMenu() : '';
 ?>
-<div class="vmagicmenu clearfix">
+<div class="vmagicmenu clearfix" <?php echo $vmenu['exclude_html_mobile'] ? 'data-exclude_html_mobile="1"' : '' ?> >
 	<ul class="nav-desktop">
 		<?php echo $drawHomeMenu ?>
 		<?php echo $drawMainMenu ?>
@@ -35,7 +35,7 @@ $drawExtraMenu = $vmenu['extraCat'] ? $this->drawExtraMenu() : '';
 	</ul>
 </div>
 <?php if(!$menu['enabled']) : ?>
-<nav class="navigation" role="navigation">
+<nav class="navigation" role="navigation" <?php echo $menu['exclude_html_desktop'] ? 'data-exclude_html_desktop="1"' : '' ?> >
 	<ul class="nav-mobile" data-alo-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
 		<?php echo $mobileMenu ?>
 		<?php echo $drawExtraMenu ?>
