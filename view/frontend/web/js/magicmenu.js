@@ -5,7 +5,7 @@
  * @license     https://www.magepow.com/license-agreement.html
  * @Author: DOng NGuyen<nguyen@magepow.com>
  * @@Create Date: 2014-04-25 13:16:48
- * @@Modify Date: 2020-10-28 09:16:29
+ * @@Modify Date: 2021-10-19 09:16:29
  * @@Function:
  */
 require(['jquery', 'magiccart/easing'], function($, easing){
@@ -325,9 +325,10 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                 },
 
                 megamenu: function (menu) {
+                    var isHorizontal = menu.hasClass('magicmenu');
                     // Topmenu
                     var navDesktop = menu.find('.nav-desktop');
-                    if(navDesktop.hasClass('sticker')) methods.sticky(menu);
+                    if(isHorizontal && navDesktop.hasClass('sticker')) methods.sticky(menu);
                     /* Active menu top-vmega */
                     menu.find('.vmega .category-item').on('hover mouseenter', function() {
                         $(this).siblings().removeClass('over');
@@ -335,9 +336,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                     });
                     var fullWidth  = navDesktop.data('fullwidth');
                     if( navDesktop.data('breakpoint') ) breakpoint = navDesktop.data('breakpoint');
-                    var leveltop = menu.find('li.level0.hasChild, li.level0.home').not('.dropdown');
-                    // is Horizontal
-                    var isHorizontal = menu.hasClass('magicmenu');
+                    var leveltop = navDesktop.find('li.level0.hasChild, li.level0.home').not('.dropdown');
                     methods.toggleVertical(menu);
                     if(isHorizontal) methods.horizontal(leveltop, fullWidth, true);                       
                     else methods.vertical(leveltop, fullWidth, true);
@@ -347,13 +346,14 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                         if ( breakpoint > $(window).width()){
                             body.addClass('nav-mobile-display');
                             $('.nav-mobile').show();
-                            navDesktop.hide();
+                            if(isHorizontal) navDesktop.hide();
                         } else {
                             body.removeClass('nav-mobile-display');
                             $('.nav-mobile').hide();
-                            navDesktop.show();
-                            if(isHorizontal) methods.horizontal(leveltop, fullWidth, true);                       
-                            else methods.vertical(leveltop, fullWidth, true);
+                            if(isHorizontal){
+                                navDesktop.show();
+                                methods.horizontal(leveltop, fullWidth, true);    
+                            }else methods.vertical(leveltop, fullWidth, true);
                         }
                     });
 
