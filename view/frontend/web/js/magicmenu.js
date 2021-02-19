@@ -23,11 +23,11 @@ require(['jquery', 'magiccart/easing'], function($, easing){
 
             var settings   = $.extend(defaults, options);
             var breakpoint = settings.breakpoint;
-            var hSelector  = settings.horizontal;
-            var vSelector  = settings.vertical;
             var sticky     = settings.sticky;
-
-            var methods = {
+            var topmenu    = $(settings.horizontal);
+            var vmenu      = $(settings.vertical);
+            var body       = $('body');
+            var methods    = {
                 options: {
                     responsive: false,
                     expanded: false,
@@ -44,7 +44,6 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                     methods._listen();
                     return this.each(function() {
                         var accordion = $("nav.navigation, .meanmenu-accordion");
-                        var megamenu = $(".nav-desktop");
                         if ("IntersectionObserver" in window) {
                             let accordionObserver = new IntersectionObserver(function(entries, observer) {
                                 entries.forEach(function(entry) {
@@ -60,15 +59,17 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                             let megamenuObserver = new IntersectionObserver(function(entries, observer) {
                                 entries.forEach(function(entry) {
                                     if (entry.isIntersecting) {
-                                        methods.megamenu();
+                                        methods.megamenu($(entry.target));
                                         megamenuObserver.unobserve(entry.target);
                                     }
                                 });
                             });
-                            megamenu.each(function(){ megamenuObserver.observe(this); });
+                            topmenu.each(function(){ megamenuObserver.observe(this); });
+                            vmenu.each(function(){ megamenuObserver.observe(this); });
                         } else {
                             accordion.each(function(){ $(this).magicaccordion($(this).data('menu-init')); });
-                            megamenu.each(function(){ methods.megamenu(); });
+                            topmenu.each(function(){ methods.megamenu(this); });
+                            vmenu.each(function(){ methods.megamenu(this); });
                         }
                     });
                 },
@@ -96,7 +97,6 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                     var menuSticky  = $(sticky);
                     var menuHeight  = menuSticky.innerHeight();
                     var postionTop  = topmenu.offset().top;
-                    var body        = $('body');
                     var heightItem  =  0;
                     var heightAIO   = 0
                     var vmagicmenu = topmenu.parent().find('.vmagicmenu.fixed-auto');
@@ -124,10 +124,8 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                             menuSticky.addClass('header-container-fixed');
                             if(heightItem && !menuAIO.hasClass('over')){
                                 heightAIO = heightItem - (postion - postionTop) - menuHeight;
-                                if(heightAIO > 0 )menuAIO.css({"height": heightAIO, "overflow": "hidden", "display": ''});
-                                else{
-                                    menuAIO.css({"height": 'auto', "display": 'none', "overflow": "" });
-                                }
+                                if(heightAIO > 0 ) menuAIO.css({"height": heightAIO, "overflow": "hidden", "display": ''});
+                                else menuAIO.css({"height": 'auto', "display": 'none', "overflow": "" });
                             } else {
                                 menuAIO.css({"height": 'auto', "display": '', "overflow": "" });
                             }
@@ -194,7 +192,7 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                         }
                     }
                     var maxW        = menuBoxMax.width();
-                    var isRTL       = $('body').hasClass('rtl');
+                    var isRTL       = body.hasClass('rtl');
                     var dir         = isRTL ? 'right' : 'left';
                     $navtop.on('hover mouseenter', function(){
                         var $item       = $(this);
@@ -326,32 +324,24 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                     }
                 },
 
-                megamenu: function () {
+                megamenu: function (menu) {
                     // Topmenu
-                    var topmenu = $(hSelector);
-                    var navDesktop = topmenu.find('.nav-desktop');
-                    if(navDesktop.hasClass('sticker')) methods.sticky(topmenu);
+                    var navDesktop = menu.find('.nav-desktop');
+                    if(navDesktop.hasClass('sticker')) methods.sticky(menu);
                     /* Active menu top-vmega */
-                    topmenu.find('.vmega .category-item').on('hover mouseenter', function() {
+                    menu.find('.vmega .category-item').on('hover mouseenter', function() {
                         $(this).siblings().removeClass('over');
                         $(this).addClass('over');
-                    }, function() {
-                        // $(this).removeClass('over');
-                        // $(this).parent().children(":first").addClass('over');
                     });
-
                     var fullWidth  = navDesktop.data('fullwidth');
                     if( navDesktop.data('breakpoint') ) breakpoint = navDesktop.data('breakpoint');
-                    var leveltop = topmenu.find('li.level0.hasChild, li.level0.home').not('.dropdown');
-                    methods.horizontal(leveltop, fullWidth, true);
-
-                    // Vertical Menu
-                    var vmenu   = $(vSelector);
-                    methods.toggleVertical(vmenu);
-                    var vLeveltop = vmenu.find('li.level0.hasChild, li.level0.home').not('.dropdown');
-                    methods.vertical(vLeveltop, fullWidth, true);
+                    var leveltop = menu.find('li.level0.hasChild, li.level0.home').not('.dropdown');
+                    // is Horizontal
+                    var isHorizontal = menu.hasClass('magicmenu');
+                    methods.toggleVertical(menu);
+                    if(isHorizontal) methods.horizontal(leveltop, fullWidth, true);                       
+                    else methods.vertical(leveltop, fullWidth, true);
                     // Responsive
-                    var body = $('body');
                     if ( breakpoint > $(window).width() ) body.addClass('nav-mobile-display');
                     $(window).on("magicmenu:refresh", function( event ) {
                         if ( breakpoint > $(window).width()){
@@ -362,14 +352,14 @@ require(['jquery', 'magiccart/easing'], function($, easing){
                             body.removeClass('nav-mobile-display');
                             $('.nav-mobile').hide();
                             navDesktop.show();
-                            methods.horizontal(leveltop, fullWidth, false);
-                            methods.vertical(vLeveltop, fullWidth, false);
+                            if(isHorizontal) methods.horizontal(leveltop, fullWidth, true);                       
+                            else methods.vertical(leveltop, fullWidth, true);
                         }
                     });
 
                     $(window).resize(function(){ $(this).trigger('magicmenu:refresh')});
                     
-                    methods.taphover(topmenu.add(vmenu));                   
+                    methods.taphover(menu);                   
                 }
 
             };
