@@ -28,11 +28,12 @@ $drawHomeMenu = $menu['home'] ? $this->drawHomeMenu() : '';
 $drawMainMenu = $menu['mainCat'] ? implode("\n", $desktop) : '';
 // drawExtMenu ExtraMenu
 $drawExtraMenu = $menu['extraCat'] ? $this->drawExtraMenu() : '';
+$drawExtraMobileMenu = $menu['extraCat'] ? $this->drawExtraMenu('mobile') : '';
 ?>
 <nav class="navigation mean-nav navigation-mobile" role="navigation" data-action="navigation" <?php echo $menu['exclude_html_desktop'] ? 'data-exclude_html_desktop="1"' : '' ?> >
 	<ul class="nav-mobile" data-alo-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
 		<?php echo $mobileMenu ?>
-		<?php echo $drawExtraMenu ?>
+		<?php echo $drawExtraMobileMenu ?>
 	</ul>
 </nav>
 <?php 

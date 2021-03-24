@@ -355,10 +355,10 @@ class Menu extends \Magento\Catalog\Block\Navigation
         return array('desktop' => $desktopTmp, 'mobile' => $mobileTmp);
     }
 
-    public function drawExtraMenu()
+    public function drawExtraMenu($visibility = 1)
     {
         if($this->hasData('extraMenu')) return $this->getData('extraMenu');
-        $extMenu    = $this->getExtraMenu();
+        $extMenu    = $this->getExtraMenu($visibility);
         $count = count($extMenu);
         $drawExtraMenu = '';
         if($count){
@@ -395,12 +395,16 @@ class Menu extends \Magento\Catalog\Block\Navigation
         return $collection;
     }
 
-    public function getExtraMenu()
+    public function getExtraMenu($visibility)
     {
         $store = $this->_storeManager->getStore()->getStoreId();
+
+        if($visibility == 'mobile') $visibility = '2';
+
         $collection = $this->_magicmenuCollectionFactory->create()
                         ->addFieldToSelect(array('link','name', 'cat_col', 'magic_label','ext_content','order'))
                         ->addFieldToFilter('extra', 1)
+                        ->addFieldToFilter('visibility', array('eq'=> $visibility, 'eq'=> 0))
                         ->addFieldToFilter('status', 1);
         $collection->getSelect()->where('find_in_set(0, stores) OR find_in_set(?, stores)', $store)->order('order');
         return $collection;        
