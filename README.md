@@ -55,30 +55,30 @@ If this project help you reduce time to develop, you can give me a cup of coffee
 
 **Free Extensions List**
 
-* [Magento 2 Recent Sales Notification](https://alothemes.com/magento-2-recent-sales-notification.html)
+* [Magento 2 Recent Sales Notification](https://magepow.com/magento-2-recent-sales-notification.html)
 
-* [Magento Categories Extension](https://alothemes.com/magento-categories-extension.html)
+* [Magento Categories Extension](https://magepow.com/magento-categories-extension.html)
 
-* [Magento Sticky Cart](https://alothemes.com/magento-sticky-cart.html)
+* [Magento Sticky Cart](https://magepow.com/magento-sticky-cart.html)
 
-* [Magento Ajax Contact](https://alothemes.com/magento-ajax-contact-form.html)
+* [Magento Ajax Contact](https://magepow.com/magento-ajax-contact-form.html)
 
-* [Magento Lazy Load](https://alothemes.com/magento-lazy-load.html)
+* [Magento Lazy Load](https://magepow.com/magento-lazy-load.html)
 
 
 **Premium Extensions List**
 
-* [Magento Speed Optimizer](https://alothemes.com/magento-speed-optimizer.html)
+* [Magento Speed Optimizer](https://magepow.com/magento-speed-optimizer.html)
 
-* [Magento 2 Mutil Translate](https://alothemes.com/magento-multi-translate.html)
+* [Magento 2 Mutil Translate](https://magepow.com/magento-multi-translate.html)
 
-* [Magento 2 Instagram Integration](https://alothemes.com/magento-2-instagram.html)
+* [Magento 2 Instagram Integration](https://magepow.com/magento-2-instagram.html)
 
-* [Lookbook Pin Products](https://alothemes.com/lookbook-pin-products.html)
+* [Lookbook Pin Products](https://magepow.com/lookbook-pin-products.html)
 
-* [Magento Product Slider](https://alothemes.com/magento-product-slider.html)
+* [Magento Product Slider](https://magepow.com/magento-product-slider.html)
 
-* [Magento Product Banner](https://alothemes.com/magento-banner-slider.html)
+* [Magento Product Banner](https://magepow.com/magento-banner-slider.html)
 
 
 **Featured Magento Themes**
