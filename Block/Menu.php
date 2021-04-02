@@ -267,7 +267,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
             $parentPositionClass = '';
             $itemPositionClassPrefix = $parentPositionClass ? $parentPositionClass . '-' : 'nav-';
             $idTop    = $catTop->getEntityId();
-            $urlTop      =  '<a class="level-top" href="' .$catTop->getUrl(). '">' .$this->getThumbnail($catTop). '<span>' .__($catTop->getName()) . $this->getCatLabel($catTop). '</span><span class="boder-menu"></span></a>';
+            $urlTop      =  '<a class="level-top" href="' .$catTop->getUrl(). '">' .$this->getThumbnail($catTop). '<span>' . $catTop->getName() . $this->getCatLabel($catTop). '</span><span class="boder-menu"></span></a>';
 
             $itemPositionClassPrefixTop = $itemPositionClassPrefix . $counter;
             $classTop   = $itemPositionClassPrefixTop . ' ' . $this->_getActiveClasses($idTop);
@@ -335,7 +335,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
                             foreach ($childTop as $child) {
                                 $itemPositionClassPrefixChild = $itemPositionClassPrefix . '-' . $counter;
                                 $class = 'level1 category-item ' . $itemPositionClassPrefixChild . ' ' . $this->_getActiveClasses($child->getId());
-                                $url =  '<a href="'. $child->getUrl().'"><span>'.__($child->getName()) . $this->getCatLabel($child) . '</span></a>';
+                                $url =  '<a href="'. $child->getUrl().'"><span>' . $child->getName() . $this->getCatLabel($child) . '</span></a>';
                                 $childHtml = ($this->_recursionLevel != 2 ) ? $this->getTreeCategoriesExt($child->getId(), $itemPositionClassPrefixChild) : ''; // include magic_label
                                 // $childHtml = ($this->_recursionLevel != 2 ) ? $this->getTreeCategoriesExtra($child->getId()) : ''; // include magic_label and Maximal Depth
                                 $desktopTmp .= '<li class="children ' . $class . '">' . $this->getImage($child) . $url . $childHtml . '</li>';
@@ -372,8 +372,8 @@ class Menu extends \Magento\Catalog\Block\Navigation
                 $class .= $ext->getCatCol() ? ' ' . $ext->getCatCol() : ' dropdown';
                 if($html) $active .=' hasChild parent';
                 $drawExtraMenu .= "<li class='level0 category-item level-top ext $active $class'>";
-                    if($link) $drawExtraMenu .= '<a class="level-top" href="' .$url. '"><span>' .__($ext->getName()) . $this->getCatLabel($ext). '</span></a>';
-                    else $drawExtraMenu .= '<span class="level-top"><span>' .__($ext->getName()) . $this->getCatLabel($ext). '</span></span>';
+                    if($link) $drawExtraMenu .= '<a class="level-top" href="' .$url. '"><span>' . $ext->getName() . $this->getCatLabel($ext). '</span></a>';
+                    else $drawExtraMenu .= '<span class="level-top"><span>' . $ext->getName() . $this->getCatLabel($ext). '</span></span>';
                     if($html) $drawExtraMenu .= $html; //$drawExtraMenu .= '<div class="level-top-mega">'.$html.'</div>';
                 $drawExtraMenu .= '</li>';
                 $i++;
