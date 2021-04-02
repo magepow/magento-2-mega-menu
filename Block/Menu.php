@@ -480,20 +480,20 @@ class Menu extends \Magento\Catalog\Block\Navigation
         return $html;
     }
 
-    public function getImage($object)
+    public function getImage($category)
     {
         $url = '';
-        $image = $this->_dirMedia . 'magiccart/magicmenu/images/' . $object->getId() .'.png';
-        if(file_exists($image)) $url = $this->_urlMedia . 'magiccart/magicmenu/images/' . $object->getId() .'.png';
-        if($url) return '<a class="a-image" href="' .$object->getUrl(). '"><img class="img-responsive" alt="' .$object->getName(). '" src="'.$url.'"></a>';
+        $image = $this->_dirMedia . 'magiccart/magicmenu/images/' . $category->getId() .'.png';
+        if(file_exists($image)) $url = $this->_urlMedia . 'magiccart/magicmenu/images/' . $category->getId() . '.png';
+        if($url) return '<a class="a-image" href="' . $category->getUrl() . '"><img class="img-responsive" alt="' . $category->getName() . '" src="' . $url . '"></a>';
     }
 
-    public function getThumbnail($object)
+    public function getThumbnail($category)
     {
         $url = '';
-        $image = $this->_dirMedia . 'magiccart/magicmenu/thumbnail/' . $object->getId() .'.png';
-        if(file_exists($image)) $url = $this->_urlMedia . 'magiccart/magicmenu/thumbnail/' . $object->getId() .'.png';
-        if($url) return '<img class="img-responsive" alt="' .$object->getName(). '" src="'.$url.'">';
+        $image = $this->_dirMedia . 'magiccart/magicmenu/thumbnail/' . $category->getId() .'.png';
+        if(file_exists($image)) $url = $this->_urlMedia . 'magiccart/magicmenu/thumbnail/' . $category->getId() . '.png';
+        if($url) return '<img class="img-responsive" alt="' . $category->getName() . '" src="' . $url . '">';
     }
 
 }
