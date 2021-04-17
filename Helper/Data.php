@@ -1,51 +1,66 @@
 <?php
 /**
- * Magiccart 
- * @category    Magiccart 
- * @copyright   Copyright (c) 2014 Magiccart (http://www.magiccart.net/) 
- * @license     http://www.magiccart.net/license-agreement.html
- * @Author: DOng NGuyen<nguyen@dvn.com>
- * @@Create Date: 2015-12-14 20:26:27
- * @@Modify Date: 2016-03-17 23:15:41
- * @@Function:
+ * @Author: nguyen
+ * @Date:   2020-02-12 14:01:01
+ * @Last Modified by: Alex Dong
+ * @Last Modified time: 2021-04-17 19:17:04
  */
 
 namespace Magiccart\Magicmenu\Helper;
 
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
+    /**
+     * @var array
+     */
+    protected $configModule;
 
-    const SECTIONS      = 'magicmenu';   // module name
-    const GROUPS        = 'general';        // setup general
-    const GROUPS_PLUS   = 'topmenu';        // custom group
-    const GROUPS_PLUS2  = 'vmenu';        // custom group
-    const GROUPS_PLUS3  = 'amenu';        // custom group
+    /**
+     * @var \Magento\Framework\Module\Manager
+     */
+    protected $moduleManager;
 
-    public function getConfig($cfg=null)
+
+    public function __construct(
+        \Magento\Framework\App\Helper\Context $context,
+        \Magento\Framework\Module\Manager $moduleManager
+    )
+    {
+        parent::__construct($context);
+        $this->moduleManager = $moduleManager;
+        $module = strtolower(str_replace('Magiccart_', '', $this->_getModuleName()));
+        $this->configModule = $this->getConfig($module);
+
+    }
+
+    public function getConfig($cfg='')
     {
         if($cfg) return $this->scopeConfig->getValue( $cfg, \Magento\Store\Model\ScopeInterface::SCOPE_STORE );
         return $this->scopeConfig;
     }
 
-    public function getGeneralCfg($cfg=null) 
+    public function getConfigModule($cfg='', $value=null)
     {
-        $config = $this->scopeConfig->getValue(
-            self::SECTIONS.'/'.self::GROUPS,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
+        $values = $this->configModule;
+        if( !$cfg ) return $values;
+        $config  = explode('/', $cfg);
+        $end     = count($config) - 1;
+        foreach ($config as $key => $vl) {
+            if( isset($values[$vl]) ){
+                if( $key == $end ) {
+                    $value = $values[$vl];
+                }else {
+                    $values = $values[$vl];
+                }
+            } 
 
-        if(isset($config[$cfg])) return $config[$cfg];
-        return $config;
+        }
+        return $value;
     }
 
-    public function getExtraCfg($cfg=null)
+    public function isEnabledModule($moduleName)
     {
-        $config = $this->scopeConfig->getValue(
-            self::SECTIONS .'/'.self::GROUPS_PLUS,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-        if(isset($config[$cfg])) return $config[$cfg];
-        return $config;
+        return $this->moduleManager->isEnabled($moduleName);
     }
 
 }
