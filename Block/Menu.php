@@ -93,6 +93,16 @@ class Menu extends \Magento\Catalog\Block\Navigation
      */
     protected $_magicmenuCollectionFactory;
 
+    /**
+     *
+     * @var \Magiccart\Magicmenu\Helper\Data
+     */
+    public $_helper;
+
+    /**
+     * @var \Magento\Framework\Serialize\Serializer\Json
+     */
+    private $serializer;
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
@@ -103,8 +113,10 @@ class Menu extends \Magento\Catalog\Block\Navigation
         \Magento\Catalog\Helper\Category $catalogCategory,
         \Magento\Framework\Registry $registry,
         \Magento\Catalog\Model\Indexer\Category\Flat\State $flatState,
+        \Magento\Framework\Serialize\Serializer\Json $serializer = null,
 
         // +++++++++add new +++++++++
+        \Magiccart\Magicmenu\Helper\Data $helper,
         // \Magiccart\Magicmenu\Model\CategoryFactory $categoryFactory,
         \Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\CollectionFactory $magicmenuCollectionFactory,
 
@@ -120,11 +132,12 @@ class Menu extends \Magento\Catalog\Block\Navigation
         $this->_categoryInstance = $categoryFactory->create();
 
         // +++++++++add new +++++++++
+        $this->_helper = $helper;
         $this->_magicmenuCollectionFactory = $magicmenuCollectionFactory;
-        $this->_sysCfg= (object) $context->getScopeConfig()->getValue(
-            'magicmenu',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
+        $this->_sysCfg= (object) $this->_helper->getConfigModule();
+
+        $this->serializer = $serializer ?: \Magento\Framework\App\ObjectManager::getInstance()
+        ->get(\Magento\Framework\Serialize\Serializer\Json::class);
 
         parent::__construct($context, $categoryFactory, $productCollectionFactory, $layerResolver, $httpContext, $catalogCategory, $registry, $flatState, $data);
 
@@ -231,10 +244,16 @@ class Menu extends \Magento\Catalog\Block\Navigation
                             }
                         }                     
                         if($store){
-                            if( $store->getCode() == $currentStore->getCode() )  $demo .= '<li class="level1"><a href="' .$store->getBaseUrl(). '"><span class="demo-home">'. $group->getName(). '</span></a></li>';
-                            else $demo .= '<li class="switcher-option level1"><a href="#" data-post='. $switcher->getTargetStorePostData($store) . '><span class="demo-home">'. $group->getName(). '</span></a></li>';
-
-
+                            if( $store->getCode() == $currentStore->getCode() ){
+                                $demo .= '<li class="level1"><a href="' .$store->getBaseUrl(). '"><span class="demo-home">'. $group->getName(). '</span></a></li>';
+                            } else {
+                                $dataPost = $switcher->getTargetStorePostData($store);
+                                $dataPost = $this->serializer->unserialize($dataPost);
+                                if(isset($dataPost['action']) && isset($dataPost['data'])){
+                                    $href = $dataPost['action'] . '?' . http_build_query($dataPost['data']);
+                                    $demo .= '<li class="switcher-option level1"><a href="' . $href . '"><span class="demo-home">'. $group->getName(). '</span></a></li>';
+                                }
+                            }
                         }
                     }
                 }
