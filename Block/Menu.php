@@ -6,7 +6,7 @@
  * @license   http://www.magiccart.net/license-agreement.html
  * @Author: Magiccart<team.magiccart@gmail.com>
  * @@Create Date: 2016-02-28 10:10:00
- * @@Modify Date: 2020-10-21 09:09:06
+ * @@Modify Date: 2021-04-28 09:09:06
  * @@Function:
  */
 namespace Magiccart\Magicmenu\Block;
@@ -85,6 +85,8 @@ class Menu extends \Magento\Catalog\Block\Navigation
     protected $_recursionLevel;
 
     protected $extData = array();
+
+    protected $_extensionAttributes;
 
     /**
      * magicmenu collection factory.
@@ -271,9 +273,10 @@ class Menu extends \Magento\Catalog\Block\Navigation
         if($this->hasData('mainMenu')) return $this->getData('mainMenu');
         $desktopHtml = array();
         $mobileHtml  = array();
-        $rootCatId = $this->_storeManager->getStore()->getRootCategoryId();
-        $catListTop = $this->getChildExt($rootCatId);
+        $rootCatId   = $this->_storeManager->getStore()->getRootCategoryId();
+        $catListTop     = $this->getChildExt($rootCatId);
         $contentCatTop  = $this->getContentCatTop();
+        $this->_extensionAttributes = $this->getExtensionAttributes($rootCatId);
 
         foreach ($contentCatTop as $ext) {
             $this->extData[$ext->getCatId()] = $ext->getData();
@@ -298,8 +301,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
             }else {
                 if($isDropdown){
                     $classTop .= $isDropdown;
-                    $childHtml = $this->getTreeCategoriesExt($idTop, $itemPositionClassPrefixTop); // include magic_label
-                    // $childHtml = $this->getTreeCategoriesExtra($idTop, $itemPositionClassPrefixTop); // include magic_label and Maximal Depth
+                    $childHtml = $this->getTreeCategoriesExtra($catTop->getChildren(), $itemPositionClassPrefixTop); // include magic_label and Maximal Depth
                     $menu = array('desktop' => $childHtml, 'mobile' => $childHtml);
                 } else { // Draw Mega Menu
                     $idTop    = $catTop->getEntityId();
@@ -349,14 +351,13 @@ class Menu extends \Magento\Catalog\Block\Navigation
                         if($hasChild) :
                             $desktopTmp .= '<ul class="level0 category-item mage-column cat-mega">';
                             $mobileTmp .= '<ul class="submenu">';
-                            $childTop  =  $this->getChildExt($idTop);
+                            $childTop  =  $catTop->getChildren();
                             $counter = 1;
                             foreach ($childTop as $child) {
                                 $itemPositionClassPrefixChild = $itemPositionClassPrefix . '-' . $counter;
                                 $class = 'level1 category-item ' . $itemPositionClassPrefixChild . ' ' . $this->_getActiveClasses($child->getId());
                                 $url =  '<a href="'. $child->getUrl().'"><span>' . $child->getName() . $this->getCatLabel($child) . '</span></a>';
-                                $childHtml = ($this->_recursionLevel != 2 ) ? $this->getTreeCategoriesExt($child->getId(), $itemPositionClassPrefixChild) : ''; // include magic_label
-                                // $childHtml = ($this->_recursionLevel != 2 ) ? $this->getTreeCategoriesExtra($child->getId(), $itemPositionClassPrefixChild) : ''; // include magic_label and Maximal Depth
+                                $childHtml = ($this->_recursionLevel != 2 ) ? $this->getTreeCategoriesExtra($child->getChildren(), $itemPositionClassPrefixChild) : ''; // include magic_label and Maximal Depth
                                 $desktopTmp .= '<li class="children ' . $class . '">' . $this->getImage($child) . $url . $childHtml . '</li>';
                                 $mobileTmp  .= '<li class="' . $class . '">' . $url . $childHtml . '</li>';
                                 $counter++;
@@ -391,8 +392,8 @@ class Menu extends \Magento\Catalog\Block\Navigation
                 $class .= $ext->getCatCol() ? ' ' . $ext->getCatCol() : ' dropdown';
                 if($html) $active .=' hasChild parent';
                 $drawExtraMenu .= "<li class='level0 category-item level-top ext $active $class'>";
-                    if($link) $drawExtraMenu .= '<a class="level-top" href="' .$url. '"><span>' . $ext->getName() . $this->getCatLabel($ext). '</span></a>';
-                    else $drawExtraMenu .= '<span class="level-top"><span>' . $ext->getName() . $this->getCatLabel($ext). '</span></span>';
+                    if($link) $drawExtraMenu .= '<a class="level-top" href="' .$url. '"><span>' . $ext->getName() . $this->getCatLabel($ext, true). '</span></a>';
+                    else $drawExtraMenu .= '<span class="level-top"><span>' . $ext->getName() . $this->getCatLabel($ext, true). '</span></span>';
                     if($html) $drawExtraMenu .= $html; //$drawExtraMenu .= '<div class="level-top-mega">'.$html.'</div>';
                 $drawExtraMenu .= '</li>';
                 $i++;
@@ -405,13 +406,23 @@ class Menu extends \Magento\Catalog\Block\Navigation
 
     public function getChildExt($parentId)
     {
+        return $this->_categoryInstance->getCategories($parentId);
+    }
+
+    public function getExtensionAttributes($rootCatId)
+    {
         $collection = $this->_categoryInstance->getCollection()
-                        ->addAttributeToSelect(array('entity_id','name','magic_label','url_path'))
-                        ->addAttributeToFilter('parent_id', $parentId)
+                        ->addAttributeToSelect(array('entity_id','magic_label'))
+                        ->addAttributeToFilter('path', array('like' => "1/$rootCatId/%"))
                         ->addAttributeToFilter('include_in_menu', 1)
-                        ->addIsActiveFilter()
-                        ->addAttributeToSort('position', 'asc'); //->addOrderField('name');
-        return $collection;
+                        ->addAttributeToFilter('magic_label', array('notnull' => true))
+                        ->addIsActiveFilter();
+        $categories = [];
+        foreach ($collection as $category) {
+            $categories[$category->getEntityId()] = $category;
+        }
+        return $categories;        
+
     }
 
     public function getExtraMenu()
@@ -443,44 +454,21 @@ class Menu extends \Magento\Catalog\Block\Navigation
         return $collection;
     }
 
-    public function  getTreeCategoriesExt($parentId, $itemPositionClassPrefix) // include Magic_Label
-    { 
-        $categories = $this->_categoryInstance->getCollection()
-                        ->addAttributeToSelect(array('name','magic_label','url_path'))
-                        ->addAttributeToFilter('include_in_menu', 1)
-                        ->addAttributeToFilter('parent_id', $parentId)
-                        ->addIsActiveFilter()
-                        ->addAttributeToSort('position', 'asc'); 
-        $html = '';
-        $counter = 1;
-        foreach($categories as $category)
-        {
-            $level = $category->getLevel();
-            $childHtml = ( $this->_recursionLevel == 0 || ($level -1 < $this->_recursionLevel) ) ? $this->getTreeCategoriesExt($category->getId(), $itemPositionClassPrefix) : '';
-            $childClass = $childHtml ? ' hasChild parent category-item ' : ' category-item ';
-            $childClass .= $itemPositionClassPrefix . '-' .$counter;
-            $childClass .= $this->_getActiveClasses($category->getId());
-            $html .= '<li class="level' . ($level -2) . $childClass . '"><a href="' . $category->getUrl() . '"><span>' . $category->getName() . $this->getCatLabel($category) . "</span></a>\n" . $childHtml . '</li>';
-            $counter++;
-        }
-        if($html) $html = '<ul class="level'.($level -3).' submenu">' .$html. '</ul>';
-        return $html;
-    }
-
-    public function  getTreeCategoriesExtra($parentId, $itemPositionClassPrefix) // include Magic_Label and Maximal Depth
+    public function  getTreeCategoriesExtra($categories, $itemPositionClassPrefix, $count=false) // include Magic_Label and Maximal Depth
     {
         $html = '';
-        $categories = $this->_categoryInstance->getCategories($parentId);
         $counter = 1;
         foreach($categories as $category) {
-            $cat = $this->_categoryInstance->load($category->getId());
-            $count = $cat->getProductCount();
-            $level = $cat->getLevel();
-            $childHtml = ( $this->_recursionLevel == 0 || ($level -1 < $this->_recursionLevel) ) ? $this->getTreeCategoriesExtra($category->getId(), $itemPositionClassPrefix) : '';
-            $childClass  = $childHtml ? ' hasChild parent' : '';
+            if($count) {
+                $cat = $this->_categoryInstance->load($category->getId());
+                $count = $count ? '(' . $cat->getProductCount() . ')' : '';                
+            }
+            $level = $category->getLevel();
+            $childHtml = ( $this->_recursionLevel == 0 || ($level -1 < $this->_recursionLevel) ) ? $this->getTreeCategoriesExtra($category->getChildren(), $itemPositionClassPrefix) : '';
+            $childClass  = $childHtml ? ' hasChild parent ' : ' ';
             $childClass .= $itemPositionClassPrefix . '-' .$counter;
             $childClass .= ' category-item ' . $this->_getActiveClasses($category->getId());
-            $html .= '<li class="level' . ($level -2) . $childClass . '"><a href="' . $this->getCategoryUrl($category) . '"><span>' . $cat->getName() . "(".$count.")" . $this->getCatLabel($cat) . "</span></a>\n";
+            $html .= '<li class="level' . ($level -2) . $childClass . '"><a href="' . $this->getCategoryUrl($category) . '"><span>' . $category->getName() . $count . $this->getCatLabel($category) . "</span></a>\n";
             $html .= $childHtml;
             $html .= '</li>';
             $counter++;
@@ -489,9 +477,13 @@ class Menu extends \Magento\Catalog\Block\Navigation
         return  $html;
     }
 
-    public function getCatLabel($cat)
+    public function getCatLabel($cat, $extra=false)
     {
         $html = '';
+        if(!$extra){
+            if(!isset($this->_extensionAttributes[$cat->getId()])) return;
+            $cat = $this->_extensionAttributes[$cat->getId()];            
+        }
         $label = explode(',', $cat->getMagicLabel());
         foreach ($label as $lab) {
             if($lab) $html .= '<span class="cat_label '.$lab.'" rel='.__(trim($lab)).'></span>';
