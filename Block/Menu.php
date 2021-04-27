@@ -356,7 +356,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
                                 $class = 'level1 category-item ' . $itemPositionClassPrefixChild . ' ' . $this->_getActiveClasses($child->getId());
                                 $url =  '<a href="'. $child->getUrl().'"><span>' . $child->getName() . $this->getCatLabel($child) . '</span></a>';
                                 $childHtml = ($this->_recursionLevel != 2 ) ? $this->getTreeCategoriesExt($child->getId(), $itemPositionClassPrefixChild) : ''; // include magic_label
-                                // $childHtml = ($this->_recursionLevel != 2 ) ? $this->getTreeCategoriesExtra($child->getId()) : ''; // include magic_label and Maximal Depth
+                                // $childHtml = ($this->_recursionLevel != 2 ) ? $this->getTreeCategoriesExtra($child->getId(), $itemPositionClassPrefixChild) : ''; // include magic_label and Maximal Depth
                                 $desktopTmp .= '<li class="children ' . $class . '">' . $this->getImage($child) . $url . $childHtml . '</li>';
                                 $mobileTmp  .= '<li class="' . $class . '">' . $url . $childHtml . '</li>';
                                 $counter++;
