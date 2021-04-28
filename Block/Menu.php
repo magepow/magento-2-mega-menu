@@ -289,7 +289,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
             $parentPositionClass = '';
             $itemPositionClassPrefix = $parentPositionClass ? $parentPositionClass . '-' : 'nav-';
             $idTop    = $catTop->getEntityId();
-            $urlTop      =  '<a class="level-top" href="' .$catTop->getUrl(). '">' .$this->getThumbnail($catTop). '<span>' . $catTop->getName() . $this->getCatLabel($catTop). '</span><span class="boder-menu"></span></a>';
+            $urlTop      =  '<a class="level-top" href="' . $this->getCategoryUrl($catTop) . '">' .$this->getThumbnail($catTop). '<span>' . $catTop->getName() . $this->getCatLabel($catTop). '</span><span class="boder-menu"></span></a>';
 
             $itemPositionClassPrefixTop = $itemPositionClassPrefix . $counter;
             $classTop   = $itemPositionClassPrefixTop . ' ' . $this->_getActiveClasses($idTop);
@@ -356,7 +356,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
                             foreach ($childTop as $cat) {
                                 $itemPositionClassPrefixChild = $itemPositionClassPrefix . '-' . $counter;
                                 $class = 'level1 category-item ' . $itemPositionClassPrefixChild . ' ' . $this->_getActiveClasses($cat->getId());
-                                $url =  '<a href="'. $cat->getUrl().'"><span>' . $cat->getName() . $this->getCatLabel($cat) . '</span></a>';
+                                $url =  '<a href="'. $this->getCategoryUrl($cat) .'"><span>' . $cat->getName() . $this->getCatLabel($cat) . '</span></a>';
                                 $childHtml = ($this->_recursionLevel != 2 ) ? $this->getTreeCategories($cat->getChildren(), $itemPositionClassPrefixChild) : ''; // include magic_label and Maximal Depth
                                 $desktopTmp .= '<li class="children ' . $class . '">' . $this->getImage($cat) . $url . $childHtml . '</li>';
                                 $mobileTmp  .= '<li class="' . $class . '">' . $url . $childHtml . '</li>';
