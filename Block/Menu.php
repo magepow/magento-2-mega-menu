@@ -301,7 +301,8 @@ class Menu extends \Magento\Catalog\Block\Navigation
             }else {
                 if($isDropdown){
                     $classTop .= $isDropdown;
-                    $childHtml = $this->getTreeCategories($catTop->getChildren(), $itemPositionClassPrefixTop); // include magic_label and Maximal Depth
+                    $catChild  = $catTop->getChildren();
+                    $childHtml = $this->getTreeCategories($catChild, $itemPositionClassPrefixTop); // include magic_label and Maximal Depth
                     $menu = array('desktop' => $childHtml, 'mobile' => $childHtml);
                 } else { // Draw Mega Menu
                     $idTop    = $catTop->getEntityId();
@@ -357,7 +358,8 @@ class Menu extends \Magento\Catalog\Block\Navigation
                                 $itemPositionClassPrefixChild = $itemPositionClassPrefix . '-' . $counter;
                                 $class = 'level1 category-item ' . $itemPositionClassPrefixChild . ' ' . $this->_getActiveClasses($cat->getId());
                                 $url =  '<a href="'. $this->getCategoryUrl($cat) .'"><span>' . $cat->getName() . $this->getCatLabel($cat) . '</span></a>';
-                                $childHtml = ($this->_recursionLevel != 2 ) ? $this->getTreeCategories($cat->getChildren(), $itemPositionClassPrefixChild) : ''; // include magic_label and Maximal Depth
+                                $catChild  = $cat->getChildren();
+                                $childHtml = ($this->_recursionLevel != 2 ) ? $this->getTreeCategories($catChild, $itemPositionClassPrefixChild) : ''; // include magic_label and Maximal Depth
                                 $desktopTmp .= '<li class="children ' . $class . '">' . $this->getImage($cat) . $url . $childHtml . '</li>';
                                 $mobileTmp  .= '<li class="' . $class . '">' . $url . $childHtml . '</li>';
                                 $counter++;
@@ -459,7 +461,8 @@ class Menu extends \Magento\Catalog\Block\Navigation
                 $count = $count ? '(' . $cat->getProductCount() . ')' : '';                
             }
             $level = $category->getLevel();
-            $childHtml = ( $this->_recursionLevel == 0 || ($level -1 < $this->_recursionLevel) ) ? $this->getTreeCategories($category->getChildren(), $itemPositionClassPrefix) : '';
+            $catChild  = $category->getChildren();
+            $childHtml = ( $this->_recursionLevel == 0 || ($level -1 < $this->_recursionLevel) ) ? $this->getTreeCategories($catChild, $itemPositionClassPrefix) : '';
             $childClass  = $childHtml ? ' hasChild parent ' : ' ';
             $childClass .= $itemPositionClassPrefix . '-' .$counter;
             $childClass .= ' category-item ' . $this->_getActiveClasses($category->getId());
