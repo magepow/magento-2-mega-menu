@@ -11,70 +11,15 @@
  */
 namespace Magiccart\Magicmenu\Block;
 
+use Magento\Framework\Data\Tree\Node;
+use Magento\Framework\Data\Tree\Node\Collection;
+use Magento\Framework\Data\Tree\NodeFactory;
+use Magento\Framework\Data\TreeFactory;
+
 class Menu extends \Magento\Catalog\Block\Navigation
 {
 
     const DEFAULT_CACHE_TAG = 'MAGICCART_MAGICMENU';
-
-    /**
-     * @var Category
-     */
-    protected $_categoryInstance;
-
-    /**
-     * Current category key
-     *
-     * @var string
-     */
-    protected $_currentCategoryKey;
-
-    /**
-     * Array of level position counters
-     *
-     * @var array
-     */
-    protected $_itemLevelPositions = [];
-
-    /**
-     * Catalog category
-     *
-     * @var \Magento\Catalog\Helper\Category
-     */
-    protected $_catalogCategory;
-
-    /**
-     * @var \Magento\Framework\Registry
-     */
-    protected $_registry;
-
-    /**
-     * Customer session
-     *
-     * @var \Magento\Framework\App\Http\Context
-     */
-    protected $httpContext;
-
-    /**
-     * Catalog layer
-     *
-     * @var \Magento\Catalog\Model\Layer
-     */
-    protected $_catalogLayer;
-
-    /**
-     * Product collection factory
-     *
-     * @var \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory
-     */
-    protected $_productCollectionFactory;
-
-    /**
-     * @var \Magento\Catalog\Model\Indexer\Category\Flat\State
-     */
-    protected $flatState;
-
-
-    // +++++++++add new +++++++++
 
     public $_sysCfg;
 
@@ -84,11 +29,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
 
     protected $_recursionLevel;
 
-    protected $_enableFlat;
-
-    protected $extData = array();
-
-    protected $_extensionAttributes;
+    protected $extData = [];
 
     /**
      * magicmenu collection factory.
@@ -108,6 +49,24 @@ class Menu extends \Magento\Catalog\Block\Navigation
      */
     private $serializer;
 
+    /**
+     * Top menu data tree
+     *
+     * @var Node
+     */
+    protected $_menu;
+
+    /**
+     * @var NodeFactory
+     */
+    private $nodeFactory;
+
+    /**
+     * @var TreeFactory
+     */
+    private $treeFactory;
+
+
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Catalog\Model\CategoryFactory $categoryFactory,
@@ -123,25 +82,20 @@ class Menu extends \Magento\Catalog\Block\Navigation
         \Magiccart\Magicmenu\Helper\Data $helper,
         // \Magiccart\Magicmenu\Model\CategoryFactory $categoryFactory,
         \Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\CollectionFactory $magicmenuCollectionFactory,
-
+        NodeFactory $nodeFactory,
+        TreeFactory $treeFactory,
         array $data = []
     ) {
 
-        $this->_productCollectionFactory = $productCollectionFactory;
-        $this->_catalogLayer = $layerResolver->get();
-        $this->httpContext = $httpContext;
-        $this->_catalogCategory = $catalogCategory;
-        $this->_registry = $registry;
-        $this->flatState = $flatState;
-        $this->_categoryInstance = $categoryFactory->create();
-
-        // +++++++++add new +++++++++
         $this->_helper = $helper;
         $this->_magicmenuCollectionFactory = $magicmenuCollectionFactory;
         $this->_sysCfg= (object) $this->_helper->getConfigModule();
 
         $this->serializer = $serializer ?: \Magento\Framework\App\ObjectManager::getInstance()
         ->get(\Magento\Framework\Serialize\Serializer\Json::class);
+
+        $this->nodeFactory = $nodeFactory;
+        $this->treeFactory = $treeFactory;
 
         parent::__construct($context, $categoryFactory, $productCollectionFactory, $layerResolver, $httpContext, $catalogCategory, $registry, $flatState, $data);
 
@@ -158,11 +112,6 @@ class Menu extends \Magento\Catalog\Block\Navigation
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE
             )
         );
-
-        $this->_enableFlat = $context->getScopeConfig()->getValue(
-                'catalog/frontend/flat_catalog_category',
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-            );
 
     }
 
@@ -278,10 +227,10 @@ class Menu extends \Magento\Catalog\Block\Navigation
         if($this->hasData('mainMenu')) return $this->getData('mainMenu');
         $desktopHtml = array();
         $mobileHtml  = array();
+        $storeId     = $this->_storeManager->getStore()->getId();
         $rootCatId   = $this->_storeManager->getStore()->getRootCategoryId();
-        $categories     = $this->_categoryInstance->getCategories($rootCatId);
-        $contentCatTop  = $this->getContentCatTop();
-        $this->_extensionAttributes = $this->getExtensionAttributes($rootCatId);
+        $categories    = $this->getTreeMenu($storeId, $rootCatId);
+        $contentCatTop = $this->getContentCatTop();
 
         foreach ($contentCatTop as $ext) {
             $this->extData[$ext->getCatId()] = $ext->getData();
@@ -294,7 +243,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
             $parentPositionClass = '';
             $itemPositionClassPrefix = $parentPositionClass ? $parentPositionClass . '-' : 'nav-';
             $idTop    = $catTop->getEntityId();
-            $urlTop      =  '<a class="level-top" href="' . $this->getCategoryUrl($catTop) . '">' .$this->getThumbnail($catTop). '<span>' . $catTop->getName() . $this->getCatLabel($catTop). '</span><span class="boder-menu"></span></a>';
+            $urlTop      =  '<a class="level-top" href="' . $catTop->getUrl() . '">' .$this->getThumbnail($catTop). '<span>' . $catTop->getName() . $this->getCatLabel($catTop). '</span><span class="boder-menu"></span></a>';
 
             $itemPositionClassPrefixTop = $itemPositionClassPrefix . $counter;
             $classTop   = $itemPositionClassPrefixTop . ' ' . $this->_getActiveClasses($idTop);
@@ -306,7 +255,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
             }else {
                 if($isDropdown){
                     $classTop .= $isDropdown;
-                    $catChild  = $this->getChildrenCategories($catTop);
+                    $catChild  = $catTop->getChildren();
                     $childHtml = $this->getTreeCategories($catChild, $itemPositionClassPrefixTop); // include magic_label and Maximal Depth
                     $menu = array('desktop' => $childHtml, 'mobile' => $childHtml);
                 } else { // Draw Mega Menu
@@ -357,13 +306,15 @@ class Menu extends \Magento\Catalog\Block\Navigation
                         if($hasChild) :
                             $desktopTmp .= '<ul class="level0 category-item mage-column cat-mega">';
                             $mobileTmp .= '<ul class="submenu">';
-                            $childTop  =  $this->getChildrenCategories($catTop);
+                            $childTop  =  $catTop->getChildren();
+                            $childLevel = $this->getChildLevel($catTop->getLevel());
+                            $this->removeChildrenWithoutActiveParent($childTop, $childLevel);
                             $counter = 1;
                             foreach ($childTop as $cat) {
                                 $itemPositionClassPrefixChild = $itemPositionClassPrefix . '-' . $counter;
-                                $class = 'level1 category-item ' . $itemPositionClassPrefixChild . ' ' . $this->_getActiveClasses($cat->getId());
-                                $url =  '<a href="'. $this->getCategoryUrl($cat) .'"><span>' . $cat->getName() . $this->getCatLabel($cat) . '</span></a>';
-                                $catChild  = $this->getChildrenCategories($cat);
+                                $class = 'level1 category-item ' . $itemPositionClassPrefixChild . ' ' . $this->_getActiveClasses($cat->getEntityId());
+                                $url =  '<a href="'. $cat->getUrl() .'"><span>' . $cat->getName() . $this->getCatLabel($cat) . '</span></a>';
+                                $catChild  = $cat->getChildren();
                                 $childHtml = ($this->_recursionLevel != 2 ) ? $this->getTreeCategories($catChild, $itemPositionClassPrefixChild) : ''; // include magic_label and Maximal Depth
                                 $desktopTmp .= '<li class="children ' . $class . '">' . $this->getImage($cat) . $url . $childHtml . '</li>';
                                 $mobileTmp  .= '<li class="' . $class . '">' . $url . $childHtml . '</li>';
@@ -399,8 +350,8 @@ class Menu extends \Magento\Catalog\Block\Navigation
                 $class .= $ext->getCatCol() ? ' ' . $ext->getCatCol() : ' dropdown';
                 if($html) $active .=' hasChild parent';
                 $drawExtraMenu .= "<li class='level0 category-item level-top ext $active $class'>";
-                    if($link) $drawExtraMenu .= '<a class="level-top" href="' .$url. '"><span>' . $ext->getName() . $this->getCatLabel($ext, true). '</span></a>';
-                    else $drawExtraMenu .= '<span class="level-top"><span>' . $ext->getName() . $this->getCatLabel($ext, true). '</span></span>';
+                    if($link) $drawExtraMenu .= '<a class="level-top" href="' .$url. '"><span>' . $ext->getName() . $this->getCatLabel($ext). '</span></a>';
+                    else $drawExtraMenu .= '<span class="level-top"><span>' . $ext->getName() . $this->getCatLabel($ext). '</span></span>';
                     if($html) $drawExtraMenu .= $html; //$drawExtraMenu .= '<div class="level-top-mega">'.$html.'</div>';
                 $drawExtraMenu .= '</li>';
                 $i++;
@@ -411,20 +362,135 @@ class Menu extends \Magento\Catalog\Block\Navigation
         return $drawExtraMenu;
     }
 
-    public function getExtensionAttributes($rootCatId)
+    public function getTreeMenu($storeId, $rootId)
     {
-        $collection = $this->_categoryInstance->getCollection()
-                        ->addAttributeToSelect(array('entity_id','magic_label'))
-                        ->addAttributeToFilter('path', array('like' => "1/$rootCatId/%"))
-                        ->addAttributeToFilter('include_in_menu', 1)
-                        ->addAttributeToFilter('magic_label', array('notnull' => true))
-                        ->addIsActiveFilter();
-        $categories = [];
+        $collection = $this->getCategoryTree($storeId, $rootId);
+        $currentCategory = $this->getCurrentCategory();
+        $mapping = [$rootId => $this->getMenu()];  // use nodes stack to avoid recursion
         foreach ($collection as $category) {
-            $categories[$category->getEntityId()] = $category;
-        }
-        return $categories;        
+            $categoryParentId = $category->getParentId();
+            if (!isset($mapping[$categoryParentId])) {
+                $parentIds = $category->getParentIds();
+                foreach ($parentIds as $parentId) {
+                    if (isset($mapping[$parentId])) {
+                        $categoryParentId = $parentId;
+                    }
+                }
+            }
 
+            /** @var Node $parentCategoryNode */
+            $parentCategoryNode = $mapping[$categoryParentId];
+
+            $categoryNode = new Node(
+                $this->getCategoryAsArray(
+                    $category,
+                    $currentCategory,
+                    $category->getParentId() == $categoryParentId
+                ),
+                'id',
+                $parentCategoryNode->getTree(),
+                $parentCategoryNode
+            );
+            $parentCategoryNode->addChild($categoryNode);
+
+            $mapping[$category->getId()] = $categoryNode; //add node in stack
+        }
+        $menu = isset($mapping[$rootId]) ? $mapping[$rootId]->getChildren() : [];
+        return $menu;
+    }
+
+    /**
+     * Get menu object.
+     *
+     * Creates Tree root node object.
+     * The creation logic was moved from class constructor into separate method.
+     *
+     * @return Node
+     * @since 100.1.0
+     */
+    public function getMenu()
+    {
+        if (!$this->_menu) {
+            $this->_menu = $this->nodeFactory->create(
+                [
+                    'data' => [],
+                    'idField' => 'root',
+                    'tree' => $this->treeFactory->create()
+                ]
+            );
+        }
+        return $this->_menu;
+    }
+
+    protected function getCategoryTree($storeId, $rootId)
+    {
+        /** @var \Magento\Catalog\Model\ResourceModel\Category\Collection $collection */
+        $collection = $this->_categoryInstance->getCollection();
+        $collection->setStoreId($storeId);
+        $collection->addAttributeToSelect(['name', 'magic_label']);
+        $collection->addFieldToFilter('path', ['like' => '1/' . $rootId . '/%']); //load only from store root
+        $collection->addAttributeToFilter('include_in_menu', 1);
+        $collection->addIsActiveFilter();
+        $collection->addNavigationMaxDepthFilter();
+        $collection->addUrlRewriteToResult();
+        $collection->addOrder('level', 'ASC');
+        $collection->addOrder('position', 'ASC');
+        $collection->addOrder('parent_id', 'ASC');
+        $collection->addOrder('entity_id', 'ASC');
+        return $collection;
+    }
+
+    /**
+     * Convert category to array
+     *
+     * @param \Magento\Catalog\Model\Category $category
+     * @param \Magento\Catalog\Model\Category $currentCategory
+     * @param bool $isParentActive
+     * @return array
+     */
+    private function getCategoryAsArray($category, $currentCategory, $isParentActive)
+    {
+        $categoryId = $category->getId();
+        return [
+            'entity_id' => $categoryId,
+            'name' => $category->getName(),
+            'magic_label' => $category->getData('magic_label'),
+            'id' => 'category-node-' . $categoryId,
+            'url' => $this->_catalogCategory->getCategoryUrl($category),
+            'has_active' => in_array((string)$categoryId, explode('/', (string)$currentCategory->getPath()), true),
+            'is_active' => $categoryId == $currentCategory->getId(),
+            'is_category' => true,
+            'is_parent_active' => $isParentActive
+        ];
+    }
+
+    /**
+     * Remove children from collection when the parent is not active
+     *
+     * @param Collection $children
+     * @param int $childLevel
+     * @return void
+     */
+    private function removeChildrenWithoutActiveParent(Collection $children, int $childLevel): void
+    {
+        /** @var Node $child */
+        foreach ($children as $child) {
+            if ($childLevel === 0 && $child->getData('is_parent_active') === false) {
+                $children->delete($child);
+            }
+        }
+    }
+
+    /**
+     * Retrieve child level based on parent level
+     *
+     * @param int $parentLevel
+     *
+     * @return int
+     */
+    private function getChildLevel($parentLevel): int
+    {
+        return $parentLevel === null ? 0 : $parentLevel + 1;
     }
 
     public function getExtraMenu()
@@ -456,22 +522,24 @@ class Menu extends \Magento\Catalog\Block\Navigation
         return $collection;
     }
 
-    public function  getTreeCategories($categories, $itemPositionClassPrefix, $count=false) // include Magic_Label and Maximal Depth
+    public function  getTreeCategories($categories, $itemPositionClassPrefix, $count='') // include Magic_Label and Maximal Depth
     {
         $html = '';
         $counter = 1;
         foreach($categories as $category) {
             if($count) {
-                $cat = $this->_categoryInstance->load($category->getId());
+                $cat = $this->_categoryInstance->load($category->getEntityId());
                 $count = $count ? '(' . $cat->getProductCount() . ')' : '';                
             }
             $level = $category->getLevel();
-            $catChild  = $this->getChildrenCategories($category);
+            $catChild  = $category->getChildren();
+            $childLevel = $this->getChildLevel($category->getLevel());
+            $this->removeChildrenWithoutActiveParent($catChild, $childLevel);
             $childHtml = ( $this->_recursionLevel == 0 || ($level -1 < $this->_recursionLevel) ) ? $this->getTreeCategories($catChild, $itemPositionClassPrefix) : '';
             $childClass  = $childHtml ? ' hasChild parent ' : ' ';
             $childClass .= $itemPositionClassPrefix . '-' .$counter;
-            $childClass .= ' category-item ' . $this->_getActiveClasses($category->getId());
-            $html .= '<li class="level' . ($level -2) . $childClass . '"><a href="' . $this->getCategoryUrl($category) . '"><span>' . $category->getName() . $count . $this->getCatLabel($category) . "</span></a>\n";
+            $childClass .= ' category-item ' . $this->_getActiveClasses($category->getEntityId());
+            $html .= '<li class="level' . ($level -2) . $childClass . '"><a href="' . $category->getUrl() . '"><span>' . $category->getName() . $count . $this->getCatLabel($category) . "</span></a>\n";
             $html .= $childHtml;
             $html .= '</li>';
             $counter++;
@@ -480,18 +548,9 @@ class Menu extends \Magento\Catalog\Block\Navigation
         return  $html;
     }
 
-    public function getChildrenCategories($category)
-    {
-        return $this->_enableFlat ? $category->getChildrenCategories($category) : $category->getChildren();
-    }
-
-    public function getCatLabel($cat, $extra=false)
+    public function getCatLabel($cat)
     {
         $html = '';
-        if(!$extra){
-            if(!isset($this->_extensionAttributes[$cat->getId()])) return;
-            $cat = $this->_extensionAttributes[$cat->getId()];            
-        }
         $label = explode(',', $cat->getMagicLabel());
         foreach ($label as $lab) {
             if($lab) $html .= '<span class="cat_label '.$lab.'" rel='.__(trim($lab)).'></span>';
@@ -502,16 +561,16 @@ class Menu extends \Magento\Catalog\Block\Navigation
     public function getImage($category)
     {
         $url = '';
-        $image = $this->_dirMedia . 'magiccart/magicmenu/images/' . $category->getId() .'.png';
-        if(file_exists($image)) $url = $this->_urlMedia . 'magiccart/magicmenu/images/' . $category->getId() . '.png';
+        $image = $this->_dirMedia . 'magiccart/magicmenu/images/' . $category->getEntityId() .'.png';
+        if(file_exists($image)) $url = $this->_urlMedia . 'magiccart/magicmenu/images/' . $category->getEntityId() . '.png';
         if($url) return '<a class="a-image" href="' . $category->getUrl() . '"><img class="img-responsive" alt="' . $category->getName() . '" src="' . $url . '"></a>';
     }
 
     public function getThumbnail($category)
     {
         $url = '';
-        $image = $this->_dirMedia . 'magiccart/magicmenu/thumbnail/' . $category->getId() .'.png';
-        if(file_exists($image)) $url = $this->_urlMedia . 'magiccart/magicmenu/thumbnail/' . $category->getId() . '.png';
+        $image = $this->_dirMedia . 'magiccart/magicmenu/thumbnail/' . $category->getEntityId() .'.png';
+        if(file_exists($image)) $url = $this->_urlMedia . 'magiccart/magicmenu/thumbnail/' . $category->getEntityId() . '.png';
         if($url) return '<img class="img-responsive" alt="' . $category->getName() . '" src="' . $url . '">';
     }
 
