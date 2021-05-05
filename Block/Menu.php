@@ -27,8 +27,6 @@ class Menu extends \Magento\Catalog\Block\Navigation
 
     protected $_dirMedia;
 
-    protected $_recursionLevel;
-
     protected $extData = [];
 
     /**
@@ -104,14 +102,6 @@ class Menu extends \Magento\Catalog\Block\Navigation
             );
 
         $this->_dirMedia = $this->getMediaDirectory()->getAbsolutePath();
-
-        $this->_recursionLevel = max(
-            0,
-            (int)$context->getScopeConfig()->getValue(
-                'catalog/navigation/max_depth',
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-            )
-        );
 
     }
 
@@ -315,7 +305,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
                                 $class = 'level1 category-item ' . $itemPositionClassPrefixChild . ' ' . $this->_getActiveClasses($cat->getEntityId());
                                 $url =  '<a href="'. $cat->getUrl() .'"><span>' . $cat->getName() . $this->getCatLabel($cat) . '</span></a>';
                                 $catChild  = $cat->getChildren();
-                                $childHtml = ($this->_recursionLevel != 2 ) ? $this->getTreeCategories($catChild, $itemPositionClassPrefixChild) : ''; // include magic_label and Maximal Depth
+                                $childHtml = $this->getTreeCategories($catChild, $itemPositionClassPrefixChild); // include magic_label and Maximal Depth
                                 $desktopTmp .= '<li class="children ' . $class . '">' . $this->getImage($cat) . $url . $childHtml . '</li>';
                                 $mobileTmp  .= '<li class="' . $class . '">' . $url . $childHtml . '</li>';
                                 $counter++;
@@ -396,6 +386,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
             $mapping[$category->getId()] = $categoryNode; //add node in stack
         }
         $menu = isset($mapping[$rootId]) ? $mapping[$rootId]->getChildren() : [];
+
         return $menu;
     }
 
@@ -535,7 +526,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
             $catChild  = $category->getChildren();
             $childLevel = $this->getChildLevel($category->getLevel());
             $this->removeChildrenWithoutActiveParent($catChild, $childLevel);
-            $childHtml = ( $this->_recursionLevel == 0 || ($level -1 < $this->_recursionLevel) ) ? $this->getTreeCategories($catChild, $itemPositionClassPrefix) : '';
+            $childHtml   = $this->getTreeCategories($catChild, $itemPositionClassPrefix);
             $childClass  = $childHtml ? ' hasChild parent ' : ' ';
             $childClass .= $itemPositionClassPrefix . '-' .$counter;
             $childClass .= ' category-item ' . $this->_getActiveClasses($category->getEntityId());
