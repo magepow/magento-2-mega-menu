@@ -240,33 +240,29 @@ class Menu extends \Magento\Catalog\Block\Navigation
             $isDropdown = in_array($idTop, $dropdownIds) ? ' dropdown' : '';
             // drawMainMenu
             $options  = '';
-            if($this->_recursionLevel == 1){
-                $menu = array('desktop' => '', 'mobile' => '');               
-            }else {
-                if($isDropdown){
-                    $classTop .= $isDropdown;
-                    $catChild  = $catTop->getChildren();
-                    $childHtml = $this->getTreeCategories($catChild, $itemPositionClassPrefixTop); // include magic_label and Maximal Depth
-                    $menu = array('desktop' => $childHtml, 'mobile' => $childHtml);
-                } else { // Draw Mega Menu
-                    $idTop    = $catTop->getEntityId();
-                    $data     = isset($this->extData[$idTop]) ? $this->extData[$idTop] : '';
-                    $blocks   = array('top'=>'', 'left'=>'', 'right'=>'', 'bottom'=>'');
-                    if($data){
-                        foreach ($blocks as $key => $value) {
-                            $proportion = $key .'_proportion';
-                            $html = $this->getStaticBlock($data[$key]);
-                            if($html) $blocks[$key] = "<div class='mage-column mega-block-$key'>".$html.'</div>';
-                        }
-                        $remove = array('top'=>'', 'left'=>'', 'right'=>'', 'bottom'=>'', 'cat_id'=>'');
-                        foreach ($remove as $key => $value) {
-                            unset($data[$key]);
-                        }
-                        $opt     = $this->serializer->serialize($data);
-                        $options = $opt ? " data-options='$opt'" : '';
+            if($isDropdown){
+                $classTop .= $isDropdown;
+                $catChild  = $catTop->getChildren();
+                $childHtml = $this->getTreeCategories($catChild, $itemPositionClassPrefixTop); // include magic_label and Maximal Depth
+                $menu = array('desktop' => $childHtml, 'mobile' => $childHtml);
+            } else { // Draw Mega Menu
+                $idTop    = $catTop->getEntityId();
+                $data     = isset($this->extData[$idTop]) ? $this->extData[$idTop] : '';
+                $blocks   = array('top'=>'', 'left'=>'', 'right'=>'', 'bottom'=>'');
+                if($data){
+                    foreach ($blocks as $key => $value) {
+                        $proportion = $key .'_proportion';
+                        $html = $this->getStaticBlock($data[$key]);
+                        if($html) $blocks[$key] = "<div class='mage-column mega-block-$key'>".$html.'</div>';
                     }
-                    $menu = $this->getMegamenu($catTop, $blocks, $itemPositionClassPrefixTop);
-                }               
+                    $remove = array('top'=>'', 'left'=>'', 'right'=>'', 'bottom'=>'', 'cat_id'=>'');
+                    foreach ($remove as $key => $value) {
+                        unset($data[$key]);
+                    }
+                    $opt     = $this->serializer->serialize($data);
+                    $options = $opt ? " data-options='$opt'" : '';
+                }
+                $menu = $this->getMegamenu($catTop, $blocks, $itemPositionClassPrefixTop);
             }
 
             if($menu['desktop']) $classTop .= ' hasChild parent';
