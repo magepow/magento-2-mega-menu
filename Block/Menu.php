@@ -84,6 +84,8 @@ class Menu extends \Magento\Catalog\Block\Navigation
 
     protected $_recursionLevel;
 
+    protected $_enableFlat;
+
     protected $extData = array();
 
     protected $_extensionAttributes;
@@ -157,7 +159,10 @@ class Menu extends \Magento\Catalog\Block\Navigation
             )
         );
 
-
+        $this->_enableFlat = $context->getScopeConfig()->getValue(
+                'catalog/frontend/flat_catalog_category',
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            );
 
     }
 
@@ -301,7 +306,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
             }else {
                 if($isDropdown){
                     $classTop .= $isDropdown;
-                    $catChild  = $catTop->getChildren();
+                    $catChild  = $this->getChildrenCategories($catTop);
                     $childHtml = $this->getTreeCategories($catChild, $itemPositionClassPrefixTop); // include magic_label and Maximal Depth
                     $menu = array('desktop' => $childHtml, 'mobile' => $childHtml);
                 } else { // Draw Mega Menu
@@ -352,13 +357,13 @@ class Menu extends \Magento\Catalog\Block\Navigation
                         if($hasChild) :
                             $desktopTmp .= '<ul class="level0 category-item mage-column cat-mega">';
                             $mobileTmp .= '<ul class="submenu">';
-                            $childTop  =  $catTop->getChildren();
+                            $childTop  =  $this->getChildrenCategories($catTop);
                             $counter = 1;
                             foreach ($childTop as $cat) {
                                 $itemPositionClassPrefixChild = $itemPositionClassPrefix . '-' . $counter;
                                 $class = 'level1 category-item ' . $itemPositionClassPrefixChild . ' ' . $this->_getActiveClasses($cat->getId());
                                 $url =  '<a href="'. $this->getCategoryUrl($cat) .'"><span>' . $cat->getName() . $this->getCatLabel($cat) . '</span></a>';
-                                $catChild  = $cat->getChildren();
+                                $catChild  = $this->getChildrenCategories($cat);
                                 $childHtml = ($this->_recursionLevel != 2 ) ? $this->getTreeCategories($catChild, $itemPositionClassPrefixChild) : ''; // include magic_label and Maximal Depth
                                 $desktopTmp .= '<li class="children ' . $class . '">' . $this->getImage($cat) . $url . $childHtml . '</li>';
                                 $mobileTmp  .= '<li class="' . $class . '">' . $url . $childHtml . '</li>';
@@ -461,7 +466,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
                 $count = $count ? '(' . $cat->getProductCount() . ')' : '';                
             }
             $level = $category->getLevel();
-            $catChild  = $category->getChildren();
+            $catChild  = $this->getChildrenCategories($category);
             $childHtml = ( $this->_recursionLevel == 0 || ($level -1 < $this->_recursionLevel) ) ? $this->getTreeCategories($catChild, $itemPositionClassPrefix) : '';
             $childClass  = $childHtml ? ' hasChild parent ' : ' ';
             $childClass .= $itemPositionClassPrefix . '-' .$counter;
@@ -473,6 +478,11 @@ class Menu extends \Magento\Catalog\Block\Navigation
         }
         if($html) $html = '<ul class="level' .($level -3). ' submenu">' . $html . '</ul>';
         return  $html;
+    }
+
+    public function getChildrenCategories($category)
+    {
+        return $this->_enableFlat ? $category->getChildrenCategories($category) : $category->getChildren();
     }
 
     public function getCatLabel($cat, $extra=false)
