@@ -318,7 +318,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
                         foreach ($remove as $key => $value) {
                             unset($data[$key]);
                         }
-                        $opt     = json_encode($data);
+                        $opt     = $this->serializer->serialize($data);
                         $options = $opt ? " data-options='$opt'" : '';
                     }
                     $menu = $this->getMegamenu($catTop, $blocks, $itemPositionClassPrefixTop);
