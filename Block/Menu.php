@@ -21,27 +21,6 @@ class Menu extends \Magento\Catalog\Block\Navigation
 
     const DEFAULT_CACHE_TAG = 'MAGICCART_MAGICMENU';
 
-    public $_sysCfg;
-
-    protected $_urlMedia;
-
-    protected $_dirMedia;
-
-    protected $extData = [];
-
-    /**
-     * magicmenu collection factory.
-     *
-     * @var \Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\CollectionFactory
-     */
-    protected $_magicmenuCollectionFactory;
-
-    /**
-     *
-     * @var \Magiccart\Magicmenu\Helper\Data
-     */
-    public $_helper;
-
     /**
      * @var \Magento\Framework\Serialize\Serializer\Json
      */
@@ -64,6 +43,27 @@ class Menu extends \Magento\Catalog\Block\Navigation
      */
     private $treeFactory;
 
+    /**
+     * magicmenu collection factory.
+     *
+     * @var \Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\CollectionFactory
+     */
+    protected $_magicmenuCollectionFactory;
+
+    protected $_urlMedia;
+
+    protected $_dirMedia;
+
+    protected $extData = [];
+
+    public $_sysCfg;
+    
+    /**
+     * @var \Magiccart\Magicmenu\Helper\Data
+     */
+    public $_helper;
+
+    public $rootCategory;
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
@@ -159,10 +159,18 @@ class Menu extends \Magento\Catalog\Block\Navigation
         return $this->getLayout()->createBlock('Magento\Theme\Block\Html\Header\Logo')->toHtml();
     }
 
+    public function getRootCategory()
+    {
+        if(!$this->rootCategory){
+            $rootCatId = $this->_storeManager->getStore()->getRootCategoryId();
+            $this->rootCategory = $this->_categoryInstance->load($rootCatId);            
+        }
+        return $this->rootCategory;
+    }
+
     public function getRootName()
     {
-        $rootCatId = $this->_storeManager->getStore()->getRootCategoryId();
-        return $this->_categoryInstance->load($rootCatId)->getName();
+        return $this->getRootCategory()->getName();
     }
 
     public function drawHomeMenu()
@@ -215,10 +223,12 @@ class Menu extends \Magento\Catalog\Block\Navigation
     public function drawMainMenu()
     {
         if($this->hasData('mainMenu')) return $this->getData('mainMenu');
-        $desktopHtml = array();
-        $mobileHtml  = array();
-        $storeId     = $this->_storeManager->getStore()->getId();
-        $rootCatId   = $this->_storeManager->getStore()->getRootCategoryId();
+
+        $desktopHtml   = [];
+        $mobileHtml    = [];
+        $rootCategory  = $this->getRootCategory();
+        $storeId       = $this->_storeManager->getStore()->getId();
+        $rootCatId     = $rootCategory->getId();
         $categories    = $this->getTreeMenu($storeId, $rootCatId);
         $contentCatTop = $this->getContentCatTop();
 
@@ -228,7 +238,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
         $last = count($categories);
         $dropdownIds = explode(',', $this->_sysCfg->general['dropdown']);
         $counter = 1;
-        
+        $this->removeChildrenWithoutActiveParent($categories, 0);        
         foreach ($categories as $catTop){
             $parentPositionClass = '';
             $itemPositionClassPrefix = $parentPositionClass ? $parentPositionClass . '-' : 'nav-';
@@ -447,8 +457,8 @@ class Menu extends \Magento\Catalog\Block\Navigation
             'is_category' => true,
             'is_parent_active' => $isParentActive,
             'entity_id' => $categoryId,
-            'magic_label' => $category->getData('magic_label'),
-            'level' => $category->getData('level')
+            'level' => $category->getLevel(),
+            'magic_label' => $category->getMagicLabel(),
         ];
     }
 
