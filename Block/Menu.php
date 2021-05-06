@@ -439,15 +439,16 @@ class Menu extends \Magento\Catalog\Block\Navigation
     {
         $categoryId = $category->getId();
         return [
-            'entity_id' => $categoryId,
             'name' => $category->getName(),
-            'magic_label' => $category->getData('magic_label'),
             'id' => 'category-node-' . $categoryId,
             'url' => $this->_catalogCategory->getCategoryUrl($category),
             'has_active' => in_array((string)$categoryId, explode('/', (string)$currentCategory->getPath()), true),
             'is_active' => $categoryId == $currentCategory->getId(),
             'is_category' => true,
-            'is_parent_active' => $isParentActive
+            'is_parent_active' => $isParentActive,
+            'entity_id' => $categoryId,
+            'magic_label' => $category->getData('magic_label'),
+            'level' => $category->getData('level')
         ];
     }
 
@@ -520,7 +521,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
             }
             $level = $category->getLevel();
             $catChild  = $category->getChildren();
-            $childLevel = $this->getChildLevel($category->getLevel());
+            $childLevel = $this->getChildLevel($level);
             $this->removeChildrenWithoutActiveParent($catChild, $childLevel);
             $childHtml   = $this->getTreeCategories($catChild, $itemPositionClassPrefix);
             $childClass  = $childHtml ? ' hasChild parent ' : ' ';
