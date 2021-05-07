@@ -23,6 +23,7 @@
                 <home>1</home>
                 <demo>1</demo>
                 <mainCat>1</mainCat>
+                <thumbnail>1</thumbnail>
                 <extraCat>1</extraCat>
                 <notIncludeNav>0</notIncludeNav>
                 <exclude_html_desktop>1</exclude_html_desktop>
@@ -32,6 +33,7 @@
                 <enabled>0</enabled>
                 <home>0</home>
                 <mainCat>1</mainCat>
+                <thumbnail>1</thumbnail>
                 <extraCat>0</extraCat>
                 <notIncludeNav>0</notIncludeNav>
                 <exclude_html_desktop>1</exclude_html_desktop>

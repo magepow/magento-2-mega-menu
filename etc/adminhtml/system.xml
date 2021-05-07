@@ -71,6 +71,12 @@
                     <comment>Show Standard Category</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+<!--                 <field id="thumbnail" translate="label comment" type="select" sortOrder="32"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Show Thumbnail : </label>
+                    <comment>Show Thumbnail Image in path pub/media/magiccart/magicmenu/thumbnail/ID.png</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends><field id="mainCat" separator=",">1</field></depends>
+                </field> -->
                 <field id="extraCat" translate="label comment" type="select" sortOrder="35"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Show Extra Category : </label>
                     <comment>Show Extra Category</comment>
@@ -115,6 +121,12 @@
                     <comment>Show Standard Category</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+<!--                 <field id="thumbnail" translate="label comment" type="select" sortOrder="32"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Show Thumbnail : </label>
+                    <comment>Show Thumbnail Image in path pub/media/magiccart/magicmenu/thumbnail/ID.png</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends><field id="mainCat" separator=",">1</field></depends>
+                </field> -->
                 <field id="extraCat" translate="label comment" type="select" sortOrder="35"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Show Extra Category : </label>
                     <comment>Show Extra Category</comment>
