@@ -2,10 +2,11 @@
 
 **Magento 2 Megamenu extension** is an indispensable component, and plays the role of website navigation to help customers easily categorize and find information. Without a menu, visitors to the page will have to spend time searching for each content on your website, thereby making them find it difficult, difficult to access and do not know what your website has main content. This will increase the user's bounce rate, thereby reducing the SEO quality of the website.
 
-[![Magento 2 Mega menu extension](https://github.com/magiccart/magento-2-mega-menu/blob/master/media/magento-2-mega-menu-extension.png)](https://magepow.com/magento-2-extensions.html)
+[![Magento 2 Mega menu extension](https://github.com/magiccart/magento-2-mega-menu/blob/master/media/magento-2-mega-menu-extension.png)](https://magepow.com/magento-2-mega-menu.html)
 
 **Magicmenu Magento extension** (Magiccart Magicmenu Extension) allows you to create a beautiful menu with rich features such as Megamenu or Drop Down Menu. On a Mega Menu, the extension allows you to show the custom block on the top/bottom/left/right of the menu.
-Why can it do that?
+
+See Detail descriptipn in [Magento 2 Mega Menu](https://magepow.com/magento-2-mega-menu.html) 
 
 [![Latest Stable Version](https://poser.pugx.org/magiccart/magicmenu/v/stable)](https://packagist.org/packages/magiccart/magicmenu)
 [![Total Downloads](https://poser.pugx.org/magiccart/magicmenu/downloads)](https://packagist.org/packages/magiccart/magicmenu)
