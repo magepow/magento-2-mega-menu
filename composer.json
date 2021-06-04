@@ -2,7 +2,7 @@
   "name": "magiccart/magicmenu",
   "description": "Make megamenu, dropdown menu, mobile menu easy all in one.",
   "require": {
-    "magiccart/community" : ">=1.0.1"
+    "magepow/core": "^1.0.0"
   },
   "type": "magento2-module",
   "license": [
@@ -12,8 +12,8 @@
   "authors": [
     {
       "name": "Alothemes",
-      "email": "support@alothemes.com",
-      "homepage": "https://alothemes.com",
+      "email": "support@magepow.com",
+      "homepage": "https://magepow.com",
       "role": "Technical Support"
     }
   ],
