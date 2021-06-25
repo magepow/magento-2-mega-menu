@@ -525,6 +525,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
         $html = '';
         $counter = 1;
         foreach($categories as $category) {
+            if(!$category->getData('is_parent_active')) continue;
             if($count) {
                 $cat = $this->_categoryInstance->load($category->getEntityId());
                 $count = $count ? '(' . $cat->getProductCount() . ')' : '';                
