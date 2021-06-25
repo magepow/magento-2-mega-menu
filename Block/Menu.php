@@ -240,6 +240,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
         $counter = 1;
         $this->removeChildrenWithoutActiveParent($categories, 0);        
         foreach ($categories as $catTop){
+            if(!$catTop->getData('is_parent_active')) continue;
             $parentPositionClass = '';
             $itemPositionClassPrefix = $parentPositionClass ? $parentPositionClass . '-' : 'nav-';
             $idTop    = $catTop->getEntityId();
@@ -307,6 +308,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
                             $this->removeChildrenWithoutActiveParent($childTop, $childLevel);
                             $counter = 1;
                             foreach ($childTop as $cat) {
+                                if(!$cat->getData('is_parent_active')) continue;
                                 $itemPositionClassPrefixChild = $itemPositionClassPrefix . '-' . $counter;
                                 $class = 'level1 category-item ' . $itemPositionClassPrefixChild . ' ' . $this->_getActiveClasses($cat->getEntityId());
                                 $url =  '<a href="'. $cat->getUrl() .'"><span>' . $cat->getName() . $this->getCatLabel($cat) . '</span></a>';
