@@ -48,8 +48,10 @@ require(['jquery', 'easing'], function($, easing){
                             let accordionObserver = new IntersectionObserver(function(entries, observer) {
                                 entries.forEach(function(entry) {
                                     if (entry.isIntersecting) {
-                                        let el = entry.target;
-                                        $(el).magicaccordion($(el).data('menu-init'));
+                                        let el  = entry.target;
+                                        let $el = $(el);
+                                        methods.active($el);
+                                        $el.magicaccordion($el.data('menu-init'));
                                         accordionObserver.unobserve(el);
                                     }
                                 });
@@ -67,7 +69,7 @@ require(['jquery', 'easing'], function($, easing){
                             topmenu.each(function(){ megamenuObserver.observe(this); });
                             vmenu.each(function(){ megamenuObserver.observe(this); });
                         } else {
-                            accordion.each(function(){ $(this).magicaccordion($(this).data('menu-init')); });
+                            accordion.each(function(){ var el = $(this); methods.active(el); el.magicaccordion($(this).data('menu-init')); });
                             topmenu.each(function(){ methods.megamenu(this); });
                             vmenu.each(function(){ methods.megamenu(this); });
                         }
@@ -324,6 +326,16 @@ require(['jquery', 'easing'], function($, easing){
                     }
                 },
 
+                active: function (menu) {
+                    var currentUrl = window.location.href.replace(/\/$/, "");
+                    menu.find('li a').each(function(){
+                        var thisHref = ($(this).attr('href').split('?'))[0];
+                        if(currentUrl.indexOf(thisHref) == 0) {
+                            $(this).closest('li').addClass('active');
+                        }
+                   });
+                },
+
                 megamenu: function (menu) {
                     var isHorizontal = menu.hasClass('magicmenu');
                     // Topmenu
@@ -359,7 +371,8 @@ require(['jquery', 'easing'], function($, easing){
 
                     $(window).resize(function(){ $(this).trigger('magicmenu:refresh')});
                     
-                    methods.taphover(menu);                   
+                    methods.taphover(menu);    
+                    methods.active(menu);    
                 }
 
             };
