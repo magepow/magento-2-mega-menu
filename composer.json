@@ -2,7 +2,7 @@
   "name": "magiccart/magicmenu",
   "description": "Make megamenu, dropdown menu, mobile menu easy all in one.",
   "require": {
-    "magepow/core": "^1.0.0"
+    "magepow/core": "^1.0.3"
   },
   "type": "magento2-module",
   "license": [
