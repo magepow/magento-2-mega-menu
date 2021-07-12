@@ -327,13 +327,18 @@ require(['jquery', 'easing'], function($, easing){
                 },
 
                 active: function (menu) {
+                    var homeUrl    = menu.find('li.home a').attr('href').replace(/\/$/, "");
                     var currentUrl = window.location.href.replace(/\/$/, "");
-                    menu.find('li a').each(function(){
-                        var thisHref = ($(this).attr('href').split('?'))[0];
-                        if(currentUrl.indexOf(thisHref) == 0) {
-                            $(this).closest('li').addClass('active');
-                        }
-                   });
+                    if(homeUrl == currentUrl){
+                        menu.find('li.home').addClass('active');
+                    } else {
+                        menu.find("li:not('.home') a").each(function(){
+                            var thisHref = ($(this).attr('href').split('?'))[0];
+                            if(currentUrl.indexOf(thisHref) == 0) {
+                                $(this).closest('li').addClass('active');
+                            }
+                       });                        
+                    }
                 },
 
                 megamenu: function (menu) {
