@@ -327,7 +327,7 @@ require(['jquery', 'easing'], function($, easing){
                 },
 
                 active: function (menu) {
-                    var homeUrl    = menu.find('li.home a').attr('href').replace(/\/$/, "");
+                    var homeUrl    = BASE_URL.replace(/\/$/, ""); /* Global variable BASE_URL from magento2 */
                     var currentUrl = window.location.href.replace(/\/$/, "");
                     if(homeUrl == currentUrl){
                         menu.find('li.home').addClass('active');
@@ -343,7 +343,7 @@ require(['jquery', 'easing'], function($, easing){
 
                 megamenu: function (menu) {
                     var isHorizontal = menu.hasClass('magicmenu');
-                    // Topmenu
+                    /* Topmenu */
                     var navDesktop = menu.find('.nav-desktop');
                     if(isHorizontal && navDesktop.hasClass('sticker')) methods.sticky(menu);
                     /* Active menu top-vmega */
