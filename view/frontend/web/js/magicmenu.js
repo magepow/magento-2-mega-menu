@@ -327,14 +327,15 @@ require(['jquery', 'easing'], function($, easing){
                 },
 
                 active: function (menu) {
-                    var homeUrl    = BASE_URL.replace(/\/$/, ""); /* Global variable BASE_URL from magento2 */
-                    var currentUrl = window.location.href.replace(/\/$/, "");
-                    if(homeUrl == currentUrl){
+                    if($('body').hasClass('cms-index-index')){
                         menu.find('li.home').addClass('active');
+                        menu.find("li:not('.home')").removeClass('active');
                     } else {
+                        var currentUrl = window.location.href.replace(/\/$/, "");
                         menu.find("li:not('.home') a").each(function(){
                             var thisHref = ($(this).attr('href').split('?'))[0];
                             if(currentUrl.indexOf(thisHref) == 0) {
+                                menu.find('li.home').removeClass('active');
                                 $(this).closest('li').addClass('active');
                             }
                        });                        
