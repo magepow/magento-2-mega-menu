@@ -77,7 +77,7 @@ require(['jquery', 'easing'], function($, easing){
                 },
 
                 taphover: function(el){
-                    var categories = el.find('.category-item');
+                    var categories = el.find('.category-item.hasChild');
                     categories.on('touchstart', function (e) {
                         'use strict'; //satisfy code inspectors
                         var link = $(this); //preselect the link
