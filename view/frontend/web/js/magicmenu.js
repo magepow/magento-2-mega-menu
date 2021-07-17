@@ -78,7 +78,7 @@ require(['jquery', 'easing'], function($, easing){
 
                 taphover: function(el){
                     var categories = el.find('.category-item.hasChild');
-                    categories.on('touchstart', function (e) {
+                    categories.on('touchstart', function (e) { /* 'touchstart click' if want for both touchstart and click */
                         'use strict'; //satisfy code inspectors
                         var link = $(this); //preselect the link
                         link.trigger('mouseenter');
