@@ -142,10 +142,19 @@ require(['jquery', 'easing'], function($, easing){
                     $navtop.each(function(index, val) {
                         var $item     = $(this);
                         if(fullWidth){
+                            var mega = $item.find('.level-top-mega');
                             if(fullWidth == 2 && horizontal ){
-                                $item.find('.level-top-mega').addClass('parent-full-width').wrap('<div class="full-width"></div>').width($('body').width());                       
+                                if(mega.parent().hasClass('full-width')){
+                                    mega.addClass('parent-full-width').width($('body').width());            
+                                } else {
+                                    mega.addClass('parent-full-width').wrap('<div class="full-width"></div>').width($('body').width());
+                                }
                             }else {
-                                $item.find('.level-top-mega').addClass('parent-auto-width').wrap('<div class="auto-width"></div>');
+                                if(mega.parent().hasClass('auto-width')){
+                                    mega.addClass('parent-auto-width');            
+                                } else {
+                                    mega.addClass('parent-auto-width').wrap('<div class="auto-width"></div>');
+                                }
                             }
                         }
                         var options   = $item.data('options');
