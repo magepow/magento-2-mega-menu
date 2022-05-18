@@ -87,7 +87,10 @@ class Menu extends \Magento\Catalog\Block\Navigation
 
         $this->_helper = $helper;
         $this->_magicmenuCollectionFactory = $magicmenuCollectionFactory;
-        $this->_sysCfg= (object) $this->_helper->getConfigModule();
+        $configModule = $this->_helper->getConfigModule();
+        if( is_null($configModule['topmenu']['notIncludeNav']) ) $configModule['topmenu']['notIncludeNav'] = '';
+        if( is_null($configModule['vmenu']['notIncludeNav']) )   $configModule['vmenu']['notIncludeNav'] = '';
+        $this->_sysCfg= (object) $configModule;
 
         $this->serializer = $serializer ?: \Magento\Framework\App\ObjectManager::getInstance()
         ->get(\Magento\Framework\Serialize\Serializer\Json::class);
