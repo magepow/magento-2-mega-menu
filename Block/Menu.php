@@ -239,7 +239,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
             $this->extData[$ext->getCatId()] = $ext->getData();
         }
         $last = count($categories);
-        $dropdownIds = explode(',', $this->_sysCfg->general['dropdown']);
+        $dropdownIds = explode(',', $this->_sysCfg->general['dropdown'] ?? '');
         $counter = 1;
         $this->removeChildrenWithoutActiveParent($categories, 0);        
         foreach ($categories as $catTop){
