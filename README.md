@@ -123,3 +123,19 @@ If this project help you reduce time to develop, you can give me a cup of coffee
 * [Bencher - Responsive Magento 2 Theme](https://1.envato.market/c/1314680/275988/4415?u=https://themeforest.net/item/bencher-responsive-magento-1-2-theme/15787772)
 
 * [Supermarket Responsive Magento 2 Theme](https://1.envato.market/c/1314680/275988/4415?u=https://themeforest.net/item/supermarket-responsive-magento-1-2-theme/18447995)
+
+**[Our Shopify Themes](https://themeforest.net/user/alotheme)**
+
+* [Dukamarket - Multipurpose Shopify Theme](https://1.envato.market/c/1314680/275988/4415?u=https://themeforest.net/item/dukamarket-multipurpose-shopify-theme/36158349)
+
+* [Ohey - Multipurpose Shopify Theme](https://1.envato.market/c/1314680/275988/4415?u=https://themeforest.net/item/ohey-multipurpose-shopify-theme/34624195)
+
+* [Flexon - Multipurpose Shopify Theme](https://1.envato.market/c/1314680/275988/4415?u=https://themeforest.net/item/flexon-multipurpose-shopify-theme/33461048)
+
+**[Our Shopify App](https://apps.shopify.com/partners/maggicart)**
+
+* [Magepow Size Chart](https://apps.shopify.com/magepow-size-chart)
+
+**[Our WordPress Theme](https://themeforest.net/user/alotheme/portfolio)**
+
+* [SadesMarket - Multipurpose WordPress Theme](https://1.envato.market/c/1314680/275988/4415?u=https://themeforest.net/item/sadesmarket-multipurpose-wordpress-theme/35369933)
