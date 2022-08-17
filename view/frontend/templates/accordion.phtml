@@ -19,9 +19,9 @@ $menuHtml = $this->drawMainMenu();
 $mobileMenu = $menuHtml['mobile'];
 ?>
 <div class="accordion-container">
-	<div class="meanmenu-accordion">
+	<div class="meanmenu-accordion" data-menu-init='{"accordion":true, "closedSign":"collapse", "openedSign":"expand", "easing":"easeInOutQuad", "openedActive":true}'>
 		<h3 class="accor-title"><?php echo __($this->getRootName())?></h3>
-		<ul class="accordion nav-accordion" data-menu-init='{{"accordion":true, "closedSign":"collapse", "openedSign":"expand", "easing":"easeInOutQuad", "openedActive":true}}' >
+		<ul class="accordion nav-accordion" >
 			<?php /* @escapeNotVerified */ echo $mobileMenu ?>
 		</ul>	
 		<div class="all-cat"><span><?php /* @escapeNotVerified */ echo __('All Categories')?></span><span style="display:none"><?php /* @escapeNotVerified */ echo __('Close')?></span></div>
