@@ -87,24 +87,18 @@ class Menu extends \Magento\Catalog\Block\Navigation
 
         $this->_helper = $helper;
         $this->_magicmenuCollectionFactory = $magicmenuCollectionFactory;
-        $configModule = $this->_helper->getConfigModule();
-        if( is_null($configModule['topmenu']['notIncludeNav']) ) $configModule['topmenu']['notIncludeNav'] = '';
-        if( is_null($configModule['vmenu']['notIncludeNav']) )   $configModule['vmenu']['notIncludeNav'] = '';
-        $this->_sysCfg= (object) $configModule;
-
-        $this->serializer = $serializer ?: \Magento\Framework\App\ObjectManager::getInstance()
-        ->get(\Magento\Framework\Serialize\Serializer\Json::class);
-
         $this->nodeFactory = $nodeFactory;
         $this->treeFactory = $treeFactory;
+        $this->serializer = $serializer ?: \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Serialize\Serializer\Json::class);
+        $configModule  = $this->_helper->getConfigModule();
+        if( is_null($configModule['topmenu']['notIncludeNav']) ) $configModule['topmenu']['notIncludeNav'] = '';
+        if( is_null($configModule['vmenu']['notIncludeNav']) )   $configModule['vmenu']['notIncludeNav'] = '';
+        $this->_sysCfg = (object) $configModule;
 
         parent::__construct($context, $categoryFactory, $productCollectionFactory, $layerResolver, $httpContext, $catalogCategory, $registry, $flatState, $data);
 
-        $this->_urlMedia = $this->_storeManager->getStore()->getBaseUrl(
-                \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
-            );
-
         $this->_dirMedia = $this->getMediaDirectory()->getAbsolutePath();
+        $this->_urlMedia = $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
 
     }
 
