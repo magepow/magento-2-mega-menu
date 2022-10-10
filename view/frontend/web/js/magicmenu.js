@@ -343,10 +343,12 @@ require(['jquery', 'easing'], function($, easing){
                     } else {
                         var currentUrl = window.location.href.replace(/\/$/, "");
                         menu.find("li:not('.home') a").each(function(){
-                            var thisHref = ($(this).attr('href').split('?'))[0];
-                            if(currentUrl.indexOf(thisHref) == 0) {
-                                menu.find('li.home').removeClass('active');
-                                $(this).closest('li').addClass('active');
+                            if($(this).attr('href') != undefined){
+                                var thisHref = ($(this).attr('href').split('?'))[0];
+                                if(currentUrl.indexOf(thisHref) == 0) {
+                                    menu.find('li.home').removeClass('active');
+                                    $(this).closest('li').addClass('active');
+                                }
                             }
                        });                        
                     }
