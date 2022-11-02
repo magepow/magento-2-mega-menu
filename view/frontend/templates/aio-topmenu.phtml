@@ -44,6 +44,7 @@ $drawExtraMenu = $menu['extraCat'] ? $extraHtml : '';
 			foreach ($vids as $id) { unset($vdesktop[$id]); }
 			$vdrawMainMenu = implode("\n", $vdesktop);
 		}
+		$classes = $vmenu['event'];
 	?>
 	<div class="vmagicmenu vertical-menu clearfix" <?php echo $vmenu['exclude_html_mobile'] ? 'data-exclude_html_mobile="1"' : '' ?> >
 		<div class="block-title block-title-vmagicmenu v-title">
@@ -57,7 +58,7 @@ $drawExtraMenu = $menu['extraCat'] ? $extraHtml : '';
 	        </strong>
 	    </div>
 		<div class="block-vmagicmenu-content">
-			<ul class="nav-desktop vmagicmenu-narrow clearfix">
+			<ul class="nav-desktop vmagicmenu-narrow clearfix <?php /* @escapeNotVerified */ echo $classes; ?>">
 				<?php echo $vdrawHomeMenu ?>
 				<?php echo $vdrawMainMenu ?>
 				<?php echo $vdrawExtraMenu ?>
@@ -78,11 +79,13 @@ $drawExtraMenu = $menu['extraCat'] ? $extraHtml : '';
 	<?php 
 		$classes  = $menu['sticker'] ? 'sticker' : '';
 		$classes .= ($menu['fullWidth'] == 2) ? ' menufullwidth' : '';
+		$classes .= ' '. $menu['event'];
 	?>
 	<div class="magicmenu clearfix" <?php echo $menu['exclude_html_mobile'] ? 'data-exclude_html_mobile="1"' : '' ?> >
 		<ul class="nav-desktop  <?php /* @escapeNotVerified */ echo $classes; ?>"
 			data-fullwidth="<?php /* @escapeNotVerified */ echo $menu['fullWidth'] ?>"
 			data-breakpoint="<?php /* @escapeNotVerified */ echo $menu['switcher'] ?>"
+			data-event="<?php /* @escapeNotVerified */ echo $menu['event'] ?>"
 			>
 			<?php echo $drawHomeMenu ?>
 			<?php echo $drawMainMenu ?>

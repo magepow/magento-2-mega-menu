@@ -17,6 +17,7 @@
             </general>
             <topmenu>
                 <enabled>1</enabled>
+                <event>hover</event>
                 <fullWidth>0</fullWidth>
                 <sticker>1</sticker>
                 <switcher>767</switcher>
@@ -31,6 +32,7 @@
             </topmenu>
             <vmenu>
                 <enabled>0</enabled>
+                <event>hover</event>
                 <home>0</home>
                 <mainCat>1</mainCat>
                 <thumbnail>1</thumbnail>

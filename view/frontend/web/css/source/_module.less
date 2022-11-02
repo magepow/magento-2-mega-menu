@@ -9,6 +9,37 @@
 					}
 				}
 			}
+			&.click {
+				.level0:hover{
+					.level-top-mega{
+						opacity: 0;
+						visibility: hidden;
+						top: 130%;
+					}
+				}
+				.level0.over {
+					.level-top-mega {
+						opacity: 1;
+						top: 50px;
+						visibility: visible;
+					}
+				}
+				.level0.dropdown.over {
+					>.level0 {
+						opacity: 1;
+						top: 50px;
+						visibility: visible;
+					}
+				}
+				.level0.dropdown {
+					.hasChild.over {
+						>ul {
+							opacity: 1;
+							visibility: visible;
+						}
+					}
+				}
+			}
 			.level0.over {
 				.level-top-mega {
 					opacity: 1;

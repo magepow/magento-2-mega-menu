@@ -33,15 +33,21 @@
                     <comment>Use Ctrl+Click for check several values or uncheck value. Display category as dropdown menu</comment>
                     <source_model>Magiccart\Magicmenu\Model\System\Config\Category</source_model>
                     <can_be_empty>1</can_be_empty>
-                </field>                
+                </field>             
             </group>
             <group id="topmenu" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Top Menu</label>
-                <field id="enabled" translate="label comment" type="select" sortOrder="5"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                <field id="enabled" translate="label comment" type="select" sortOrder="0"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Enabled</label>
                     <comment>Enabled frontend</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="event" translate="label comment" type="select" sortOrder="5"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Action Show Menu : </label>
+                    <comment>Menu will show when Click or Hover</comment>
+                    <source_model>Magiccart\Magicmenu\Model\System\Config\Event</source_model>
+                    <can_be_empty>1</can_be_empty>
+                </field> 
                 <field id="fullWidth" translate="label comment" type="select" sortOrder="5"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Mega Menu Width : </label>
                     <source_model>Magiccart\Magicmenu\Model\System\Config\Width</source_model>
@@ -106,6 +112,12 @@
                     <comment>Enabled frontend</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="event" translate="label comment" type="select" sortOrder="5"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Action Show Menu : </label>
+                    <comment>Menu will show when Click or Hover</comment>
+                    <source_model>Magiccart\Magicmenu\Model\System\Config\Event</source_model>
+                    <can_be_empty>1</can_be_empty>
+                </field> 
                 <field id="home" translate="label comment" type="select" sortOrder="20"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Show Home : </label>
                     <comment>Show button home</comment>

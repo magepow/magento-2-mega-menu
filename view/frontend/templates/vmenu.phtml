@@ -26,9 +26,10 @@ $drawHomeMenu = $vmenu['home'] ? $this->drawHomeMenu() : '';
 $drawMainMenu = $vmenu['mainCat'] ? implode("\n", $desktop) : '';
 // drawExtMenu ExtraMenu
 $drawExtraMenu = $vmenu['extraCat'] ? $this->drawExtraMenu() : '';
+$classes = $vmenu['event'];
 ?>
 <div class="vmagicmenu clearfix" <?php echo $vmenu['exclude_html_mobile'] ? 'data-exclude_html_mobile="1"' : '' ?> >
-	<ul class="nav-desktop">
+	<ul class="nav-desktop <?php /* @escapeNotVerified */ echo $classes; ?>">
 		<?php echo $drawHomeMenu ?>
 		<?php echo $drawMainMenu ?>
 		<?php echo $drawExtraMenu ?>
