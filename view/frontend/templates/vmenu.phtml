@@ -18,7 +18,7 @@ if(!$vmenu['enabled']) return;
 $menuHtml = $this->drawMainMenu();
 $mobileMenu = $menuHtml['mobile'];
 $desktop 	= $menuHtml['desktop'];
-$ids  = explode(',', $vmenu['notIncludeNav']);
+$ids  = explode(',', (string) $vmenu['notIncludeNav']);
 foreach ($ids as $id) { unset($desktop[$id]); }
 // drawHomeMenu
 $drawHomeMenu = $vmenu['home'] ? $this->drawHomeMenu() : '';

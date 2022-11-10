@@ -20,7 +20,7 @@ if( !$menu['enabled']){
 $menuHtml = $this->drawMainMenu();
 $mobileMenu = $menuHtml['mobile'];
 $desktop 	= $menuHtml['desktop'];
-$ids  = explode(',', $menu['notIncludeNav']);
+$ids  = explode(',', (string) $menu['notIncludeNav']);
 foreach ($ids as $id) { unset($desktop[$id]); }
 // drawHomeMenu
 $drawHomeMenu = $menu['home'] ? $this->drawHomeMenu() : '';

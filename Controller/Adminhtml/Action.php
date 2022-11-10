@@ -88,8 +88,8 @@ abstract class Action extends \Magento\Backend\App\Action
     protected function _isAllowed()
     {
         $namespace = (new \ReflectionObject($this))->getNamespaceName();
-        $string = strtolower(str_replace(__NAMESPACE__ . '\\','', $namespace));
-        $action =  explode('\\', $string);
+        $string = strtolower(str_replace(__NAMESPACE__ . '\\','', (string) $namespace));
+        $action =  explode('\\', (string) $string);
         $action =  array_shift($action);
         return $this->_authorization->isAllowed("Magiccart_Magicmenu::magicmenu_$action");
     }

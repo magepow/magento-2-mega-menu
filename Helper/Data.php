@@ -28,7 +28,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     {
         parent::__construct($context);
         $this->moduleManager = $moduleManager;
-        $module = strtolower(str_replace('Magiccart_', '', $this->_getModuleName()));
+        $module = strtolower(str_replace('Magiccart_', '', (string) $this->_getModuleName()));
         $this->configModule = $this->getConfig($module);
 
     }
@@ -43,7 +43,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $values = $this->configModule;
         if( !$cfg ) return $values;
-        $config  = explode('/', $cfg);
+        $config  = explode('/', (string) $cfg);
         $end     = count($config) - 1;
         foreach ($config as $key => $vl) {
             if( isset($values[$vl]) ){

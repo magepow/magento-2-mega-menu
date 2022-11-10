@@ -40,7 +40,7 @@ $drawExtraMenu = $menu['extraCat'] ? $extraHtml : '';
 		$vdrawExtraMenu = $vmenu['extraCat'] ? $extraHtml : '';
 		if($vmenu['mainCat']){
 			$vdesktop 	= $menuHtml['desktop'];
-			$vids  = explode(',', $vmenu['notIncludeNav']);
+			$vids  = explode(',', (string) $vmenu['notIncludeNav']);
 			foreach ($vids as $id) { unset($vdesktop[$id]); }
 			$vdrawMainMenu = implode("\n", $vdesktop);
 		}
@@ -71,7 +71,7 @@ $drawExtraMenu = $menu['extraCat'] ? $extraHtml : '';
 	<?php
 		if($menu['mainCat']){
 			$desktop 	= $menuHtml['desktop'];
-			$ids  = explode(',', $menu['notIncludeNav']);
+			$ids  = explode(',', (string) $menu['notIncludeNav']);
 			foreach ($ids as $id) { unset($desktop[$id]); }
 			$drawMainMenu = implode("\n", $desktop);
 		}

@@ -233,7 +233,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
             $this->extData[$ext->getCatId()] = $ext->getData();
         }
         $last = count($categories);
-        $dropdownIds = explode(',', $this->_sysCfg->general['dropdown'] ?? '');
+        $dropdownIds = explode(',', (string) $this->_sysCfg->general['dropdown']);
         $counter = 1;
         $this->removeChildrenWithoutActiveParent($categories, 0);        
         foreach ($categories as $catTop){
@@ -451,7 +451,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
             'name' => $category->getName(),
             'id' => 'category-node-' . $categoryId,
             'url' => $this->_catalogCategory->getCategoryUrl($category),
-            'has_active' => in_array((string)$categoryId, explode('/', (string)$currentCategory->getPath()), true),
+            'has_active' => in_array((string)$categoryId, explode('/', (string) $currentCategory->getPath()), true),
             'is_active' => $categoryId == $currentCategory->getId(),
             'is_category' => true,
             'is_parent_active' => $isParentActive,
