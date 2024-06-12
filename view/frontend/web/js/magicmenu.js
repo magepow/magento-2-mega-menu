@@ -405,7 +405,7 @@ require(['jquery', 'easing'], function($, easing){
             }
         }
 
-    })(jQuery);
+    })($);
 
     $(document).ready(function($) {$(document).magicmenu();});
 });
