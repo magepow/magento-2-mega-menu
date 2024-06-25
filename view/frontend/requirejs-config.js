@@ -11,7 +11,7 @@ var config = {
 
 	shim: {
 		'magicmenu': {
-			deps: ['jquery']
+			deps: ['jquery', 'easing']
 		},
 
 	}
