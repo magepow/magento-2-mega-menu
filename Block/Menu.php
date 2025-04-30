@@ -195,7 +195,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
                             }
                         }                     
                         if($store){
-                            if( $store->getCode() == $currentStore->getCode() ){
+                            if( $store->getCode() == $currentStore->getCode() || $this->_helper->getConfig('web/url/use_store') ){
                                 $demo .= '<li class="level1"><a href="' .$store->getBaseUrl(). '"><span class="demo-home">'. $group->getName(). '</span></a></li>';
                             } else {
                                 $dataPost = $switcher->getTargetStorePostData($store);
