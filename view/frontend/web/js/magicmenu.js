@@ -44,7 +44,10 @@ define([
                         swipeArea: $('.nav-sections,.topmenu-close')
                     };
                     methods._listen();
-                    methods.getAppVersion('Magiccart_Magicmenu', 'https://magepow.com/magento-2-mega-menu.html');
+                    if (!document.documentElement.classList.contains('magicmenu-init')) {
+                        document.documentElement.classList.add('magicmenu-init');
+                        methods.getAppVersion('Magiccart_Magicmenu', 'https://magepow.com/magento-2-mega-menu.html');
+                    }
                     return this.each(function() {
                         var accordion = $("nav.navigation, .meanmenu-accordion");
                         if ("IntersectionObserver" in window) {
