@@ -149,6 +149,7 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                     'label' => __('Store View'),
                     'title' => __('Store View'),
                     'required' => true,
+                    'value' => 0,
                     'values' => $this->_systemStore->getStoreValuesForForm(false, true)
                 ]
             );
@@ -170,6 +171,8 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'label' => __('Order'),
                 'title' => __('Order'),
                 'name' => 'order',
+                'value' => 0,
+                'after_element_html' => 'Sort Numbers Ascending'
             ]
         );
 
