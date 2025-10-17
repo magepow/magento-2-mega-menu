@@ -105,7 +105,7 @@ define([
                     if ($(document).height() <= $(window).height()) return;
                     var menuSticky  = $(sticky);
                     var menuHeight  = menuSticky.innerHeight();
-                    var postionTop  = topmenu.offset().top;
+                    var postionTop  = topmenu.offset().top + topmenu.height();
                     var heightItem  =  0;
                     var heightAIO   = 0
                     var vmagicmenu = topmenu.parent().find('.vmagicmenu.fixed-auto');
