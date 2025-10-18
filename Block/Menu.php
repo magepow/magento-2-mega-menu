@@ -179,7 +179,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
         $drawHomeMenu .= '<a class="level-top" href="'.$this->getBaseUrl().'"><span class="icon fa fa-home"></span><span class="icon-text">' .__('Home') .'</span>';
         $drawHomeMenu .= '</a>';
         if($this->_sysCfg->topmenu['demo']){
-            $demo = '';
+            $demos = [];
             $currentStore = $this->_storeManager->getStore();
             $switcher = $this->getLayout()->createBlock('Magento\Store\Block\Switcher');
             foreach ($this->_storeManager->getWebsites() as $website) {
@@ -196,20 +196,23 @@ class Menu extends \Magento\Catalog\Block\Navigation
                         }                     
                         if($store){
                             if( $store->getCode() == $currentStore->getCode() || $this->_helper->getConfig('web/url/use_store') ){
-                                $demo .= '<li class="level1"><a href="' .$store->getBaseUrl(). '"><span class="demo-home">'. $group->getName(). '</span></a></li>';
+                                $demos[] = '<li class="level1"><a href="' .$store->getBaseUrl(). '"><span class="demo-home">'. $group->getName(). '</span></a></li>';
                             } else {
                                 $dataPost = $switcher->getTargetStorePostData($store);
                                 $dataPost = $this->serializer->unserialize($dataPost);
                                 if(isset($dataPost['action']) && isset($dataPost['data'])){
                                     $href = $dataPost['action'] . '?' . http_build_query($dataPost['data']);
-                                    $demo .= '<li class="switcher-option level1"><a href="' . $href . '"><span class="demo-home">'. $group->getName(). '</span></a></li>';
+                                    $demos[] = '<li class="switcher-option level1"><a href="' . $href . '"><span class="demo-home">'. $group->getName(). '</span></a></li>';
                                 }
                             }
                         }
                     }
                 }
             }
-            if($demo) $drawHomeMenu .= '<ul class="level0 category-item submenu">' .$demo .'</ul>';           
+            if(!empty($demos)){
+                natsort($demos);
+                $drawHomeMenu .= '<ul class="level0 category-item submenu">' . implode(' ', $demos) .'</ul>';   
+            }        
         }
 
         $drawHomeMenu .= '</li>';
