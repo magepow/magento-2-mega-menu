@@ -174,10 +174,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
     {
         if($this->hasData('homeMenu')) return $this->getData('homeMenu');
         $drawHomeMenu = '';
-        $active = ($this->getIsHomePage()) ? ' active' : '';
-        $drawHomeMenu .= '<li class="level0 category-item level-top dropdown home' . $active . '">';
-        $drawHomeMenu .= '<a class="level-top" href="'.$this->getBaseUrl().'"><span class="icon fa fa-home"></span><span class="icon-text">' .__('Home') .'</span>';
-        $drawHomeMenu .= '</a>';
+        $drawDemoMenu = '';
         if($this->_sysCfg->topmenu['demo']){
             $demos = [];
             $currentStore = $this->_storeManager->getStore();
@@ -211,10 +208,14 @@ class Menu extends \Magento\Catalog\Block\Navigation
             }
             if(!empty($demos)){
                 natsort($demos);
-                $drawHomeMenu .= '<ul class="level0 category-item submenu">' . implode(' ', $demos) .'</ul>';   
+                $drawDemoMenu = '<ul class="level0 category-item submenu">' . implode(' ', $demos) .'</ul>';   
             }        
         }
-
+        $active = ($this->getIsHomePage()) ? ' active' : '';
+        $drawHomeMenu .= '<li class="level0 category-item level-top dropdown home' . $active . ($drawDemoMenu ? ' hasChild': '') . '">';
+        $drawHomeMenu .= '<a class="level-top" href="'.$this->getBaseUrl().'"><span class="icon fa fa-home"></span><span class="icon-text">' .__('Home') .'</span>';
+        $drawHomeMenu .= '</a>';
+        $drawHomeMenu .= $drawDemoMenu;
         $drawHomeMenu .= '</li>';
         $this->setData('homeMenu', $drawHomeMenu);
         return $drawHomeMenu;
