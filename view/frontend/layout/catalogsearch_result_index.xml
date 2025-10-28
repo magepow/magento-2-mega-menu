@@ -12,13 +12,8 @@
  
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceBlock name="store.menu">
-            <block class="Magiccart\Magicmenu\Block\Menu" name="catalog.topnav" template="aio-topmenu.phtml">
-                <block class="Magento\Theme\Block\Html\Topmenu" name="catalog.topnav.default" template="Magento_Theme::html/topmenu.phtml"/>
-            </block>
-        </referenceBlock>
-        <!-- <referenceContainer name="div.sidebar.main">
+        <referenceContainer name="div.sidebar.main">
             <block class="Magiccart\Magicmenu\Block\Menu" ifconfig="magicmenu/accordion/enabled" name="accordion.sidebar" before="-" template="accordion.phtml" />
-        </referenceContainer> -->
+        </referenceContainer>
     </body>
 </page>
