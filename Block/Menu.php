@@ -74,7 +74,6 @@ class Menu extends \Magento\Catalog\Block\Navigation
         \Magento\Catalog\Helper\Category $catalogCategory,
         \Magento\Framework\Registry $registry,
         \Magento\Catalog\Model\Indexer\Category\Flat\State $flatState,
-        \Magento\Framework\Serialize\Serializer\Json $serializer = null,
 
         // +++++++++add new +++++++++
         \Magiccart\Magicmenu\Helper\Data $helper,
@@ -82,6 +81,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
         \Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\CollectionFactory $magicmenuCollectionFactory,
         NodeFactory $nodeFactory,
         TreeFactory $treeFactory,
+        ?\Magento\Framework\Serialize\Serializer\Json $serializer = null,
         array $data = []
     ) {
 
