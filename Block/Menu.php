@@ -15,6 +15,7 @@ use Magento\Framework\Data\Tree\Node;
 use Magento\Framework\Data\Tree\Node\Collection;
 use Magento\Framework\Data\Tree\NodeFactory;
 use Magento\Framework\Data\TreeFactory;
+use Magento\Framework\Serialize\Serializer\Json;
 
 class Menu extends \Magento\Catalog\Block\Navigation
 {
@@ -81,7 +82,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
         \Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\CollectionFactory $magicmenuCollectionFactory,
         NodeFactory $nodeFactory,
         TreeFactory $treeFactory,
-        ?\Magento\Framework\Serialize\Serializer\Json $serializer = null,
+        Json $serializer,
         array $data = []
     ) {
 
@@ -89,7 +90,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
         $this->_magicmenuCollectionFactory = $magicmenuCollectionFactory;
         $this->nodeFactory = $nodeFactory;
         $this->treeFactory = $treeFactory;
-        $this->serializer = $serializer ?: \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Serialize\Serializer\Json::class);
+        $this->serializer = $serializer;
         $configModule  = $this->_helper->getConfigModule();
         if( is_null($configModule['topmenu']['notIncludeNav']) ) $configModule['topmenu']['notIncludeNav'] = '';
         if( is_null($configModule['vmenu']['notIncludeNav']) )   $configModule['vmenu']['notIncludeNav'] = '';
