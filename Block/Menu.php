@@ -78,7 +78,6 @@ class Menu extends \Magento\Catalog\Block\Navigation
 
         // +++++++++add new +++++++++
         \Magiccart\Magicmenu\Helper\Data $helper,
-        // \Magiccart\Magicmenu\Model\CategoryFactory $categoryFactory,
         \Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\CollectionFactory $magicmenuCollectionFactory,
         NodeFactory $nodeFactory,
         TreeFactory $treeFactory,
@@ -125,7 +124,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
 
     public function getIsHomePage()
     {
-        return $this->getUrl('') == $this->getUrl('*/*/*', array('_current'=>true, '_use_rewrite'=>true));
+        return $this->getUrl('') == $this->getUrl('*/*/*', ['_current'=>true, '_use_rewrite'=>true]);
     }
 
     public function isCategoryActive($catId)
@@ -257,18 +256,18 @@ class Menu extends \Magento\Catalog\Block\Navigation
                 $classTop .= $isDropdown;
                 $catChild  = $catTop->getChildren();
                 $childHtml = $this->getTreeCategories($catChild, $itemPositionClassPrefixTop); // include magic_label and Maximal Depth
-                $menu = array('desktop' => $childHtml, 'mobile' => $childHtml);
+                $menu = ['desktop' => $childHtml, 'mobile' => $childHtml];
             } else { // Draw Mega Menu
                 $idTop    = $catTop->getEntityId();
                 $data     = isset($this->extData[$idTop]) ? $this->extData[$idTop] : '';
-                $blocks   = array('top'=>'', 'left'=>'', 'right'=>'', 'bottom'=>'');
+                $blocks   = ['top'=>'', 'left'=>'', 'right'=>'', 'bottom'=>''];
                 if($data){
                     foreach ($blocks as $key => $value) {
                         $proportion = $key .'_proportion';
                         $html = $this->getStaticBlock($data[$key]);
                         if($html) $blocks[$key] = "<div class='mage-column mega-block-$key'>".$html.'</div>';
                     }
-                    $remove = array('top'=>'', 'left'=>'', 'right'=>'', 'bottom'=>'', 'cat_id'=>'');
+                    $remove = ['top'=>'', 'left'=>'', 'right'=>'', 'bottom'=>'', 'cat_id'=>''];
                     foreach ($remove as $key => $value) {
                         unset($data[$key]);
                     }
@@ -330,7 +329,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
                 $desktopTmp .= '</div>';  /* End Content mega */
             $desktopTmp .= '</div>';  /* Warp Mega */
         endif;
-        return array('desktop' => $desktopTmp, 'mobile' => $mobileTmp);
+        return ['desktop' => $desktopTmp, 'mobile' => $mobileTmp];
     }
 
     public function drawExtraMenu()
@@ -344,7 +343,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
             $currentUrl = $this->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]); //$this->getCurrentUrl();
             foreach ($extMenu as $ext) { 
                 $link = $ext->getLink();
-                $url = (filter_var($link, FILTER_VALIDATE_URL)) ? $link : $this->getUrl('', array('_direct'=>$link));
+                $url = (filter_var($link, FILTER_VALIDATE_URL)) ? $link : $this->getUrl('', ['_direct'=>$link]);
                 $active = ( $link && $url == $currentUrl) ? ' active' : '';
                 $html = $this->getStaticBlock($ext->getExtContent());
                 $class .= $ext->getCatCol() ? ' ' . $ext->getCatCol() : ' dropdown';
@@ -499,7 +498,7 @@ class Menu extends \Magento\Catalog\Block\Navigation
     {
         $store = $this->_storeManager->getStore()->getStoreId();
         $collection = $this->_magicmenuCollectionFactory->create()
-                        ->addFieldToSelect(array('link','name', 'cat_col', 'magic_label','ext_content','order'))
+                        ->addFieldToSelect(['link','name', 'cat_col', 'magic_label','ext_content','order'])
                         ->addFieldToFilter('extra', 1)
                         ->addFieldToFilter('status', 1);
         $collection->getSelect()->where('find_in_set(0, stores) OR find_in_set(?, stores)', $store)->order('order');
@@ -515,11 +514,11 @@ class Menu extends \Magento\Catalog\Block\Navigation
     {
         $store = $this->_storeManager->getStore()->getStoreId();
         $collection = $this->_magicmenuCollectionFactory->create()
-                        ->addFieldToSelect(array(
+                        ->addFieldToSelect([
                                 'cat_id','cat_col','cat_proportion','top',
                                 'right','right_proportion','bottom','left','left_proportion'
-                            ))
-                        ->addFieldToFilter('stores',array( array('finset' => 0), array('finset' => $store)))
+                            ])
+                        ->addFieldToFilter('stores',[['finset' => 0], ['finset' => $store]])
                         ->addFieldToFilter('status', 1);
         return $collection;
     }
