@@ -1,10 +1,10 @@
-[<img src="https://github.com/magepow/themeforest/blob/master/shopify/shopify_affiliate.jpg" >](https://shopify.pxf.io/VyL446)
+[<img src="https://github.com/magepow/themeforest/blob/main/shopify/shopify_affiliate.jpg" >](https://shopify.pxf.io/VyL446)
 
 ## Magento 2 Mega Menu Free download - Magicmenu extension by Magepow
 
 **Magento 2 Megamenu extension** is an indispensable component, and plays the role of website navigation to help customers easily categorize and find information. Without a menu, visitors to the page will have to spend time searching for each content on your website, thereby making them find it difficult, difficult to access and do not know what your website has main content. This will increase the user's bounce rate, thereby reducing the SEO quality of the website.
 
-[![Magento 2 Mega menu extension](https://github.com/magiccart/magento-2-mega-menu/blob/master/media/magento-2-mega-menu-extension.png)](https://magepow.com/magento-2-mega-menu.html)
+[![Magento 2 Mega menu extension](https://github.com/magiccart/magento-2-mega-menu/blob/main/media/magento-2-mega-menu-extension.png)](https://magepow.com/magento-2-mega-menu.html)
 
 **Magicmenu Magento extension** (Magiccart Magicmenu Extension) allows you to create a beautiful menu with rich features such as Megamenu or Drop Down Menu. On a Mega Menu, the extension allows you to show the custom block on the top/bottom/left/right of the menu.
 
@@ -22,16 +22,16 @@ Magiccart menu extension allows you to customize the menu to your liking:
 
 **Mega Menu**
 This is the type of menu commonly used in magento websites. The advantage of this type of menu is to save the maximum space for the website and clearly display the website's themes.
-![widget-img](https://github.com/magiccart/magento2-magicmenu/blob/master/media/megamenu.jpg)
+![widget-img](https://github.com/magiccart/magento2-magicmenu/blob/main/media/megamenu.jpg)
 
 **Dropdown Menu**
 
 This is a menu type that is highly appreciated by customers. With a horizontal and vertical navigation business structure, the drop-down menu can contain more categories, suitable for websites containing many product catalogs.
-![widget-img](https://github.com/magiccart/magento2-magicmenu/blob/master/media/dropdownmenu.jpg)
+![widget-img](https://github.com/magiccart/magento2-magicmenu/blob/main/media/dropdownmenu.jpg)
 
 ### 2: Allow to add Extra Menu
 You can log in Admin > Magiccart > Magic Menu > Extra Menu. It will look like this:
-![widget-img](https://github.com/magiccart/magento2-magicmenu/blob/master/media/managemenu.jpg)
+![widget-img](https://github.com/magiccart/magento2-magicmenu/blob/main/media/managemenu.jpg)
 Then, you can click Add New Menu or Edit. After that, click Save to finish.
 
 ### 3: Support Responsive
