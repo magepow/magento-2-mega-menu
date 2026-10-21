@@ -1,19 +1,17 @@
+/**
+ * Copyright © Magiccart. All rights reserved.
+ * See LICENSE for license details.
+ */
 var config = {
-	map: {
-		'*': {
-			'magicmenu': "Magiccart_Magicmenu/js/magicmenu",
-		},
-	},
+    map: {
+        '*': {
+            'magicmenu': 'Magiccart_Magicmenu/js/magicmenu'
+        }
+    },
 
-	// paths: {
-	// 	'magicmenu'	: 'Magiccart_Magicmenu/js/magicmenu',
-	// },
-
-	shim: {
-		'magicmenu': {
-			deps: ['jquery', 'easing']
-		},
-
-	}
-
+    shim: {
+        'magicmenu': {
+            deps: ['jquery']
+        }
+    }
 };

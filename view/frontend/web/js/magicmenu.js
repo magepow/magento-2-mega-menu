@@ -1,18 +1,11 @@
 /**
- * Magepow 
- * @category    Magepow 
- * @copyright   Copyright (c) 2014 Magepow (https://www.magepow.com) 
- * @license     https://www.magepow.com/license-agreement.html
- * @Author: DOng NGuyen<nguyen@magepow.com>
- * @@Create Date: 2014-04-25 13:16:48
- * @@Modify Date: 2021-10-19 09:16:29
- * @@Function:
+ * Copyright © Magiccart. All rights reserved.
+ * See LICENSE for license details.
  */
 define([
-    'jquery',
-    'easing'
-    ], function ($, easing) {
-    !(function($){"use strict";$.fn.magicaccordion=function(options){var defaults={accordion:!0,mouseType:!1,speed:300,closedSign:'collapse',openedSign:'expand',openedActive:!1,};var methods={init:function(){return this.each(function(){var self=$(this);methods.menuLoad(self)})},menuLoad:function(self){var opts=$.extend(defaults,options);if(self.hasClass('menu-init'))return;self.addClass('menu-init');self.find("li").each(function(){if($(this).find("ul").length){$(this).find("ul").hide();$(this).find("a:first").after("<span class='"+opts.closedSign+"'>"+opts.closedSign+"</span>");if($(this).find("a:first").attr('href')=="#"){$(this).find("a:first").on('click',function(){return!1})}}});if(opts.openedActive){methods.openedActive(self)}if(opts.mouseType){self.find("li a").mouseenter(function(){methods.menuAction(self,$(this))})}else{self.find("li span").on('click',function(){methods.menuAction(self,$(this))})}var catplus=self.find('.nav-accordion >.level0:hidden').not('.all-cat');if(catplus.length){self.find('.all-cat').show().on('click',function(event){$(this).children().toggle();catplus.slideToggle('slow')})}else{self.find('.all-cat').hide()}},menuAction:function(self,item){var opts=$.extend(defaults,options);var parent=item.parent();if(parent.find("ul").length){if(opts.accordion){if(!parent.find("ul").is(':visible')){var parents=parent.parents("ul");var visible=self.find("ul:visible");visible.each(function(visibleIndex){var close=!0;parents.each(function(parentIndex){if(parents[parentIndex]==visible[visibleIndex]){close=!1;return!1}});if(close){if($(this).parent().find("ul")!=visible[visibleIndex]){$(visible[visibleIndex]).slideUp(opts.speed,function(){$(this).parent("li").find("a:first").next().html(opts.closedSign).addClass(opts.closedSign).removeClass(opts.openedSign)})}}})}}var parentFirst=parent.find("ul:first");if(parentFirst.is(":visible")){parentFirst.slideUp(opts.speed,function(){$(this).parent("li").find("a:first").next().delay(opts.speed+1000).html(opts.closedSign).removeClass(opts.openedSign).addClass(opts.closedSign)})}else{parentFirst.slideDown(opts.speed,function(){$(this).parent("li").find("a:first").next().delay(opts.speed+1000).html(opts.openedSign).removeClass(opts.closedSign).addClass(opts.openedSign)})}}},openedActive:function(self){var opts=$.extend(defaults,options);self.find("li.active").each(function(){$(this).parents("ul").slideDown(opts.speed,opts.easing);$(this).parents("ul").parent("li").find("a:first").next().html(opts.openedSign).removeClass(opts.closedSign).addClass(opts.openedSign);$(this).find("ul:first").slideDown(opts.speed,opts.easing);$(this).find("a:first").next().html(opts.openedSign).removeClass(opts.closedSign).addClass(opts.openedSign)})}};if(methods[options]){return methods[options].apply(this,Array.prototype.slice.call(arguments,1))}else if(typeof options==='object'||!options){return methods.init.apply(this)}else{$.error('Method "'+method+'" does not exist in magicaccordion plugin!')}}})($);
+    'jquery'
+    ], function ($) {
+    !(function($){"use strict";$.fn.magicaccordion=function(options){var defaults={accordion:!0,mouseType:!1,speed:300,closedSign:'collapse',openedSign:'expand',openedActive:!1,};var methods={init:function(){return this.each(function(){var self=$(this);methods.menuLoad(self)})},menuLoad:function(self){var opts=$.extend(defaults,options);if(self.hasClass('menu-init'))return;self.addClass('menu-init');self.find("li").each(function(){if($(this).find("ul").length){$(this).find("ul").hide();$(this).find("a:first").after("<span class='"+opts.closedSign+"'>"+opts.closedSign+"</span>");if($(this).find("a:first").attr('href')=="#"){$(this).find("a:first").on('click',function(){return!1})}}});if(opts.openedActive){methods.openedActive(self)}if(opts.mouseType){self.find("li a").mouseenter(function(){methods.menuAction(self,$(this))})}else{self.find("li span").on('click',function(){methods.menuAction(self,$(this))})}var catplus=self.find('.nav-accordion >.level0:hidden').not('.all-cat');if(catplus.length){self.find('.all-cat').show().on('click',function(event){$(this).children().toggle();catplus.slideToggle('slow')})}else{self.find('.all-cat').hide()}},menuAction:function(self,item){var opts=$.extend(defaults,options);var parent=item.parent();if(parent.find("ul").length){if(opts.accordion){if(!parent.find("ul").is(':visible')){var parents=parent.parents("ul");var visible=self.find("ul:visible");visible.each(function(visibleIndex){var close=!0;parents.each(function(parentIndex){if(parents[parentIndex]==visible[visibleIndex]){close=!1;return!1}});if(close){if($(this).parent().find("ul")!=visible[visibleIndex]){$(visible[visibleIndex]).slideUp(opts.speed,function(){$(this).parent("li").find("a:first").next().html(opts.closedSign).addClass(opts.closedSign).removeClass(opts.openedSign)})}}})}}var parentFirst=parent.find("ul:first");if(parentFirst.is(":visible")){parentFirst.slideUp(opts.speed,function(){$(this).parent("li").find("a:first").next().delay(opts.speed+1000).html(opts.closedSign).removeClass(opts.openedSign).addClass(opts.closedSign)})}else{parentFirst.slideDown(opts.speed,function(){$(this).parent("li").find("a:first").next().delay(opts.speed+1000).html(opts.openedSign).removeClass(opts.closedSign).addClass(opts.openedSign)})}}},openedActive:function(self){var opts=$.extend(defaults,options);self.find("li.active").each(function(){$(this).parents("ul").slideDown(opts.speed,opts.easing);$(this).parents("ul").parent("li").find("a:first").next().html(opts.openedSign).removeClass(opts.closedSign).addClass(opts.openedSign);$(this).find("ul:first").slideDown(opts.speed,opts.easing);$(this).find("a:first").next().html(opts.openedSign).removeClass(opts.closedSign).addClass(opts.openedSign)})}};if(methods[options]){return methods[options].apply(this,Array.prototype.slice.call(arguments,1))}else if(typeof options==='object'||!options){return methods.init.apply(this)}else{$.error('Method "'+options+'" does not exist in magicaccordion plugin!')}}})($);
     (function ($) {
         "use strict";
         $.fn.magicmenu = function (options) {
@@ -408,7 +401,7 @@ define([
                     let result = regx.exec(href);
                     let version = result ? result[1].replace(/\D/g, '') : '1.0.0';
                     console.log(`%c ${appName} %c v${version}  %c`, "background: #555555; padding: 1px; margin-bottom: 2px; border-radius: 3px 0 0 3px; color: #fff", "background: #44cc11; padding: 1px; margin-bottom: 2px; border-radius: 0 3px 3px 0; color: #fff", "background:transparent", `🚀 ${href}`);
-        
+
                     return version;
                 }
 
@@ -419,7 +412,7 @@ define([
             } else if (typeof options === 'object' || !options) { // $("#element").pluginName({ option: 1, option:2 });
                 return methods.init.apply(this);
             } else {
-                $.error('Method "' + method + '" does not exist in timer plugin!');
+                $.error('Method "' + options + '" does not exist in magicmenu plugin!');
             }
         }
 
