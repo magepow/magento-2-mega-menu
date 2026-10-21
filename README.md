@@ -1,64 +1,155 @@
-## Magento 2 Mega Menu Free download - Magicmenu extension by Magepow
+<div align="center">
+  <div>
+    <a href="https://magepow.com/magento-2-mega-menu.html">
+      <img src="media/magicmenu.png" alt="Mega menu">
+    </a>
+  </div>
+  <a href="https://packagist.org/packages/magiccart/magicmenu">
+    <img src="https://poser.pugx.org/magiccart/magicmenu/v/stable" alt="Latest Stable Version">
+  </a>
+  <a href="https://packagist.org/packages/magiccart/magicmenu">
+    <img src="https://poser.pugx.org/magiccart/magicmenu/downloads" alt="Total Downloads">
+  </a>
+  <a href="https://packagist.org/packages/magiccart/magicmenu">
+    <img src="https://poser.pugx.org/magiccart/magicmenu/d/daily" alt="Daily Downloads">
+  </a>
+</div>
 
-**Magento 2 Megamenu extension** is an indispensable component, and plays the role of website navigation to help customers easily categorize and find information. Without a menu, visitors to the page will have to spend time searching for each content on your website, thereby making them find it difficult, difficult to access and do not know what your website has main content. This will increase the user's bounce rate, thereby reducing the SEO quality of the website.
+<h1 align="center">Magento 2 Mega Menu</h1>
 
-[![Magento 2 Mega menu extension](https://github.com/magiccart/magento-2-mega-menu/blob/main/media/magento-2-mega-menu-extension.png)](https://magepow.com/magento-2-mega-menu.html)
+Welcome to Magepow Magento 2 Mega Menu! Our free module helps you create a user-friendly navigation experience and improve the usability of your online store.
 
-**Magicmenu Magento extension** (Magiccart Magicmenu Extension) allows you to create a beautiful menu with rich features such as Megamenu or Drop Down Menu. On a Mega Menu, the extension allows you to show the custom block on the top/bottom/left/right of the menu.
+For merchants who need professional assistance and reliable ongoing support, we recommend purchasing the module from Magepow. Our support service helps you get the most out of the module, resolve technical issues, and ensure a smoother experience when integrating it into your Magento store.
 
-See Detail descriptipn in [Magento 2 Mega Menu](https://magepow.com/magento-2-mega-menu.html) 
 
-[![Latest Stable Version](https://poser.pugx.org/magiccart/magicmenu/v/stable)](https://packagist.org/packages/magiccart/magicmenu)
-[![Total Downloads](https://poser.pugx.org/magiccart/magicmenu/downloads)](https://packagist.org/packages/magiccart/magicmenu)
-[![Daily Downloads](https://poser.pugx.org/magiccart/magicmenu/d/daily)](https://packagist.org/packages/magiccart/magicmenu)
+**Magento 2 Mega menu extension** is an indispensable component, and plays the role of website navigation to help customers easily categorize and find information. Without a menu, visitors to the page will have to spend time searching for each content on your website, thereby making them find it difficult, difficult to access and do not know what your website has main content. This will increase the user's bounce rate, thereby reducing the SEO quality of the website.
 
-## Highlight Features
+![Magento 2 Mega menu extension](media/magento-2-mega-menu-extension.png)
 
-### 1: Magento menu layout options: mega, dropdown or both
+Mega menu, dropdown menu and mobile menu for Magento 2 / Adobe Commerce.
 
-Magiccart menu extension allows you to customize the menu to your liking:
+The module replaces the default `store.menu` block with a configurable navigation that supports
+mega menu layouts, plain dropdown menus, an extra (custom) menu and a sidebar accordion menu.
 
-**Mega Menu**
-This is the type of menu commonly used in magento websites. The advantage of this type of menu is to save the maximum space for the website and clearly display the website's themes.
-![widget-img](https://github.com/magiccart/magento2-magicmenu/blob/main/media/megamenu.jpg)
+## Get started
 
-**Dropdown Menu**
+- [Quick start install](https://docs.magepow.com/magicmenu)
+- [Requirements Magento Open Source / Adobe Commerce](https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/system-requirements.html)
+- [Magento 2 Mega Menu Pro](https://magepow.com/magento-2-mega-menu.html)
 
-This is a menu type that is highly appreciated by customers. With a horizontal and vertical navigation business structure, the drop-down menu can contain more categories, suitable for websites containing many product catalogs.
-![widget-img](https://github.com/magiccart/magento2-magicmenu/blob/main/media/dropdownmenu.jpg)
+## Installation
 
-### 2: Allow to add Extra Menu
-You can log in Admin > Magiccart > Magic Menu > Extra Menu. It will look like this:
-![widget-img](https://github.com/magiccart/magento2-magicmenu/blob/main/media/managemenu.jpg)
-Then, you can click Add New Menu or Edit. After that, click Save to finish.
-
-### 3: Support Responsive
-
-Magento 2 Mega Menu is designed to work perfectly on all devices: mobile devices, computers, tablets. Device responsiveness will help increase the customer experience on the website, and increase the store's ability to rank on search engines.
-
-### 4: Professional and user-friendly interface customization
-Besides the flexible navigation of the Magicmenu, the professional and user-friendly interface is also an important factor to keep customers wiping more on your website. This extension allows you add Thumbnail, Image to category in mega menu, or add thumbnail to category(only for level 1 of vertical menu), at the same time can add custom block to mage menu.
-
-Depending on the needs and characteristics of the website, administrators can choose to customize magicmenu as desired.
-
-## ✓ Install Magiccart Magicmenu via composer (recommend)
-Run the following command in Magento 2 root folder:
-
-```
+```bash
 composer require magiccart/magicmenu
-php bin/magento setup:upgrade
-php bin/magento setup:static-content:deploy -f
+bin/magento setup:upgrade
+bin/magento setup:static-content:deploy -f
+bin/magento cache:flush
 ```
 
-## Magiccart Magicmenu User Guide
-[USE GUIDE](https://docs.alothemes.com/m2/theme/gecko/#sub66)
+Manual installation: copy the module to `app/code/Magiccart/Magicmenu` and run the commands above
+without the `composer require` line.
+
+## Need Professional Support?
+
+Magepow Magento 2 Mega Menu is free and open-source, allowing you to build intuitive and user-friendly navigation for your Magento store.
+
+If you need professional technical assistance, help with configuration, troubleshooting, or ongoing support, you can purchase the module with our support service directly from the Magepow website.
+
+Get professional support and make the most of your Magento 2 Mega Menu.
+
+- [👉 Purchase with Support](https://magepow.com/magento-2-mega-menu.html)
+
+
+## Highlight features
+
+### 1. Mega menu, dropdown menu or both
+
+**Mega menu**
+
+The mega menu saves horizontal space and gives every top category its own panel made of CMS
+static blocks placed on the top, left, right and bottom of the category list.
+
+![Mega menu](media/megamenu.jpg)
+
+**Dropdown menu**
+
+A dropdown menu shows the sub categories on hover or on click. It fits catalogs with many
+categories and keeps the navigation compact.
+
+![Dropdown menu](media/dropdownmenu.jpg)
+
+### 2. Extra menu
+
+`Magiccart > Magic Menu > Extra Menu` adds standalone entries to the navigation. Each entry shows a
+link, a CMS static block, or both.
+
+![Extra menu](media/managemenu.jpg)
+
+### 3. Responsive and mobile menu
+
+The menu adapts to the screen: the desktop navigation is replaced by a mobile menu below the
+breakpoint defined in the configuration. The sticky option keeps the menu visible while scrolling.
+
+### 4. Category label, image and thumbnail
+
+Each category can show a label, a thumbnail and an image inside the mega menu. The values are set
+in `Catalog > Manage Categories` and are stored as the `magic_label`, `magic_thumbnail` and
+`magic_image` category attributes.
+
+## Configuration
+
+`Stores > Configuration > Magiccart > Magic Menu`
+
+| Group | Description |
+|---|---|
+| General | Categories that are rendered as a simple dropdown instead of a mega menu. |
+| Top Menu | Horizontal menu: enable/disable, home button, multi store demo switcher, sticky menu, screen breakpoint, event (hover/click), full width mode, excluded categories. |
+| Vertical Menu | Same options as the top menu for the vertical navigation. |
+| Accordion | Enable the accordion menu rendered in the sidebar on category pages. |
+
+### Category configuration
+
+`Catalog > Categories > <category>`
+
+* `Label` – comma separated list of labels rendered next to the category name.
+* `Thumbnail` / `Image` – uploaded to `pub/media/magiccart/magicmenu/thumbnail/<id>.png` and
+  `pub/media/magiccart/magicmenu/images/<id>.png`.
+
+### Mega menu / extra menu configuration
+
+`Magiccart > Magic Menu > Menu` binds a top category to a layout made of CMS static blocks
+(top, left, right, bottom) with configurable proportions.
+
+`Magiccart > Magic Menu > Extra Menu` adds a standalone entry to the navigation. It renders either
+a link or a CMS static block.
+
+The values stored in the `top`, `left`, `right`, `bottom` and `ext_content` fields are **CMS block
+identifiers**, not block IDs.
+
+#### Proportions of the mega menu
+
+The width of the mega menu is shared between the category list, the left block and the right block.
+The three proportion fields are weights: the total of the weights is used to calculate the width of
+every part.
+
+| Proportion | Meaning |
+|---|---|
+| Proportion: Category | Weight of the category list. |
+| Proportion: Block Left | Weight of the block displayed on the left. |
+| Proportion: Block Right | Weight of the block displayed on the right. |
+
+Example: `Proportion: Category = 2`, `Proportion: Block Left = 1` and `Proportion: Block Right = 0`
+give 67% of the width to the categories and 33% to the left block.
+
+## License
+
+OSL-3.0 / AFL-3.0. See [LICENSE](LICENSE).
 
 ## Donation
 
 If this project help you reduce time to develop, you can give me a cup of coffee :) 
 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/paypalme/alopay)
-
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/paypalme/dongvannguyen)
 
 **[Our Magento 2 Extensions](https://magepow.com/magento-2-extensions.html)**
 
@@ -124,22 +215,19 @@ If this project help you reduce time to develop, you can give me a cup of coffee
 
 * [Supermarket Responsive Magento 2 Theme](https://1.envato.market/c/1314680/275988/4415?u=https://themeforest.net/item/supermarket-responsive-magento-1-2-theme/18447995)
 
-**[Our Shopify Themes](https://themeforest.net/user/alotheme)**
-
-* [Dukamarket - Multipurpose Shopify Theme](https://1.envato.market/c/1314680/275988/4415?u=https://themeforest.net/item/dukamarket-multipurpose-shopify-theme/36158349)
-
-* [Ohey - Multipurpose Shopify Theme](https://1.envato.market/c/1314680/275988/4415?u=https://themeforest.net/item/ohey-multipurpose-shopify-theme/34624195)
-
-* [Flexon - Multipurpose Shopify Theme](https://1.envato.market/c/1314680/275988/4415?u=https://themeforest.net/item/flexon-multipurpose-shopify-theme/33461048)
-
 **[Our Shopify App](https://apps.shopify.com/partners/maggicart)**
 
 * [Magepow Infinite Scroll](https://apps.shopify.com/magepow-infinite-scroll)
 
-* [Magepow Promotionbar](https://apps.shopify.com/magepow-promotionbar)
+* [Magepow Product Zoom](https://apps.shopify.com/magepow-productzoom)
 
 * [Magepow Size Chart](https://apps.shopify.com/magepow-size-chart)
 
+**[Our Shopify Themes](https://themeforest.net/user/alotheme)**
+
+* [Uminex - Fastest Shopify 2.0 Theme](https://themeforest.net/item/uminex-fastest-shopify-20-theme/46350215)
+* [Dukamarket - Multipurpose Shopify Theme](https://1.envato.market/c/1314680/275988/4415?u=https://themeforest.net/item/dukamarket-multipurpose-shopify-theme/36158349)
+
 **[Our WordPress Theme](https://themeforest.net/user/alotheme/portfolio)**
 
-* [SadesMarket - Multipurpose WordPress Theme](https://1.envato.market/c/1314680/275988/4415?u=https://themeforest.net/item/sadesmarket-multipurpose-wordpress-theme/35369933)
+* [KuteShop - Marketplace Elementor WooCommerce Theme](https://1.envato.market/c/1314680/275988/4415?u=https://themeforest.net/item/kuteshop-multipurpose-woocommerce-wordpress-theme/13012521)
