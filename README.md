@@ -35,7 +35,7 @@ mega menu layouts, plain dropdown menus, an extra (custom) menu and a sidebar ac
 
 - [Quick start install](https://docs.magepow.com/magicmenu)
 - [Requirements Magento Open Source / Adobe Commerce](https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/system-requirements.html)
-- [Magento 2 Mega Menu Pro](https://magepow.com/magento-2-mega-menu.html)
+- [👉 Magento 2 Mega Menu Pro](https://magepow.com/magento-2-mega-menu.html)
 
 ## Installation
 
@@ -57,7 +57,7 @@ If you need professional technical assistance, help with configuration, troubles
 
 Get professional support and make the most of your Magento 2 Mega Menu.
 
-- [👉 Purchase Mega Menu Pro with Support](https://magepow.com/magento-2-mega-menu.html)
+[👉 Purchase Mega Menu Pro with Support](https://magepow.com/magento-2-mega-menu.html)
 
 ## Highlight features
 
