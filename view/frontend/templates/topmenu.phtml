@@ -5,45 +5,47 @@
  */
 declare(strict_types=1);
 
-$menu = $this->_sysCfg->topmenu;
+/**
+ * @var \Magiccart\Magicmenu\Block\Menu $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$menu = $block->sysCfg->topmenu;
 
-if( !$menu['enabled']){
-	echo $this->getChildHtml();
-	return;
+if (!$menu['enabled']) {
+    echo $block->getChildHtml();
+    return;
 }
-// drawMainMenu vs DrowMobileMenu
-$menuHtml = $this->drawMainMenu();
+
+$menuHtml = $block->drawMainMenu();
 $mobileMenu = $menuHtml['mobile'];
-$desktop 	= $menuHtml['desktop'];
-$ids  = explode(',', (string) $menu['notIncludeNav']);
-foreach ($ids as $id) { unset($desktop[$id]); }
-// drawHomeMenu
-$drawHomeMenu = $menu['home'] ? $this->drawHomeMenu() : '';
-// drawMainMenu
+$desktop = $menuHtml['desktop'];
+$ids = explode(',', (string)$menu['notIncludeNav']);
+foreach ($ids as $id) {
+    unset($desktop[$id]);
+}
+$drawHomeMenu = $menu['home'] ? $block->drawHomeMenu() : '';
 $drawMainMenu = $menu['mainCat'] ? implode("\n", $desktop) : '';
-// drawExtMenu ExtraMenu
-$drawExtraMenu = $menu['extraCat'] ? $this->drawExtraMenu() : '';
+$drawExtraMenu = $menu['extraCat'] ? $block->drawExtraMenu() : '';
+
+$classes = $menu['sticker'] ? 'sticker' : '';
+$classes .= ($menu['fullWidth'] == 2) ? ' menufullwidth' : '';
+$classes .= ' ' . $menu['event'];
 ?>
-<nav class="navigation mean-nav navigation-mobile" role="navigation" data-action="navigation" <?php echo $menu['exclude_html_desktop'] ? 'data-exclude_html_desktop="1"' : '' ?> >
-	<ul class="nav-mobile" data-alo-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
-		<?php echo $menu['mainCat'] ? $mobileMenu : '' ?>
-		<?php echo $drawExtraMenu ?>
-	</ul>
+<nav class="navigation mean-nav navigation-mobile" role="navigation" data-action="navigation">
+    <ul class="nav-mobile" data-alo-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
+        <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $menu['mainCat'] ? $mobileMenu : '' ?>
+        <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $drawExtraMenu ?>
+    </ul>
 </nav>
-<?php 
-	$classes  = $menu['sticker'] ? 'sticker' : '';
-	$classes .= ($menu['fullWidth'] == 2) ? ' menufullwidth' : '';
-	$classes .= ' '. $menu['event'];
-?>
-<div class="magicmenu clearfix" <?php echo $menu['exclude_html_mobile'] ? 'data-exclude_html_mobile="1"' : '' ?> >
-	<ul class="nav-desktop <?php /* @escapeNotVerified */ echo $classes; ?>"			
-			data-fullwidth="<?php /* @escapeNotVerified */ echo $menu['fullWidth'] ?>"
-			data-breakpoint="<?php /* @escapeNotVerified */ echo $menu['switcher'] ?>"
-			data-event="<?php /* @escapeNotVerified */ echo $menu['event'] ?>"
-			>
-		<?php echo $drawHomeMenu ?>
-		<?php echo $drawMainMenu ?>
-		<?php echo $drawExtraMenu ?>
-	</ul>
+<div class="magicmenu clearfix">
+    <ul class="nav-desktop <?= $escaper->escapeHtmlAttr($classes) ?>"
+        data-fullwidth="<?= $escaper->escapeHtmlAttr((string)$menu['fullWidth']) ?>"
+        data-breakpoint="<?= $escaper->escapeHtmlAttr((string)$menu['switcher']) ?>"
+        data-event="<?= $escaper->escapeHtmlAttr((string)$menu['event']) ?>"
+        >
+        <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $drawHomeMenu ?>
+        <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $drawMainMenu ?>
+        <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $drawExtraMenu ?>
+    </ul>
 </div>
 <script type="text/x-magento-init">{"body": {"magicmenu": {}}}</script>

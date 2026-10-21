@@ -7,21 +7,27 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Block\Adminhtml\Menu\Edit;
 
+use Magento\Backend\Block\Widget\Form\Generic;
 
-class Form extends \Magento\Backend\Block\Widget\Form\Generic
+class Form extends Generic
 {
+    /**
+     * Build the edit form wrapper.
+     *
+     * @return Generic
+     */
     protected function _prepareForm()
     {
         /** @var \Magento\Framework\Data\Form $form */
         $form = $this->_formFactory->create(
-            array(
-                'data' => array(
+            [
+                'data' => [
                     'id' => 'edit_form',
                     'action' => $this->getUrl('*/*/save', ['store' => $this->getRequest()->getParam('store')]),
                     'method' => 'post',
                     'enctype' => 'multipart/form-data',
-                ),
-            )
+                ],
+            ]
         );
         $form->setUseContainer(true);
         $this->setForm($form);

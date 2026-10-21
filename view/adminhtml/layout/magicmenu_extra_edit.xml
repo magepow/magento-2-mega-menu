@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- /**
- * Magiccart 
- * @category    Magiccart 
- * @copyright   Copyright (c) 2014 Magiccart (http://www.magiccart.net/) 
- * @license     http://www.magiccart.net/license-agreement.html
- * @Author: DOng NGuyen<nguyen@dvn.com>
- * @@Create Date: 2016-02-23 18:59:34
- * @@Modify Date: 2016-03-09 17:44:29
- * @@Function:
- */ -->
+<!--
+/**
+ * Copyright © Magiccart. All rights reserved.
+ * See LICENSE for license details.
+ */-->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <title>Extra Tabs</title>
@@ -27,16 +22,18 @@
             </block>
         </referenceContainer>
         <referenceContainer name="content">
-        <block class="Magiccart\Magicmenu\Block\Adminhtml\Extra\Edit" name="extra_edit"/>
+            <block class="Magiccart\Magicmenu\Block\Adminhtml\Extra\Edit" name="extra_edit">
+                <block class="Magiccart\Magicmenu\Block\Adminhtml\Extra\Edit\Form" name="form"/>
+            </block>
         </referenceContainer>
         <referenceContainer name="left">
-        <block class="Magiccart\Magicmenu\Block\Adminhtml\Extra\Edit\Tabs" name="extra_edit_tabs">
-            <block class="Magiccart\Magicmenu\Block\Adminhtml\Extra\Edit\Tab\Form" name="extra_edit_tab_form"/>
-            <action method="addTab">
-                <argument name="name" xsi:type="string">main_section</argument>
-                <argument name="block" xsi:type="string">extra_edit_tab_form</argument>
-            </action>
-        </block>
+            <block class="Magiccart\Magicmenu\Block\Adminhtml\Extra\Edit\Tabs" name="extra_edit_tabs">
+                <block class="Magiccart\Magicmenu\Block\Adminhtml\Extra\Edit\Tab\Form" name="extra_edit_tab_form"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">main_section</argument>
+                    <argument name="block" xsi:type="string">extra_edit_tab_form</argument>
+                </action>
+            </block>
         </referenceContainer>
     </body>
 </page>

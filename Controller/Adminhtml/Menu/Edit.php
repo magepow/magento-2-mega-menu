@@ -7,35 +7,35 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Controller\Adminhtml\Menu;
 
-class Edit extends \Magiccart\Magicmenu\Controller\Adminhtml\Action
+use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magiccart\Magicmenu\Controller\Adminhtml\Action;
+
+class Edit extends Action implements HttpGetActionInterface
 {
     /**
-     * @var \Magento\Framework\View\Result\PageFactory
+     * @inheritdoc
+     */
+    public const ADMIN_RESOURCE = 'Magiccart_Magicmenu::magicmenu_menu';
+
+    /**
+     * @inheritdoc
      */
     public function execute()
     {
         $id = $this->getRequest()->getParam('magicmenu_id');
-        $storeViewId = $this->getRequest()->getParam('store');
-        $model = $this->_magicmenuFactory->create();
 
         if ($id) {
-            $model->setStoreViewId($storeViewId)->load($id);
-            if (!$model->getId()) {
+            try {
+                $this->magicmenuRepository->getById($id);
+            } catch (NoSuchEntityException $exception) {
                 $this->messageManager->addError(__('This Menu no longer exists.'));
-                $resultRedirect = $this->resultRedirectFactory->create();
 
-                return $resultRedirect->setPath('*/*/');
+                return $this->resultRedirectFactory->create()->setPath('*/*/');
             }
         }
 
-        $data = $this->_getSession()->getFormData(true);
-        if (!empty($data)) {
-            $model->setData($data);
-        }
-
-        $this->_coreRegistry->register('magicmenu', $model);
-
-        $resultPage = $this->_resultPageFactory->create();
+        $resultPage = $this->resultPageFactory->create();
 
         return $resultPage;
     }

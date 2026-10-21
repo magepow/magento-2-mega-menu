@@ -2,7 +2,10 @@
     "name": "magiccart/magicmenu",
     "description": "Make megamenu, dropdown menu, mobile menu easy all in one.",
     "type": "magento2-module",
-    "license": "proprietary",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
     "authors": [
         {
             "name": "Magepow",

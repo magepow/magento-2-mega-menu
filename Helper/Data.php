@@ -7,59 +7,93 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Helper;
 
-class Data extends \Magento\Framework\App\Helper\AbstractHelper
+use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\Module\Manager;
+use Magiccart\Magicmenu\Model\Config;
+
+/**
+ * @deprecated Use \Magiccart\Magicmenu\Model\Config instead.
+ */
+class Data extends AbstractHelper
 {
+    /**
+     * @var Config
+     */
+    private $config;
+
+    /**
+     * @var Manager
+     */
+    private $moduleManager;
+
     /**
      * @var array
      */
-    protected $configModule;
-
-    /**
-     * @var \Magento\Framework\Module\Manager
-     */
-    protected $moduleManager;
-
+    private $configModule = [];
 
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
-        \Magento\Framework\Module\Manager $moduleManager
-    )
-    {
+        Manager $moduleManager,
+        Config $config
+    ) {
         parent::__construct($context);
         $this->moduleManager = $moduleManager;
-        $module = strtolower(str_replace('Magiccart_', '', (string) $this->_getModuleName()));
-        $this->configModule = $this->getConfig($module);
-
+        $this->config = $config;
+        $this->configModule = $this->config->getModuleConfig();
     }
 
-    public function getConfig($cfg='')
+    /**
+     * Retrieve a configuration value.
+     *
+     * @param string $cfg
+     * @return mixed
+     */
+    public function getConfig($cfg = '')
     {
-        if($cfg) return $this->scopeConfig->getValue( $cfg, \Magento\Store\Model\ScopeInterface::SCOPE_STORE );
-        return $this->scopeConfig;
+        if ($cfg) {
+            return $this->config->getScopeValue($cfg);
+        }
+
+        return $this->config->getModuleConfig();
     }
 
-    public function getConfigModule($cfg='', $value=null)
+    /**
+     * Retrieve a nested value of the module configuration.
+     *
+     * @param string $cfg
+     * @param mixed $value
+     * @return mixed
+     */
+    public function getConfigModule($cfg = '', $value = null)
     {
         $values = $this->configModule;
-        if( !$cfg ) return $values;
-        $config  = explode('/', (string) $cfg);
-        $end     = count($config) - 1;
-        foreach ($config as $key => $vl) {
-            if( isset($values[$vl]) ){
-                if( $key == $end ) {
-                    $value = $values[$vl];
-                }else {
-                    $values = $values[$vl];
-                }
-            } 
-
+        if (!$cfg) {
+            return $values;
         }
+
+        $config = explode('/', (string)$cfg);
+        $end = count($config) - 1;
+        foreach ($config as $key => $item) {
+            if (isset($values[$item])) {
+                if ($key == $end) {
+                    $value = $values[$item];
+                } else {
+                    $values = $values[$item];
+                }
+            }
+        }
+
         return $value;
     }
 
+    /**
+     * Check whether a module is enabled.
+     *
+     * @param string $moduleName
+     * @return bool
+     */
     public function isEnabledModule($moduleName)
     {
         return $this->moduleManager->isEnabled($moduleName);
     }
-
 }

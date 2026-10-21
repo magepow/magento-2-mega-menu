@@ -7,41 +7,41 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Block\Adminhtml\Menu;
 
+use Magento\Backend\Block\Template\Context;
+use Magento\Backend\Helper\Data as BackendHelper;
+use Magento\Catalog\Model\CategoryFactory;
+use Magento\Framework\DataObject;
+use Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\CollectionFactory as MagicmenuCollectionFactory;
 use Magiccart\Magicmenu\Model\Status;
 
 class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 {
     /**
-     * magicmenu collection factory.
-     *
-     * @var \Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\CollectionFactory
+     * @var MagicmenuCollectionFactory
      */
-    protected $_magicmenuCollectionFactory;
+    protected $magicmenuCollectionFactory;
 
     /**
-     * @var \Magento\Catalog\Model\CategoryFactory
+     * @var CategoryFactory
      */
-    protected $_categoryFactory;
+    protected $categoryFactory;
 
     /**
-     * construct.
-     *
-     * @param \Magento\Backend\Block\Template\Context                         $context
-     * @param \Magento\Backend\Helper\Data                                    $backendHelper
-     * @param \Magento\Catalog\Model\CategoryFactory                          $categoryFactory
-     * @param \Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\CollectionFactory $magicmenuCollectionFactory
-     * @param array                                                           $data
+     * @param Context $context
+     * @param BackendHelper $backendHelper
+     * @param CategoryFactory $categoryFactory
+     * @param MagicmenuCollectionFactory $magicmenuCollectionFactory
+     * @param array $data
      */
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Backend\Helper\Data $backendHelper,
-        \Magento\Catalog\Model\CategoryFactory $categoryFactory,
-        \Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\CollectionFactory $magicmenuCollectionFactory,
-    
+        Context $context,
+        BackendHelper $backendHelper,
+        CategoryFactory $categoryFactory,
+        MagicmenuCollectionFactory $magicmenuCollectionFactory,
         array $data = []
     ) {
-        $this->_magicmenuCollectionFactory = $magicmenuCollectionFactory;
-        $this->_categoryFactory = $categoryFactory;
+        $this->magicmenuCollectionFactory = $magicmenuCollectionFactory;
+        $this->categoryFactory = $categoryFactory;
 
         parent::__construct($context, $backendHelper, $data);
     }
@@ -60,7 +60,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     {
 
         $store = $this->getRequest()->getParam('store');
-        $collection = $this->_magicmenuCollectionFactory->create();
+        $collection = $this->magicmenuCollectionFactory->create();
         if($store) $collection->addFieldToFilter('stores',array( array('finset' => 0), array('finset' => $store)));
         $collection->addFieldToFilter('extra', 0);
         $this->setCollection($collection);
@@ -181,12 +181,6 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 
         return parent::_prepareColumns();
     }
-
-    /**
-     * get slider vailable option
-     *
-     * @return array
-     */
 
     /**
      * @return $this

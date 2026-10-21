@@ -7,14 +7,22 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Controller\Adminhtml\Menu;
 
-class Grid extends \Magiccart\Magicmenu\Controller\Adminhtml\Action
+use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magiccart\Magicmenu\Controller\Adminhtml\Action;
+
+class Grid extends Action implements HttpGetActionInterface
 {
     /**
-     * @var \Magento\Framework\View\Result\PageFactory
+     * @inheritdoc
+     */
+    public const ADMIN_RESOURCE = 'Magiccart_Magicmenu::magicmenu_menu';
+
+    /**
+     * @inheritdoc
      */
     public function execute()
     {
-        $resultLayout = $this->_resultLayoutFactory->create();
+        $resultLayout = $this->resultLayoutFactory->create();
 
         return $resultLayout;
     }

@@ -1,15 +1,10 @@
 <?xml version="1.0"?>
 
-<!-- /**
- * Magiccart 
- * @category    Magiccart 
- * @copyright   Copyright (c) 2014 Magiccart (http://www.magiccart.net/) 
- * @license     http://www.magiccart.net/license-agreement.html
- * @Author: DOng NGuyen<nguyen@dvn.com>
- * @@Create Date: 2016-02-23 18:59:34
- * @@Modify Date: 2020-07-21 18:17:04
- * @@Function:
- */ -->
+<!--
+/**
+ * Copyright © Magiccart. All rights reserved.
+ * See LICENSE for license details.
+ */-->
  
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
@@ -94,16 +89,6 @@
                     <source_model>Magiccart\Magicmenu\Model\System\Config\Category</source_model>
                     <can_be_empty>1</can_be_empty>
                 </field>
-                <field id="exclude_html_desktop" translate="label comment" type="select" sortOrder="50"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Exclude Menu Desktop in Mobile version : </label>
-                    <comment model="Magiccart\Magicmenu\Block\Adminhtml\System\DynamicComment" />
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="exclude_html_mobile" translate="label comment" type="select" sortOrder="60"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Exclude Menu Mobile in Desktop version : </label>
-                    <comment model="Magiccart\Magicmenu\Block\Adminhtml\System\DynamicComment" />
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>                
             </group>
             <group id="vmenu" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Vertical Menu</label>
@@ -150,16 +135,6 @@
                     <source_model>Magiccart\Magicmenu\Model\System\Config\Category</source_model>
                     <can_be_empty>1</can_be_empty>
                 </field>
-                <field id="exclude_html_desktop" translate="label comment" type="select" sortOrder="50"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Exclude Menu Desktop in Mobile version : </label>
-                    <comment model="Magiccart\Magicmenu\Block\Adminhtml\System\DynamicComment" />
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="exclude_html_mobile" translate="label comment" type="select" sortOrder="60"  showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-                    <label>Exclude Menu Mobile in Desktop version : </label>
-                    <comment model="Magiccart\Magicmenu\Block\Adminhtml\System\DynamicComment" />
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field> 
             </group>
             <group id="accordion" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Accordion Menu</label>

@@ -5,87 +5,95 @@
  */
 declare(strict_types=1);
 
-$menu = $this->_sysCfg->topmenu;
-$vmenu = $this->_sysCfg->vmenu;
+/**
+ * @var \Magiccart\Magicmenu\Block\Menu $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$menu = $block->sysCfg->topmenu;
+$vmenu = $block->sysCfg->vmenu;
 
-if( !$menu['enabled'] && !$vmenu['enabled'] ){
-	echo $this->getChildHtml();
-	return;
+if (!$menu['enabled'] && !$vmenu['enabled']) {
+    echo $block->getChildHtml();
+    return;
 }
 
-// drawMainMenu vs DrowMobileMenu
-$homeHtml  	= $this->drawHomeMenu();
-$menuHtml  	= $this->drawMainMenu();
-$extraHtml 	= $this->drawExtraMenu();
+$homeHtml = $block->drawHomeMenu();
+$menuHtml = $block->drawMainMenu();
+$extraHtml = $block->drawExtraMenu();
 $mobileMenu = $menuHtml['mobile'];
-$drawHomeMenu  = $menu['home'] ? $homeHtml : '';
-$drawMainMenu  = '';
+$drawHomeMenu = $menu['home'] ? $homeHtml : '';
+$drawMainMenu = '';
 $drawExtraMenu = $menu['extraCat'] ? $extraHtml : '';
 ?>
-<nav class="navigation mean-nav navigation-mobile" role="navigation" data-action="navigation" <?php echo $menu['exclude_html_desktop'] ? 'data-exclude_html_desktop="1"' : '' ?> >
-	<ul class="nav-mobile" data-alo-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
-		<?php echo $mobileMenu ?>
-		<?php echo $drawExtraMenu ?>
-	</ul>
+<nav class="navigation mean-nav navigation-mobile" role="navigation" data-action="navigation">
+    <ul class="nav-mobile" data-alo-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
+        <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $mobileMenu ?>
+        <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $drawExtraMenu ?>
+    </ul>
 </nav>
-<?php if($vmenu['enabled']) : ?>
-	<?php
-		$vdrawHomeMenu  = $vmenu['home'] ? $homeHtml : '';
-		$vdrawMainMenu  = '';
-		$vdrawExtraMenu = $vmenu['extraCat'] ? $extraHtml : '';
-		if($vmenu['mainCat']){
-			$vdesktop 	= $menuHtml['desktop'];
-			$vids  = explode(',', (string) $vmenu['notIncludeNav']);
-			foreach ($vids as $id) { unset($vdesktop[$id]); }
-			$vdrawMainMenu = implode("\n", $vdesktop);
-		}
-		$classes = $vmenu['event'];
-	?>
-	<div class="vmagicmenu vertical-menu clearfix" <?php echo $vmenu['exclude_html_mobile'] ? 'data-exclude_html_mobile="1"' : '' ?> >
-		<div class="block-title block-title-vmagicmenu v-title">
-	        <strong>
-	        	<span class="vmagicmenu-subtitle"><?php echo __($this->getRootName())?></span>
-	            <span class="icon-menu">
-	                <span></span>
-	                <span></span>
-	                <span></span>
-	            </span>
-	        </strong>
-	    </div>
-		<div class="block-vmagicmenu-content">
-			<ul class="nav-desktop vmagicmenu-narrow clearfix <?php /* @escapeNotVerified */ echo $classes; ?>">
-				<?php echo $vdrawHomeMenu ?>
-				<?php echo $vdrawMainMenu ?>
-				<?php echo $vdrawExtraMenu ?>
-				<li class="all-cat"><span><?php echo __('All Categories')?></span><span style="display:none"><?php echo __('Close')?></span></li>
-			</ul>
-		</div>
-	</div>
+<?php if ($vmenu['enabled']) : ?>
+    <?php
+    $vdrawHomeMenu = $vmenu['home'] ? $homeHtml : '';
+    $vdrawMainMenu = '';
+    $vdrawExtraMenu = $vmenu['extraCat'] ? $extraHtml : '';
+    if ($vmenu['mainCat']) {
+        $vdesktop = $menuHtml['desktop'];
+        $vids = explode(',', (string)$vmenu['notIncludeNav']);
+        foreach ($vids as $id) {
+            unset($vdesktop[$id]);
+        }
+        $vdrawMainMenu = implode("\n", $vdesktop);
+    }
+    $classes = $vmenu['event'];
+    ?>
+    <div class="vmagicmenu vertical-menu clearfix">
+        <div class="block-title block-title-vmagicmenu v-title">
+            <strong>
+                <span class="vmagicmenu-subtitle"><?= $escaper->escapeHtml($block->getRootName()) ?></span>
+                <span class="icon-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </strong>
+        </div>
+        <div class="block-vmagicmenu-content">
+            <ul class="nav-desktop vmagicmenu-narrow clearfix <?= $escaper->escapeHtmlAttr($classes) ?>">
+                <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $vdrawHomeMenu ?>
+                <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $vdrawMainMenu ?>
+                <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $vdrawExtraMenu ?>
+                <li class="all-cat">
+                    <span><?= $escaper->escapeHtml(__('All Categories')) ?></span>
+                    <span style="display:none"><?= $escaper->escapeHtml(__('Close')) ?></span>
+                </li>
+            </ul>
+        </div>
+    </div>
 <?php endif ?>
-<?php if($menu['enabled']) : ?>
-	<?php
-		if($menu['mainCat']){
-			$desktop 	= $menuHtml['desktop'];
-			$ids  = explode(',', (string) $menu['notIncludeNav']);
-			foreach ($ids as $id) { unset($desktop[$id]); }
-			$drawMainMenu = implode("\n", $desktop);
-		}
-	?>
-	<?php 
-		$classes  = $menu['sticker'] ? 'sticker' : '';
-		$classes .= ($menu['fullWidth'] == 2) ? ' menufullwidth' : '';
-		$classes .= ' '. $menu['event'];
-	?>
-	<div class="magicmenu clearfix" <?php echo $menu['exclude_html_mobile'] ? 'data-exclude_html_mobile="1"' : '' ?> >
-		<ul class="nav-desktop  <?php /* @escapeNotVerified */ echo $classes; ?>"
-			data-fullwidth="<?php /* @escapeNotVerified */ echo $menu['fullWidth'] ?>"
-			data-breakpoint="<?php /* @escapeNotVerified */ echo $menu['switcher'] ?>"
-			data-event="<?php /* @escapeNotVerified */ echo $menu['event'] ?>"
-			>
-			<?php echo $drawHomeMenu ?>
-			<?php echo $drawMainMenu ?>
-			<?php echo $drawExtraMenu ?>
-		</ul>
-	</div>
+<?php if ($menu['enabled']) : ?>
+    <?php
+    if ($menu['mainCat']) {
+        $desktop = $menuHtml['desktop'];
+        $ids = explode(',', (string)$menu['notIncludeNav']);
+        foreach ($ids as $id) {
+            unset($desktop[$id]);
+        }
+        $drawMainMenu = implode("\n", $desktop);
+    }
+    $classes = $menu['sticker'] ? 'sticker' : '';
+    $classes .= ($menu['fullWidth'] == 2) ? ' menufullwidth' : '';
+    $classes .= ' ' . $menu['event'];
+    ?>
+    <div class="magicmenu clearfix">
+        <ul class="nav-desktop <?= $escaper->escapeHtmlAttr($classes) ?>"
+            data-fullwidth="<?= $escaper->escapeHtmlAttr((string)$menu['fullWidth']) ?>"
+            data-breakpoint="<?= $escaper->escapeHtmlAttr((string)$menu['switcher']) ?>"
+            data-event="<?= $escaper->escapeHtmlAttr((string)$menu['event']) ?>"
+            >
+            <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $drawHomeMenu ?>
+            <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $drawMainMenu ?>
+            <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $drawExtraMenu ?>
+        </ul>
+    </div>
 <?php endif ?>
 <script type="text/x-magento-init">{"body": {"magicmenu": {}}}</script>

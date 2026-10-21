@@ -7,50 +7,60 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Model\System\Config;
 
+use Magento\Framework\Option\ArrayInterface;
 
-class Width implements \Magento\Framework\Option\ArrayInterface
+class Width implements ArrayInterface
 {
-
-    const WIDTH_BOXED = 0;
-    const WIDTH_AUTO  = 1;
-    const WIDTH_FULL  = 2;
+    /**
+     * Boxed width.
+     */
+    public const WIDTH_BOXED = 0;
 
     /**
-     * get available statuses.
-     *
-     * @return []
+     * Automatic width.
      */
-    public static function getWidth()
+    public const WIDTH_AUTO = 1;
+
+    /**
+     * Full width.
+     */
+    public const WIDTH_FULL = 2;
+
+    /**
+     * Get the available widths in "key-value" format.
+     *
+     * @return array
+     */
+    public static function getWidth(): array
     {
         return [
-            self::WIDTH_AUTO => __('Auto')
-            , self::WIDTH_BOXED => __('Boxed')
-            , self::WIDTH_FULL => __('Full')
+            self::WIDTH_AUTO => __('Auto'),
+            self::WIDTH_BOXED => __('Boxed'),
+            self::WIDTH_FULL => __('Full'),
         ];
     }
 
     /**
-     * Options getter
+     * Get the available widths as select options.
      *
      * @return array
      */
-    public function toOptionArray()
+    public function toOptionArray(): array
     {
         return [
-            ['value' => self::WIDTH_AUTO, 'label' => __('Auto')], 
+            ['value' => self::WIDTH_AUTO, 'label' => __('Auto')],
             ['value' => self::WIDTH_BOXED, 'label' => __('Boxed')],
-            ['value' => self::WIDTH_FULL, 'label' => __('Full')]
+            ['value' => self::WIDTH_FULL, 'label' => __('Full')],
         ];
     }
 
     /**
-     * Get options in "key-value" format
+     * Get the available widths in "key-value" format.
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return self::getWidth();
     }
 }
-

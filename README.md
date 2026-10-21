@@ -57,8 +57,7 @@ If you need professional technical assistance, help with configuration, troubles
 
 Get professional support and make the most of your Magento 2 Mega Menu.
 
-- [👉 Purchase with Support](https://magepow.com/magento-2-mega-menu.html)
-
+- [👉 Purchase Mega Menu Pro with Support](https://magepow.com/magento-2-mega-menu.html)
 
 ## Highlight features
 
@@ -140,6 +139,44 @@ every part.
 
 Example: `Proportion: Category = 2`, `Proportion: Block Left = 1` and `Proportion: Block Right = 0`
 give 67% of the width to the categories and 33% to the left block.
+
+## Extension points
+
+| Type | Name |
+|---|---|
+| Service contract | `Magiccart\Magicmenu\Api\MagicmenuRepositoryInterface` |
+| Data contract | `Magiccart\Magicmenu\Api\Data\MagicmenuInterface` |
+| Search results | `Magiccart\Magicmenu\Api\Data\MagicmenuSearchResultsInterface` |
+| Frontend block | `Magiccart\Magicmenu\Block\Menu` |
+| Configuration reader | `Magiccart\Magicmenu\Model\Config` |
+
+Use the repository instead of loading or saving the model directly:
+
+```php
+$menu = $this->magicmenuRepository->getById($id);
+$menu->setName('New name');
+$this->magicmenuRepository->save($menu);
+```
+
+## Upgrade notes (2.0.0)
+
+* The module moved from `setup_version` / `InstallSchema` / `InstallData` to declarative schema
+  (`etc/db_schema.xml`) and a data patch (`Setup/Patch/Data/AddCategoryMagicAttributes.php`).
+  The patch is idempotent: existing category attributes are not recreated.
+* The CMS static blocks are now resolved by identifier (`Magento\Cms\Block\BlockByIdentifier`)
+  instead of the deprecated `Magento\Cms\Block\Block`.
+* `Magiccart\Magicmenu\Helper\Data` is deprecated, use `Magiccart\Magicmenu\Model\Config` instead.
+* The `Registry` based transfer of the edited entity between controller and form block was removed.
+* The `exclude_html_desktop` and `exclude_html_mobile` settings were removed, the attributes they
+  rendered were never read by the JavaScript.
+
+## Development
+
+```bash
+vendor/bin/phpcs --standard=Magento2 --severity=10 app/code/Magiccart/Magicmenu
+vendor/bin/phpcs --standard=Magento2 --extensions=php,phtml app/code/Magiccart/Magicmenu
+vendor/bin/phpunit -c dev/tests/unit/phpunit.xml.dist app/code/Magiccart/Magicmenu/Test/Unit
+```
 
 ## License
 

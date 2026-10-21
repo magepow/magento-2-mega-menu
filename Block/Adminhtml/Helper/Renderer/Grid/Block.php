@@ -7,57 +7,65 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Block\Adminhtml\Helper\Renderer\Grid;
 
-class Block extends \Magento\Backend\Block\Widget\Grid\Column\Renderer\AbstractRenderer
+use Magento\Backend\Block\Context;
+use Magento\Backend\Block\Widget\Grid\Column\Renderer\AbstractRenderer;
+use Magento\Cms\Api\Data\BlockInterface;
+use Magento\Cms\Api\GetBlockByIdentifierInterface;
+use Magento\Framework\DataObject;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Store\Model\StoreManagerInterface;
+
+class Block extends AbstractRenderer
 {
     /**
-     * Store manager.
-     *
-     * @var \Magento\Store\Model\StoreManagerInterface
+     * @var GetBlockByIdentifierInterface
      */
-    protected $_storeManager;
+    private $blockByIdentifier;
 
     /**
-     * block factory.
-     *
-     * @var \Magento\Cms\Model\BlockFactory
+     * @var StoreManagerInterface
      */
-    protected $_blockFactory;
+    private $storeManager;
 
-    /**
-     * [__construct description].
-     *
-     * @param \Magento\Backend\Block\Context              $context
-     * @param \Magento\Store\Model\StoreManagerInterface  $storeManager
-     * @param \Magento\Cms\Model\BlockFactory $blockFactory
-     * @param array                                       $data
-     */
     public function __construct(
-        \Magento\Backend\Block\Context $context,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Cms\Model\BlockFactory $blockFactory,
+        Context $context,
+        GetBlockByIdentifierInterface $blockByIdentifier,
+        StoreManagerInterface $storeManager,
         array $data = []
     ) {
         parent::__construct($context, $data);
-        $this->_storeManager = $storeManager;
-        $this->_bockFactory  = $blockFactory;
+        $this->blockByIdentifier = $blockByIdentifier;
+        $this->storeManager = $storeManager;
     }
 
     /**
-     * Render action.
+     * Render the CMS block title of the current row.
      *
-     * @param \Magento\Framework\DataObject $row
-     *
+     * @param DataObject $row
      * @return string
      */
-    public function render(\Magento\Framework\DataObject $row)
+    public function render(DataObject $row)
     {
-        $id = $row->getData($this->getColumn()->getIndex());
-        if(!$id) return;
-        $store = $this->getRequest()->getParam('store');
-        $bock = $this->_bockFactory->create();
-        $bock->setStoreId($store)->load($id);
-        $url = $this->getUrl('cms/block/edit', ['block_id' => $bock->getId()]);
+        $identifier = $row->getData($this->getColumn()->getIndex());
 
-        return '<a href="'.$url.'" alt="'.$url.'" >'. $bock->getTitle() .'</a>';
+        if (!$identifier) {
+            return '';
+        }
+
+        try {
+            /** @var BlockInterface $block */
+            $block = $this->blockByIdentifier->execute(
+                (string)$identifier,
+                (int)$this->storeManager->getStore()->getId()
+            );
+        } catch (NoSuchEntityException $exception) {
+            return '';
+        }
+
+        $url = $this->getUrl('cms/block/edit', ['block_id' => $block->getId()]);
+
+        return '<a href="' . $this->_escaper->escapeUrl($url) . '" title="'
+            . $this->_escaper->escapeHtmlAttr($url) . '">'
+            . $this->_escaper->escapeHtml($block->getTitle()) . '</a>';
     }
 }

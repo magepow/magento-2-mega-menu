@@ -7,23 +7,40 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Controller\Adminhtml\Menu;
 
-class Delete extends \Magiccart\Magicmenu\Controller\Adminhtml\Action
+use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magiccart\Magicmenu\Controller\Adminhtml\Action;
+
+class Delete extends Action implements HttpGetActionInterface
 {
+    /**
+     * @inheritdoc
+     */
+    public const ADMIN_RESOURCE = 'Magiccart_Magicmenu::magicmenu_menu';
+
+    /**
+     * @inheritdoc
+     */
     public function execute()
     {
         $id = $this->getRequest()->getParam('magicmenu_id');
-        try {
-            $item = $this->_magicmenuFactory->create()->setId($id);
-            $item->delete();
-            $this->messageManager->addSuccess(
-                __('Delete successfully !')
-            );
-        } catch (\Exception $e) {
-            $this->messageManager->addError($e->getMessage());
+
+        if (!$id || !is_numeric($id)) {
+            $this->messageManager->addError(__('We can\'t find a menu to delete.'));
+
+            return $this->resultRedirectFactory->create()->setPath('*/*/');
         }
 
-        $resultRedirect = $this->resultRedirectFactory->create();
+        try {
+            $this->magicmenuRepository->deleteById((int)$id);
+            $this->messageManager->addSuccess(__('Delete successfully !'));
+        } catch (NoSuchEntityException $exception) {
+            $this->messageManager->addError(__('We can\'t find a menu to delete.'));
+        } catch (CouldNotDeleteException $exception) {
+            $this->messageManager->addError($exception->getMessage());
+        }
 
-        return $resultRedirect->setPath('*/*/');
+        return $this->resultRedirectFactory->create()->setPath('*/*/');
     }
 }

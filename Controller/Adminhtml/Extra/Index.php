@@ -7,21 +7,29 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Controller\Adminhtml\Extra;
 
-class Index extends \Magiccart\Magicmenu\Controller\Adminhtml\Action
+use Magento\Framework\App\Action\HttpGetActionInterface;
+use Magiccart\Magicmenu\Controller\Adminhtml\Action;
+
+class Index extends Action implements HttpGetActionInterface
 {
     /**
-     * @var \Magento\Framework\View\Result\PageFactory
+     * @inheritdoc
+     */
+    public const ADMIN_RESOURCE = 'Magiccart_Magicmenu::magicmenu_extra';
+
+    /**
+     * @inheritdoc
      */
     public function execute()
     {
         if ($this->getRequest()->getQuery('ajax')) {
-            $resultForward = $this->_resultForwardFactory->create();
+            $resultForward = $this->resultForwardFactory->create();
             $resultForward->forward('grid');
 
             return $resultForward;
         }
 
-        $resultPage = $this->_resultPageFactory->create();
+        $resultPage = $this->resultPageFactory->create();
 
         return $resultPage;
     }

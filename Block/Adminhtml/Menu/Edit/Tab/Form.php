@@ -7,52 +7,69 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Block\Adminhtml\Menu\Edit\Tab;
 
+use Magento\Backend\Block\Store\Switcher\Form\Renderer\Fieldset\Element as FieldsetElement;
+use Magento\Backend\Block\Template\Context;
+use Magento\Backend\Block\Widget\Form\Generic;
+use Magento\Backend\Block\Widget\Tab\TabInterface;
+use Magento\Framework\Data\FormFactory;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Registry;
+use Magento\Store\Model\System\Store;
+use Magiccart\Magicmenu\Api\Data\MagicmenuInterface;
+use Magiccart\Magicmenu\Api\MagicmenuRepositoryInterface;
+use Magiccart\Magicmenu\Model\MagicmenuFactory;
 use Magiccart\Magicmenu\Model\Status;
-class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magento\Backend\Block\Widget\Tab\TabInterface
+use Magiccart\Magicmenu\Model\System\Config\Blocks;
+use Magiccart\Magicmenu\Model\System\Config\Category;
+
+class Form extends Generic implements TabInterface
 {
     /**
-     * @var \Magento\Framework\DataObjectFactory
+     * @var Blocks
      */
-    protected $_objectFactory;
-
-    /**
-     * @var Magiccart\Magicmenu\Model\System\Config\Blocks
-     */    
     protected $_blocks;
 
-
     /**
-     * @var Magiccart\Magicmenu\Model\System\Config\Category
-     */    
+     * @var Category
+     */
     protected $_category;
 
     /**
-     * @var \Magiccart\Magicmenu\Model\Magicmenu
-     */
-
-    protected $_magicmenu;
-
-    /**
-     * @var \Magento\Store\Model\System\Store
+     * @var Store
      */
     protected $_systemStore;
 
+    /**
+     * @var MagicmenuRepositoryInterface
+     */
+    private $magicmenuRepository;
+
+    /**
+     * @var MagicmenuFactory
+     */
+    private $magicmenuFactory;
+
+    /**
+     * @var MagicmenuInterface|null
+     */
+    private $magicmenu;
+
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\Registry $registry,
-        \Magento\Framework\Data\FormFactory $formFactory,
-        \Magento\Framework\DataObjectFactory $objectFactory,
-        \Magento\Store\Model\System\Store $systemStore,
-        \Magiccart\Magicmenu\Model\Magicmenu $magicmenu,
-        \Magiccart\Magicmenu\Model\System\Config\Blocks $blocks,
-        \Magiccart\Magicmenu\Model\System\Config\Category $category,
+        Context $context,
+        Registry $registry,
+        FormFactory $formFactory,
+        Store $systemStore,
+        MagicmenuRepositoryInterface $magicmenuRepository,
+        MagicmenuFactory $magicmenuFactory,
+        Blocks $blocks,
+        Category $category,
         array $data = []
     ) {
-        $this->_objectFactory = $objectFactory;
-        $this->_magicmenu = $magicmenu;
         $this->_blocks = $blocks;
         $this->_category = $category;
         $this->_systemStore = $systemStore;
+        $this->magicmenuRepository = $magicmenuRepository;
+        $this->magicmenuFactory = $magicmenuFactory;
         parent::__construct($context, $registry, $formFactory, $data);
     }
 
@@ -75,14 +92,25 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
      */
     protected function _prepareForm()
     {
-        $model = $this->_coreRegistry->registry('magicmenu');
+        $model = $this->getMagicmenu();
 
         /** @var \Magento\Framework\Data\Form $form */
         $form = $this->_formFactory->create();
 
         $form->setHtmlIdPrefix('magic_');
 
-        $fieldset = $form->addFieldset('base_fieldset', ['legend' => __('Menu Information')]);
+        $fieldset = $form->addFieldset(
+            'base_fieldset',
+            [
+                'legend' => __('Menu Information'),
+                'comment' => __(
+                    'The width of the mega menu is shared between the category list, the left block and the right block. '
+                    . 'Enter the weight of each part, the total of the three weights is used to calculate the width of '
+                    . 'every part. For example, Category = 2, Block Left = 1 and Block Right = 0 give 67% of the width '
+                    . 'to the categories and 33% to the left block.'
+                ),
+            ]
+        );
 
         if ($model->getId()) {
             $fieldset->addField('magicmenu_id', 'hidden', ['name' => 'magicmenu_id']);
@@ -94,19 +122,24 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'title' => __('Category'),
                 'name'  => 'cat_id',
                 'values' => $this->_category->toOptionArray(),
-                'after_element_html' => '
-                    <p class="nm"><small>Select top category</small></p>
-                    <p class="nm"><small>Label && Image, Thumbanil add in Catalog > Manager Categories</small></p>
-                ',
+                'after_element_html' => '<p class="note">' . $this->_escaper->escapeHtml(
+                    __('Select the top category of this menu. The label, the image and the thumbnail of the category are set in Catalog > Manage Categories.')
+                ) . '</p>',
             ]
         );
 
-        $cat_proportion = $fieldset->addField('cat_proportion', 'text', 
+        $cat_proportion = $fieldset->addField('cat_proportion', 'text',
             [
             'label'     => __('Proportion: Category'),
             'class'     => 'validate-greater-than-zero',
             // 'required'  => true,
             'name'      => 'cat_proportion',
+            'after_element_html' => '<p class="note">' . $this->_escaper->escapeHtml(
+                __(
+                    'Weight of the category list inside the mega menu. The higher the value, the wider the category list. '
+                    . 'The width is the weight of this field divided by the total weight of Category, Block Left and Block Right.'
+                )
+            ) . '</p>',
             ]
         );
 
@@ -149,9 +182,9 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'title' => __('Block Top'),
                 'name'  => 'top',
                 'values' => $this->_blocks->toOptionArray(),
-                'after_element_html' => '
-                    <p class="nm"><small>Add Static Block to Top Megamenu</small></p>
-                ',
+                'after_element_html' => '<p class="note">' . $this->_escaper->escapeHtml(
+                    __('Add a static block displayed on the top of the mega menu.')
+                ) . '</p>',
             ]
         );
 
@@ -161,13 +194,13 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'title' => __('Block Right'),
                 'name'  => 'right',
                 'values' => $this->_blocks->toOptionArray(),
-                'after_element_html' => '
-                    <p class="nm"><small>Add Static Block to Right Megamenu</small></p>
-                ',
+                'after_element_html' => '<p class="note">' . $this->_escaper->escapeHtml(
+                    __('Add a static block displayed on the right of the mega menu.')
+                ) . '</p>',
             ]
         );
 
-        $right_proportion = $fieldset->addField('right_proportion', 'text', 
+        $right_proportion = $fieldset->addField('right_proportion', 'text',
             [
             'label'     => __('Proportion: Block Right'),
             'class'     => 'validate-zero-or-greater',
@@ -177,7 +210,12 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
         );
 
         $right_proportion->setAfterElementHtml(
-            '<p class="nm"><small>Proportion weight</small></p>
+            '<p class="note">' . $this->_escaper->escapeHtml(
+                __(
+                    'Weight of the block displayed on the right of the mega menu. Set 0 to hide the space of this block. '
+                    . 'For example, Category = 2, Block Right = 1 and Block Left = 0 give 33% of the width to this block.'
+                )
+            ) . '</p>
             <script type="text/javascript">
             require([
                 "jquery",
@@ -207,9 +245,9 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'title' => __('Block Bottom'),
                 'name'  => 'bottom',
                 'values' => $this->_blocks->toOptionArray(),
-                'after_element_html' => '
-                    <p class="nm"><small>Add Static Block to Bottom Megamenu</small></p>
-                ',
+                'after_element_html' => '<p class="note">' . $this->_escaper->escapeHtml(
+                    __('Add a static block displayed on the bottom of the mega menu.')
+                ) . '</p>',
             ]
         );
 
@@ -219,13 +257,13 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                 'title' => __('Block Left'),
                 'name'  => 'left',
                 'values' => $this->_blocks->toOptionArray(),
-                'after_element_html' => '
-                    <p class="nm"><small>Add Static Block to Left Megamenu</small></p>
-                ',
+                'after_element_html' => '<p class="note">' . $this->_escaper->escapeHtml(
+                    __('Add a static block displayed on the left of the mega menu.')
+                ) . '</p>',
             ]
         );
 
-        $left_proportion = $fieldset->addField('left_proportion', 'text', 
+        $left_proportion = $fieldset->addField('left_proportion', 'text',
             [
             'label'     => __('Proportion: Block Left'),
             'class'     => 'validate-zero-or-greater',
@@ -235,7 +273,12 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
         );
 
         $left_proportion->setAfterElementHtml(
-            '<p class="nm"><small>Proportion weight</small></p>
+            '<p class="note">' . $this->_escaper->escapeHtml(
+                __(
+                    'Weight of the block displayed on the left of the mega menu. Set 0 to hide the space of this block. '
+                    . 'For example, Category = 2, Block Left = 1 and Block Right = 0 give 33% of the width to this block.'
+                )
+            ) . '</p>
             <script type="text/javascript">
             require([
                 "jquery",
@@ -272,9 +315,7 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                     'values' => $this->_systemStore->getStoreValuesForForm(false, true)
                 ]
             );
-            $renderer = $this->getLayout()->createBlock(
-                'Magento\Backend\Block\Store\Switcher\Form\Renderer\Fieldset\Element'
-            );
+            $renderer = $this->getLayout()->createBlock(FieldsetElement::class);
             $field->setRenderer($renderer);
         } else {
             $fieldset->addField(
@@ -301,11 +342,35 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
     }
 
     /**
-     * @return mixed
+     * Retrieve the magicmenu entity currently being edited.
+     *
+     * @return MagicmenuInterface
      */
     public function getMagicmenu()
     {
-        return $this->_coreRegistry->registry('magicmenu');
+        if ($this->magicmenu === null) {
+            $model = $this->magicmenuFactory->create();
+            $id = $this->getRequest()->getParam('magicmenu_id');
+
+            if ($id) {
+                try {
+                    $model = $this->magicmenuRepository->getById($id);
+                } catch (NoSuchEntityException $exception) {
+                    $model = $this->magicmenuFactory->create();
+                }
+            }
+
+            $model->setStoreViewId($this->getRequest()->getParam('store'));
+
+            $formData = $this->_backendSession->getFormData(true);
+            if (!empty($formData)) {
+                $model->setData($formData);
+            }
+
+            $this->magicmenu = $model;
+        }
+
+        return $this->magicmenu;
     }
 
     /**
@@ -314,7 +379,8 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
     public function getPageTitle()
     {
         return $this->getMagicmenu()->getId()
-            ? __("Edit Menu '%1'", $this->escapeHtml($this->getMagicmenu()->getTitle())) : __('New Menu');
+            ? __("Edit Menu '%1'", $this->_escaper->escapeHtml((string)$this->getMagicmenu()->getName()))
+            : __('New Menu');
     }
 
     /**

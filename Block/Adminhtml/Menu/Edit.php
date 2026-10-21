@@ -78,10 +78,9 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
 				});
 			";
 
-            if ($magicmenuId = $this->getRequest()->getParam('magicmenu_id')) {
-                $this->_formScripts[] = '
-					window.magicmenu_id = '.$magicmenuId.';
-				';
+            $magicmenuId = (int)$this->getRequest()->getParam('magicmenu_id');
+            if ($magicmenuId) {
+                $this->_formScripts[] = 'window.magicmenu_id = ' . $magicmenuId . ';';
             }
         } else {
             $this->buttonList->add(

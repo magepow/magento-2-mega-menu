@@ -7,85 +7,94 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Controller\Adminhtml;
 
-abstract class Action extends \Magento\Backend\App\Action
+use Magento\Backend\App\Action as BackendAction;
+use Magento\Backend\App\Action\Context;
+use Magento\Backend\Helper\Js;
+use Magento\Backend\Model\View\Result\ForwardFactory;
+use Magento\Backend\Model\View\Result\RedirectFactory;
+use Magento\Framework\App\Response\Http\FileFactory;
+use Magento\Framework\View\Result\LayoutFactory;
+use Magento\Framework\View\Result\PageFactory;
+use Magiccart\Magicmenu\Api\MagicmenuRepositoryInterface;
+use Magiccart\Magicmenu\Model\MagicmenuFactory;
+use Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\CollectionFactory;
+
+abstract class Action extends BackendAction
 {
     /**
-     * @var \Magento\Backend\Helper\Js
+     * Default ACL resource. Concrete controllers must override it.
      */
-    protected $_jsHelper;
+    public const ADMIN_RESOURCE = 'Magiccart_Magicmenu::magicmenu';
 
     /**
-     * @var \Magento\Backend\Model\View\Result\ForwardFactory
+     * @var Js
      */
-    protected $_resultForwardFactory;
+    protected $jsHelper;
 
     /**
-     * @var \Magento\Framework\View\Result\LayoutFactory
+     * @var ForwardFactory
      */
-    protected $_resultLayoutFactory;
+    protected $resultForwardFactory;
 
     /**
-     * A factory that knows how to create a "page" result
-     * Requires an instance of controller action in order to impose page type,
-     * which is by convention is determined from the controller action class.
-     *
-     * @var \Magento\Framework\View\Result\PageFactory
+     * @var LayoutFactory
      */
-    protected $_resultPageFactory;
+    protected $resultLayoutFactory;
 
     /**
-     * @var \Magento\Backend\Model\View\Result\RedirectFactory
+     * @var PageFactory
+     */
+    protected $resultPageFactory;
+
+    /**
+     * @var RedirectFactory
      */
     protected $resultRedirectFactory;
 
-    protected $_magicmenuFactory;
-
-    protected $_magicmenuCollectionFactory;
     /**
-     * Registry object.
-     *
-     * @var \Magento\Framework\Registry
+     * @var MagicmenuFactory
      */
-    protected $_coreRegistry;
+    protected $magicmenuFactory;
+
+    /**
+     * @var MagicmenuRepositoryInterface
+     */
+    protected $magicmenuRepository;
+
+    /**
+     * @var CollectionFactory
+     */
+    protected $magicmenuCollectionFactory;
 
     /**
      * File Factory.
      *
-     * @var \Magento\Framework\App\Response\Http\FileFactory
+     * @var FileFactory
      */
-    protected $_fileFactory;
+    protected $fileFactory;
 
     public function __construct(
-        \Magento\Backend\App\Action\Context $context,
-        \Magiccart\Magicmenu\Model\MagicmenuFactory $magicmenuFactory,
-        \Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\CollectionFactory $magicmenuCollectionFactory,
-        \Magento\Framework\Registry $coreRegistry,
-        \Magento\Framework\App\Response\Http\FileFactory $fileFactory,
-        \Magento\Framework\View\Result\PageFactory $resultPageFactory,
-        \Magento\Framework\View\Result\LayoutFactory $resultLayoutFactory,
-        \Magento\Backend\Model\View\Result\ForwardFactory $resultForwardFactory,
-        \Magento\Backend\Helper\Js $jsHelper
+        Context $context,
+        MagicmenuFactory $magicmenuFactory,
+        MagicmenuRepositoryInterface $magicmenuRepository,
+        CollectionFactory $magicmenuCollectionFactory,
+        FileFactory $fileFactory,
+        PageFactory $resultPageFactory,
+        LayoutFactory $resultLayoutFactory,
+        ForwardFactory $resultForwardFactory,
+        Js $jsHelper
     ) {
         parent::__construct($context);
-        $this->_coreRegistry = $coreRegistry;
-        $this->_fileFactory = $fileFactory;
-        $this->_jsHelper = $jsHelper;
+        $this->fileFactory = $fileFactory;
+        $this->jsHelper = $jsHelper;
 
-        $this->_resultPageFactory = $resultPageFactory;
-        $this->_resultLayoutFactory = $resultLayoutFactory;
-        $this->_resultForwardFactory = $resultForwardFactory;
+        $this->resultPageFactory = $resultPageFactory;
+        $this->resultLayoutFactory = $resultLayoutFactory;
+        $this->resultForwardFactory = $resultForwardFactory;
         $this->resultRedirectFactory = $context->getResultRedirectFactory();
-		
-        $this->_magicmenuFactory = $magicmenuFactory;
-        $this->_magicmenuCollectionFactory = $magicmenuCollectionFactory;
-    }
 
-    protected function _isAllowed()
-    {
-        $namespace = (new \ReflectionObject($this))->getNamespaceName();
-        $string = strtolower(str_replace(__NAMESPACE__ . '\\','', (string) $namespace));
-        $action =  explode('\\', (string) $string);
-        $action =  array_shift($action);
-        return $this->_authorization->isAllowed("Magiccart_Magicmenu::magicmenu_$action");
+        $this->magicmenuFactory = $magicmenuFactory;
+        $this->magicmenuRepository = $magicmenuRepository;
+        $this->magicmenuCollectionFactory = $magicmenuCollectionFactory;
     }
 }

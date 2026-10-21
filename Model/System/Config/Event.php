@@ -7,13 +7,20 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Model\System\Config;
 
-class Event implements \Magento\Framework\Option\ArrayInterface
+use Magento\Framework\Option\ArrayInterface;
+
+class Event implements ArrayInterface
 {
-    public function toOptionArray()
+    /**
+     * Retrieve the available menu events.
+     *
+     * @return array
+     */
+    public function toOptionArray(): array
     {
         return [
-            'click'=>   __('Click'),
-            'hover'=>   __('Hover'),
+            'click' => __('Click'),
+            'hover' => __('Hover'),
         ];
     }
 }

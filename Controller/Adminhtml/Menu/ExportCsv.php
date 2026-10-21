@@ -7,18 +7,28 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Controller\Adminhtml\Menu;
 
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magiccart\Magicmenu\Block\Adminhtml\Menu\Grid as MenuGrid;
+use Magiccart\Magicmenu\Controller\Adminhtml\Action;
 
-class ExportCsv extends \Magiccart\Magicmenu\Controller\Adminhtml\Action
+class ExportCsv extends Action implements HttpGetActionInterface
 {
+    /**
+     * @inheritdoc
+     */
+    public const ADMIN_RESOURCE = 'Magiccart_Magicmenu::magicmenu_menu';
+
+    /**
+     * @inheritdoc
+     */
     public function execute()
     {
         $fileName = 'menus.csv';
 
-        /** @var \\Magento\Framework\View\Result\Page $resultPage */
-        $resultPage = $this->_resultPageFactory->create();
-        $content = $resultPage->getLayout()->createBlock('Magiccart\Magicmenu\Block\Adminhtml\Menu\Grid')->getCsv();
+        $resultPage = $this->resultPageFactory->create();
+        $content = $resultPage->getLayout()->createBlock(MenuGrid::class)->getCsv();
 
-        return $this->_fileFactory->create($fileName, $content, DirectoryList::VAR_DIR);
+        return $this->fileFactory->create($fileName, $content, DirectoryList::VAR_DIR);
     }
 }

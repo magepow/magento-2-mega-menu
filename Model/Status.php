@@ -9,19 +9,26 @@ namespace Magiccart\Magicmenu\Model;
 
 class Status
 {
-    const STATUS_ENABLED = 1;
-    const STATUS_DISABLED = 2;
+    /**
+     * Enabled status.
+     */
+    public const STATUS_ENABLED = 1;
 
     /**
-     * get available statuses.
-     *
-     * @return []
+     * Disabled status.
      */
-    public static function getAvailableStatuses()
+    public const STATUS_DISABLED = 2;
+
+    /**
+     * Get the available statuses of a magicmenu.
+     *
+     * @return array
+     */
+    public static function getAvailableStatuses(): array
     {
         return [
-            self::STATUS_ENABLED => __('Enabled')
-            , self::STATUS_DISABLED => __('Disabled'),
+            self::STATUS_ENABLED => __('Enabled'),
+            self::STATUS_DISABLED => __('Disabled'),
         ];
     }
 }

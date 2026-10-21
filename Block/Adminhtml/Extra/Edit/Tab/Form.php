@@ -7,44 +7,61 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Block\Adminhtml\Extra\Edit\Tab;
 
+use Magento\Backend\Block\Store\Switcher\Form\Renderer\Fieldset\Element as FieldsetElement;
+use Magento\Backend\Block\Template\Context;
+use Magento\Backend\Block\Widget\Form\Generic;
+use Magento\Backend\Block\Widget\Tab\TabInterface;
+use Magento\Framework\Data\FormFactory;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Registry;
+use Magento\Store\Model\System\Store;
+use Magiccart\Magicmenu\Api\Data\MagicmenuInterface;
+use Magiccart\Magicmenu\Api\MagicmenuRepositoryInterface;
+use Magiccart\Magicmenu\Model\MagicmenuFactory;
 use Magiccart\Magicmenu\Model\Status;
-class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magento\Backend\Block\Widget\Tab\TabInterface
+use Magiccart\Magicmenu\Model\System\Config\Blocks;
+
+class Form extends Generic implements TabInterface
 {
     /**
-     * @var \Magento\Framework\DataObjectFactory
+     * @var Blocks
      */
-    protected $_objectFactory;
-
-    /**
-     * @var \Magento\Catalog\Model\Category\Attribute\Source\Page
-     */    
     protected $_blocks;
 
     /**
-     * @var \Magiccart\Magicmenu\Model\Magicmenu
-     */
-
-    protected $_magicmenu;
-
-    /**
-     * @var \Magento\Store\Model\System\Store
+     * @var Store
      */
     protected $_systemStore;
 
+    /**
+     * @var MagicmenuRepositoryInterface
+     */
+    private $magicmenuRepository;
+
+    /**
+     * @var MagicmenuFactory
+     */
+    private $magicmenuFactory;
+
+    /**
+     * @var MagicmenuInterface|null
+     */
+    private $magicmenu;
+
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\Registry $registry,
-        \Magento\Framework\Data\FormFactory $formFactory,
-        \Magento\Framework\DataObjectFactory $objectFactory,
-        \Magento\Store\Model\System\Store $systemStore,
-        \Magiccart\Magicmenu\Model\Magicmenu $magicmenu,
-        \Magiccart\Magicmenu\Model\System\Config\Blocks $blocks,
+        Context $context,
+        Registry $registry,
+        FormFactory $formFactory,
+        Store $systemStore,
+        MagicmenuRepositoryInterface $magicmenuRepository,
+        MagicmenuFactory $magicmenuFactory,
+        Blocks $blocks,
         array $data = []
     ) {
-        $this->_objectFactory = $objectFactory;
-        $this->_magicmenu = $magicmenu;
         $this->_blocks = $blocks;
         $this->_systemStore = $systemStore;
+        $this->magicmenuRepository = $magicmenuRepository;
+        $this->magicmenuFactory = $magicmenuFactory;
         parent::__construct($context, $registry, $formFactory, $data);
     }
 
@@ -67,7 +84,7 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
      */
     protected function _prepareForm()
     {
-        $model = $this->_coreRegistry->registry('magicmenu');
+        $model = $this->getMagicmenu();
 
         /** @var \Magento\Framework\Data\Form $form */
         $form = $this->_formFactory->create();
@@ -148,9 +165,7 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
                     'values' => $this->_systemStore->getStoreValuesForForm(false, true)
                 ]
             );
-            $renderer = $this->getLayout()->createBlock(
-                'Magento\Backend\Block\Store\Switcher\Form\Renderer\Fieldset\Element'
-            );
+            $renderer = $this->getLayout()->createBlock(FieldsetElement::class);
             $field->setRenderer($renderer);
         } else {
             $fieldset->addField(
@@ -187,11 +202,35 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
     }
 
     /**
-     * @return mixed
+     * Retrieve the magicmenu entity currently being edited.
+     *
+     * @return MagicmenuInterface
      */
     public function getMagicmenu()
     {
-        return $this->_coreRegistry->registry('magicmenu');
+        if ($this->magicmenu === null) {
+            $model = $this->magicmenuFactory->create();
+            $id = $this->getRequest()->getParam('magicmenu_id');
+
+            if ($id) {
+                try {
+                    $model = $this->magicmenuRepository->getById($id);
+                } catch (NoSuchEntityException $exception) {
+                    $model = $this->magicmenuFactory->create();
+                }
+            }
+
+            $model->setStoreViewId($this->getRequest()->getParam('store'));
+
+            $formData = $this->_backendSession->getFormData(true);
+            if (!empty($formData)) {
+                $model->setData($formData);
+            }
+
+            $this->magicmenu = $model;
+        }
+
+        return $this->magicmenu;
     }
 
     /**
@@ -200,7 +239,8 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements \Magent
     public function getPageTitle()
     {
         return $this->getMagicmenu()->getId()
-            ? __("Edit Extra Menu '%1'", $this->escapeHtml($this->getMagicmenu()->getTitle())) : __('New Extra Menu');
+            ? __("Edit Extra Menu '%1'", $this->_escaper->escapeHtml((string)$this->getMagicmenu()->getName()))
+            : __('New Extra Menu');
     }
 
     /**

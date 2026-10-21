@@ -7,38 +7,55 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Controller\Adminhtml\Menu;
 
-class MassStatus extends \Magiccart\Magicmenu\Controller\Adminhtml\Action
+use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magiccart\Magicmenu\Controller\Adminhtml\Action;
+
+class MassStatus extends Action implements HttpPostActionInterface
 {
     /**
-     * @var \Magento\Framework\View\Result\PageFactory
+     * @inheritdoc
+     */
+    public const ADMIN_RESOURCE = 'Magiccart_Magicmenu::magicmenu_menu';
+
+    /**
+     * @inheritdoc
      */
     public function execute()
     {
         $magicmenuIds = $this->getRequest()->getParam('magicmenu');
         $status = $this->getRequest()->getParam('status');
         $storeViewId = $this->getRequest()->getParam('store');
+
         if (!is_array($magicmenuIds) || empty($magicmenuIds)) {
             $this->messageManager->addError(__('Please select Menu(s).'));
         } else {
-            $collection = $this->_magicmenuCollectionFactory->create()
-                // ->setStoreViewId($storeViewId)
-                ->addFieldToFilter('magicmenu_id', ['in' => $magicmenuIds]);
-            try {
-                foreach ($collection as $item) {
-                    $item->setStoreViewId($storeViewId)
-                        ->setStatus($status)
-                        ->setIsMassupdate(true)
-                        ->save();
+            $updated = 0;
+            foreach ($magicmenuIds as $magicmenuId) {
+                if (!is_numeric($magicmenuId)) {
+                    continue;
                 }
+                try {
+                    $magicmenu = $this->magicmenuRepository->getById((int)$magicmenuId);
+                    $magicmenu->setStoreViewId($storeViewId)
+                        ->setStatus($status);
+                    $this->magicmenuRepository->save($magicmenu);
+                    $updated++;
+                } catch (NoSuchEntityException $exception) {
+                    continue;
+                } catch (CouldNotSaveException $exception) {
+                    $this->messageManager->addError($exception->getMessage());
+                }
+            }
+
+            if ($updated) {
                 $this->messageManager->addSuccess(
-                    __('A total of %1 record(s) have been changed status.', count($magicmenuIds))
+                    __('A total of %1 record(s) have been changed status.', $updated)
                 );
-            } catch (\Exception $e) {
-                $this->messageManager->addError($e->getMessage());
             }
         }
-        $resultRedirect = $this->resultRedirectFactory->create();
 
-        return $resultRedirect->setPath('*/*/', ['store' => $this->getRequest()->getParam('store')]);
+        return $this->resultRedirectFactory->create()->setPath('*/*/', ['store' => $storeViewId]);
     }
 }

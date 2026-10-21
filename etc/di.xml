@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magiccart. All rights reserved.
+ * See LICENSE for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magiccart\Magicmenu\Api\Data\MagicmenuInterface"
+                type="Magiccart\Magicmenu\Model\Magicmenu"/>
+    <preference for="Magiccart\Magicmenu\Api\Data\MagicmenuSearchResultsInterface"
+                type="Magiccart\Magicmenu\Model\MagicmenuSearchResults"/>
+    <preference for="Magiccart\Magicmenu\Api\MagicmenuRepositoryInterface"
+                type="Magiccart\Magicmenu\Model\MagicmenuRepository"/>
+</config>

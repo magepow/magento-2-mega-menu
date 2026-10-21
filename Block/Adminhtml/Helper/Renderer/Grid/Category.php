@@ -7,54 +7,46 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Block\Adminhtml\Helper\Renderer\Grid;
 
-class Category extends \Magento\Backend\Block\Widget\Grid\Column\Renderer\AbstractRenderer
+use Magento\Backend\Block\Context;
+use Magento\Backend\Block\Widget\Grid\Column\Renderer\AbstractRenderer;
+use Magento\Catalog\Model\CategoryFactory;
+use Magento\Framework\DataObject;
+
+class Category extends AbstractRenderer
 {
     /**
-     * Store manager.
-     *
-     * @var \Magento\Store\Model\StoreManagerInterface
+     * @var CategoryFactory
      */
-    protected $_storeManager;
+    private $categoryFactory;
 
-    /**
-     * block factory.
-     *
-     * @var \Magento\Cms\Model\BlockFactory
-     */
-    protected $_categoryFactory;
-
-    /**
-     * [__construct description].
-     *
-     * @param \Magento\Backend\Block\Context              $context
-     * @param \Magento\Store\Model\StoreManagerInterface  $storeManager
-     * @param \Magento\Cms\Model\BlockFactory $blockFactory
-     * @param array                                       $data
-     */
     public function __construct(
-        \Magento\Backend\Block\Context $context,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Catalog\Model\CategoryFactory $categoryFactory,
+        Context $context,
+        CategoryFactory $categoryFactory,
         array $data = []
     ) {
         parent::__construct($context, $data);
-        $this->_storeManager = $storeManager;
-        $this->_categoryFactory  = $categoryFactory;
+        $this->categoryFactory = $categoryFactory;
     }
 
     /**
-     * Render action.
+     * Render the category name of the current row.
      *
-     * @param \Magento\Framework\DataObject $row
-     *
+     * @param DataObject $row
      * @return string
      */
-    public function render(\Magento\Framework\DataObject $row)
+    public function render(DataObject $row)
     {
-        $id = $row->getData($this->getColumn()->getIndex()); // $row->getCatId(); // $row->getData('cat_id');
-        $category = $this->_categoryFactory->create()->load($id);
-        $url = $this->getUrl('catalog/category/edit', ['id' => $id]);
+        $categoryId = $row->getData($this->getColumn()->getIndex());
 
-        return '<a href="'.$url.'" alt="'.$url.'" >'. $category->getName() .'</a>';
+        if (!$categoryId) {
+            return '';
+        }
+
+        $category = $this->categoryFactory->create()->load($categoryId);
+        $url = $this->getUrl('catalog/category/edit', ['id' => $categoryId]);
+
+        return '<a href="' . $this->_escaper->escapeUrl($url) . '" title="'
+            . $this->_escaper->escapeHtmlAttr($url) . '">'
+            . $this->_escaper->escapeHtml($category->getName()) . '</a>';
     }
 }

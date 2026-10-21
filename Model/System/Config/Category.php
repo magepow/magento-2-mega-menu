@@ -7,94 +7,90 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Model\System\Config;
 
-class Category implements \Magento\Framework\Option\ArrayInterface
+use Magento\Catalog\Model\CategoryFactory;
+use Magento\Catalog\Model\Config\Source\Category as CategorySource;
+use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Option\ArrayInterface;
+use Magento\Store\Model\StoreManagerInterface;
+
+class Category implements ArrayInterface
 {
+    /**
+     * @var RequestInterface
+     */
+    private $request;
 
     /**
-     * @var \Magento\Catalog\Model\CategoryFactory
+     * @var StoreManagerInterface
      */
-    protected $_categoryFactory;
+    private $storeManager;
 
     /**
-     * @var \Magento\Catalog\Model\Config\Source\Category
+     * @var CategoryFactory
      */
-    protected $_category;  
+    private $categoryFactory;
 
-    protected $_request;
+    /**
+     * @var CategorySource
+     */
+    private $category;
 
-    protected $_storeManager;
-
-    protected  $_options = array();
+    /**
+     * @var array
+     */
+    private $options = [];
 
     public function __construct(
-        \Magento\Framework\App\RequestInterface $request,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Catalog\Model\CategoryFactory $categoryFactory,
-        \Magento\Catalog\Model\Config\Source\Category $category
-    )
-    {
-        $this->_request = $request;
-        $this->_storeManager = $storeManager;
-        $this->_categoryFactory = $categoryFactory;
-        $this->_category = $category;
+        RequestInterface $request,
+        StoreManagerInterface $storeManager,
+        CategoryFactory $categoryFactory,
+        CategorySource $category
+    ) {
+        $this->request = $request;
+        $this->storeManager = $storeManager;
+        $this->categoryFactory = $categoryFactory;
+        $this->category = $category;
     }
 
-    public function toOptionArray() {
-
-        if(!$this->_options){
-            $store = $this->_request->getParam('store');
-            if(!$store) $categories = $this->_category->toOptionArray();
-            else {
-                $rootCategoryId = $this->_storeManager->getStore($store)->getRootCategoryId();
-                $label = $this->_categoryFactory->create()->load($rootCategoryId)->getName();
-                $categories = array(array('value' => $rootCategoryId, 'label' => $label));
-            }
-            $options = array();
-            foreach ($categories as $category) {
-                if($category['value']) {
-                    $rootOption = array('label' => $category['label']);
-                    $_categories = $this->_categoryFactory->create()->getCategories($category['value']);
-                    $childOptions = array();
-                    foreach ($_categories as $_category) {
-                        $childOptions[] = array(
-                            'label' => $_category->getName(),
-                            'value' => $_category->getId()
-                        );
-                    }
-                    $rootOption['value'] = $childOptions;
-                    $options[] = $rootOption;
-                }
-            }
-            $this->_options = $options;      
+    /**
+     * Retrieve the category tree as select options.
+     *
+     * @return array
+     */
+    public function toOptionArray(): array
+    {
+        if ($this->options) {
+            return $this->options;
         }
 
-        return $this->_options;
+        $store = $this->request->getParam('store');
+        if (!$store) {
+            $categories = $this->category->toOptionArray();
+        } else {
+            $rootCategoryId = $this->storeManager->getStore($store)->getRootCategoryId();
+            $label = $this->categoryFactory->create()->load($rootCategoryId)->getName();
+            $categories = [['value' => $rootCategoryId, 'label' => $label]];
+        }
+
+        $options = [];
+        foreach ($categories as $category) {
+            if (empty($category['value'])) {
+                continue;
+            }
+            $rootOption = ['label' => $category['label']];
+            $childOptions = [];
+            foreach ($this->categoryFactory->create()->getCategories($category['value']) as $childCategory) {
+                $childOptions[] = [
+                    'label' => $childCategory->getName(),
+                    'value' => $childCategory->getId(),
+                ];
+            }
+            $rootOption['value'] = $childOptions;
+            $options[] = $rootOption;
+        }
+
+        $this->options = $options;
+
+        return $this->options;
     }
- 
-    // public function toOptionArray() { // show all category
-    // 
-    //     if(!$this->_options){
-    //         $categories = $this->_category->toOptionArray();
-    //         $options = array();
-    //         foreach ($categories as $category) {
-    //             if($category['value']) {
-    //                 $rootOption = array('label' => $category['label']);
-    //                 $_categories = $this->_categoryFactory->create()->getCategories($category['value']);
-    //                 $childOptions = array();
-    //                 foreach ($_categories as $_category) {
-    //                     $childOptions[] = array(
-    //                         'label' => $_category->getName(),
-    //                         'value' => $_category->getId()
-    //                     );
-    //                 }
-    //                 $rootOption['value'] = $childOptions;
-    //                 $options[] = $rootOption;
-    //             }
-    //         }
-    //         $this->_options = $options;      
-    //     }
-
-    //     return $this->_options;
-    // }
-
 }

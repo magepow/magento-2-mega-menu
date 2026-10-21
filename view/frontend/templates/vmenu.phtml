@@ -5,37 +5,42 @@
  */
 declare(strict_types=1);
 
-$vmenu = $this->_sysCfg->vmenu;
-$menu  = $this->_sysCfg->topmenu;
+/**
+ * @var \Magiccart\Magicmenu\Block\Menu $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$vmenu = $block->sysCfg->vmenu;
+$menu = $block->sysCfg->topmenu;
 
-if(!$vmenu['enabled']) return;
-// drawMainMenu vs DrowMobileMenu
-$menuHtml = $this->drawMainMenu();
+if (!$vmenu['enabled']) {
+    return;
+}
+
+$menuHtml = $block->drawMainMenu();
 $mobileMenu = $menuHtml['mobile'];
-$desktop 	= $menuHtml['desktop'];
-$ids  = explode(',', (string) $vmenu['notIncludeNav']);
-foreach ($ids as $id) { unset($desktop[$id]); }
-// drawHomeMenu
-$drawHomeMenu = $vmenu['home'] ? $this->drawHomeMenu() : '';
-// drawMainMenu
+$desktop = $menuHtml['desktop'];
+$ids = explode(',', (string)$vmenu['notIncludeNav']);
+foreach ($ids as $id) {
+    unset($desktop[$id]);
+}
+$drawHomeMenu = $vmenu['home'] ? $block->drawHomeMenu() : '';
 $drawMainMenu = $vmenu['mainCat'] ? implode("\n", $desktop) : '';
-// drawExtMenu ExtraMenu
-$drawExtraMenu = $vmenu['extraCat'] ? $this->drawExtraMenu() : '';
+$drawExtraMenu = $vmenu['extraCat'] ? $block->drawExtraMenu() : '';
 $classes = $vmenu['event'];
 ?>
-<div class="vmagicmenu clearfix" <?php echo $vmenu['exclude_html_mobile'] ? 'data-exclude_html_mobile="1"' : '' ?> >
-	<ul class="nav-desktop <?php /* @escapeNotVerified */ echo $classes; ?>">
-		<?php echo $drawHomeMenu ?>
-		<?php echo $drawMainMenu ?>
-		<?php echo $drawExtraMenu ?>
-	</ul>
+<div class="vmagicmenu clearfix">
+    <ul class="nav-desktop <?= $escaper->escapeHtmlAttr($classes) ?>">
+        <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $drawHomeMenu ?>
+        <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $drawMainMenu ?>
+        <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $drawExtraMenu ?>
+    </ul>
 </div>
-<?php if(!$menu['enabled']) : ?>
-<nav class="navigation" role="navigation" <?php echo $menu['exclude_html_desktop'] ? 'data-exclude_html_desktop="1"' : '' ?> >
-	<ul class="nav-mobile" data-alo-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
-		<?php echo $menu['mainCat'] ? $mobileMenu : '' ?>
-		<?php echo $drawExtraMenu ?>
-	</ul>
-</nav>
+<?php if (!$menu['enabled']) : ?>
+    <nav class="navigation" role="navigation">
+        <ul class="nav-mobile" data-alo-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
+            <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $menu['mainCat'] ? $mobileMenu : '' ?>
+            <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $drawExtraMenu ?>
+        </ul>
+    </nav>
 <?php endif; ?>
 <script type="text/x-magento-init">{"body": {"magicmenu": {}}}</script>

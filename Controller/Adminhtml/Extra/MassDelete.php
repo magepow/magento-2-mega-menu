@@ -7,32 +7,50 @@ declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Controller\Adminhtml\Extra;
 
-class MassDelete extends \Magiccart\Magicmenu\Controller\Adminhtml\Action
+use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\Exception\CouldNotDeleteException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magiccart\Magicmenu\Controller\Adminhtml\Action;
+
+class MassDelete extends Action implements HttpPostActionInterface
 {
     /**
-     * @var \Magento\Framework\View\Result\PageFactory
+     * @inheritdoc
+     */
+    public const ADMIN_RESOURCE = 'Magiccart_Magicmenu::magicmenu_extra';
+
+    /**
+     * @inheritdoc
      */
     public function execute()
     {
         $magicmenuIds = $this->getRequest()->getParam('magicmenu');
+
         if (!is_array($magicmenuIds) || empty($magicmenuIds)) {
             $this->messageManager->addError(__('Please select magicmenu(s).'));
         } else {
-            $collection = $this->_magicmenuCollectionFactory->create()
-                ->addFieldToFilter('magicmenu_id', ['in' => $magicmenuIds]);
-            try {
-                foreach ($collection as $item) {
-                    $item->delete();
+            $deleted = 0;
+            foreach ($magicmenuIds as $magicmenuId) {
+                if (!is_numeric($magicmenuId)) {
+                    continue;
                 }
+                try {
+                    $this->magicmenuRepository->deleteById((int)$magicmenuId);
+                    $deleted++;
+                } catch (NoSuchEntityException $exception) {
+                    continue;
+                } catch (CouldNotDeleteException $exception) {
+                    $this->messageManager->addError($exception->getMessage());
+                }
+            }
+
+            if ($deleted) {
                 $this->messageManager->addSuccess(
-                    __('A total of %1 record(s) have been deleted.', count($magicmenuIds))
+                    __('A total of %1 record(s) have been deleted.', $deleted)
                 );
-            } catch (\Exception $e) {
-                $this->messageManager->addError($e->getMessage());
             }
         }
-        $resultRedirect = $this->resultRedirectFactory->create();
 
-        return $resultRedirect->setPath('*/*/');
+        return $this->resultRedirectFactory->create()->setPath('*/*/');
     }
 }
