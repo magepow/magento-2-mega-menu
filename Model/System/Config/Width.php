@@ -1,11 +1,9 @@
 <?php
-
 /**
- * @Author: nguyen
- * @Date:   2020-08-28 10:53:10
- * @Last Modified by:   nguyen
- * @Last Modified time: 2020-08-28 11:15:40
+ * Copyright © Magiccart. All rights reserved.
+ * See LICENSE for license details.
  */
+declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Model\System\Config;
 

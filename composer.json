@@ -1,26 +1,25 @@
 {
-  "name": "magiccart/magicmenu",
-  "description": "Make megamenu, dropdown menu, mobile menu easy all in one.",
-  "require": {
-    "magepow/core": "^1.0.3"
-  },
-  "type": "magento2-module",
-  "license": [
-    "OSL-3.0",
-    "AFL-3.0"
-  ],
-  "authors": [
-    {
-      "name": "Alothemes",
-      "email": "support@magepow.com",
-      "homepage": "https://magepow.com",
-      "role": "Technical Support"
+    "name": "magiccart/magicmenu",
+    "description": "Make megamenu, dropdown menu, mobile menu easy all in one.",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Magepow",
+            "email": "support@magepow.com",
+            "homepage": "https://magepow.com",
+            "role": "Technical Support"
+        }
+    ],
+    "require": {
+        "magepow/core": "^1.1.2"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Magiccart\\Magicmenu\\": ""
+        }
     }
-  ],
-  "autoload": {
-    "files": [ "registration.php" ],
-    "psr-4": {
-      "Magiccart\\Magicmenu\\": ""
-    }
-  }
 }

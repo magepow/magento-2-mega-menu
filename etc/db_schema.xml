@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magiccart. All rights reserved.
+ * See LICENSE for license details.
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="magiccart_magicmenu" resource="default" engine="innodb" comment="Magiccart Magicmenu">
+        <column xsi:type="int" name="magicmenu_id" unsigned="true" nullable="false" identity="true" comment="Magicmenu ID"/>
+        <column xsi:type="varchar" name="cat_id" length="255" nullable="true" comment="Category Id"/>
+        <column xsi:type="varchar" name="cat_col" length="255" nullable="true" comment="Columns category"/>
+        <column xsi:type="int" name="cat_proportion" unsigned="false" nullable="false" default="0" comment="Proportion category"/>
+        <column xsi:type="varchar" name="top" length="255" nullable="true" comment="Category content top"/>
+        <column xsi:type="varchar" name="right" length="255" nullable="true" comment="Category content right"/>
+        <column xsi:type="int" name="right_proportion" unsigned="false" nullable="false" default="0" comment="Proportion category content right"/>
+        <column xsi:type="varchar" name="bottom" length="255" nullable="true" comment="Category content bottom"/>
+        <column xsi:type="varchar" name="left" length="255" nullable="true" comment="Category content left"/>
+        <column xsi:type="int" name="left_proportion" unsigned="false" nullable="false" default="0" comment="Proportion category content left"/>
+        <column xsi:type="varchar" name="name" length="255" nullable="true" comment="Extra menu name"/>
+        <column xsi:type="varchar" name="magic_label" length="255" nullable="true" comment="Extra menu label"/>
+        <column xsi:type="varchar" name="link" length="255" nullable="true" comment="Extra menu link"/>
+        <column xsi:type="varchar" name="ext_content" length="1024" nullable="true" comment="Extra menu content"/>
+        <column xsi:type="smallint" name="extra" unsigned="false" nullable="false" default="0" comment="Is Extra"/>
+        <column xsi:type="varchar" name="stores" length="255" nullable="true" comment="Stores"/>
+        <column xsi:type="int" name="order" unsigned="false" nullable="false" default="0" comment="Order"/>
+        <column xsi:type="smallint" name="status" unsigned="false" nullable="false" default="1" comment="Status"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="magicmenu_id"/>
+        </constraint>
+    </table>
+</schema>

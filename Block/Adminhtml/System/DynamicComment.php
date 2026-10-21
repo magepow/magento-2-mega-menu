@@ -1,11 +1,10 @@
 <?php
-
 /**
- * @Author: nguyen
- * @Date:   2021-02-02 20:08:17
- * @Last Modified by:   nguyen
- * @Last Modified time: 2021-02-02 20:18:56
+ * Copyright © Magiccart. All rights reserved.
+ * See LICENSE for license details.
  */
+declare(strict_types=1);
+
 namespace Magiccart\Magicmenu\Block\Adminhtml\System;
 
 use Magento\Framework\View\Element\AbstractBlock;

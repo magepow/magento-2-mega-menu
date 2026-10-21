@@ -1,0 +1,28 @@
+{
+    "magiccart_magicmenu": {
+        "column": {
+            "magicmenu_id": true,
+            "cat_id": true,
+            "cat_col": true,
+            "cat_proportion": true,
+            "top": true,
+            "right": true,
+            "right_proportion": true,
+            "bottom": true,
+            "left": true,
+            "left_proportion": true,
+            "name": true,
+            "magic_label": true,
+            "link": true,
+            "ext_content": true,
+            "extra": true,
+            "stores": true,
+            "order": true,
+            "status": true
+        },
+        "index": {},
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

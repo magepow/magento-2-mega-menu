@@ -1,14 +1,9 @@
 <?php
 /**
- * Magepow 
- * @category    Magepow 
- * @copyright   Copyright (c) 2014 Magiccart (https://www.magepow.com) 
- * @license     https://www.magepow.com/license-agreement.html
- * @Author: Magiccart<team.magiccart@gmail.com>
- * @@Create Date: 2022-11-1 19:10:30
- * @@Modify Date: 2022-11-1 22:16:38
- * @@Function:
+ * Copyright © Magiccart. All rights reserved.
+ * See LICENSE for license details.
  */
+declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Model\System\Config;
 

@@ -1,24 +1,66 @@
 <?php
 /**
- * Magiccart 
- * @category    Magiccart 
- * @copyright   Copyright (c) 2014 Magiccart (http://www.magiccart.net/) 
- * @license     http://www.magiccart.net/license-agreement.html
- * @Author: DOng NGuyen<nguyen@dvn.com>
- * @@Create Date: 2016-01-05 10:40:51
- * @@Modify Date: 2016-04-22 17:02:53
- * @@Function:
+ * Copyright © Magiccart. All rights reserved.
+ * See LICENSE for license details.
  */
+declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Controller\Adminhtml\Menu;
 
+use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Filesystem;
+use Magento\Framework\Image\AdapterFactory as ImageAdapterFactory;
+use Magento\MediaStorage\Model\File\UploaderFactory;
+use Magiccart\Magicmenu\Controller\Adminhtml\Action;
 
-class Save extends \Magiccart\Magicmenu\Controller\Adminhtml\Action
+class Save extends Action
 {
     /**
-     * @var \Magento\Framework\View\Result\PageFactory
+     * @var UploaderFactory
      */
+    private UploaderFactory $uploaderFactory;
+
+    /**
+     * @var ImageAdapterFactory
+     */
+    private ImageAdapterFactory $imageAdapterFactory;
+
+    /**
+     * @var Filesystem
+     */
+    private Filesystem $filesystem;
+
+    public function __construct(
+        Context $context,
+        \Magiccart\Magicmenu\Model\MagicmenuFactory $magicmenuFactory,
+        \Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\CollectionFactory $magicmenuCollectionFactory,
+        \Magento\Framework\Registry $coreRegistry,
+        \Magento\Framework\App\Response\Http\FileFactory $fileFactory,
+        \Magento\Framework\View\Result\PageFactory $resultPageFactory,
+        \Magento\Framework\View\Result\LayoutFactory $resultLayoutFactory,
+        \Magento\Backend\Model\View\Result\ForwardFactory $resultForwardFactory,
+        \Magento\Backend\Helper\Js $jsHelper,
+        UploaderFactory $uploaderFactory,
+        ImageAdapterFactory $imageAdapterFactory,
+        Filesystem $filesystem
+    ) {
+        parent::__construct(
+            $context,
+            $magicmenuFactory,
+            $magicmenuCollectionFactory,
+            $coreRegistry,
+            $fileFactory,
+            $resultPageFactory,
+            $resultLayoutFactory,
+            $resultForwardFactory,
+            $jsHelper
+        );
+        $this->uploaderFactory = $uploaderFactory;
+        $this->imageAdapterFactory = $imageAdapterFactory;
+        $this->filesystem = $filesystem;
+    }
+
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
@@ -31,31 +73,23 @@ class Save extends \Magiccart\Magicmenu\Controller\Adminhtml\Action
                 $model->load($id);
             }
 
-            if (isset($_FILES['image']) && isset($_FILES['image']['name']) && strlen($_FILES['image']['name'])) {
-                /*
-                 * Save image upload
-                 */
+            if (isset($_FILES['image']) && isset($_FILES['image']['name']) && strlen((string) $_FILES['image']['name'])) {
                 try {
-                    $uploader = $this->_objectManager->create(
-                        'Magento\MediaStorage\Model\File\Uploader',
-                        ['fileId' => 'image']
-                    );
+                    $uploader = $this->uploaderFactory->create(['fileId' => 'image']);
                     $uploader->setAllowedExtensions(['jpg', 'jpeg', 'gif', 'png']);
 
-                    /** @var \Magento\Framework\Image\Adapter\AdapterInterface $imageAdapter */
-                    $imageAdapter = $this->_objectManager->get('Magento\Framework\Image\AdapterFactory')->create();
+                    $imageAdapter = $this->imageAdapterFactory->create();
 
                     $uploader->addValidateCallback('menu_image', $imageAdapter, 'validateUploadFile');
                     $uploader->setAllowRenameFiles(true);
                     $uploader->setFilesDispersion(true);
 
-                    /** @var \Magento\Framework\Filesystem\Directory\Read $mediaDirectory */
-                    $mediaDirectory = $this->_objectManager->get('Magento\Framework\Filesystem')
+                    $mediaDirectory = $this->filesystem
                         ->getDirectoryRead(DirectoryList::MEDIA);
                     $result = $uploader->save(
                         $mediaDirectory->getAbsolutePath('magicmenu/menu/')
                     );
-                    $data['image'] = 'magicmenu/menu/'.$result['file'];
+                    $data['image'] = 'magicmenu/menu/' . $result['file'];
                 } catch (\Exception $e) {
                     if ($e->getCode() == 0) {
                         $this->messageManager->addError($e->getMessage());
@@ -73,12 +107,10 @@ class Save extends \Magiccart\Magicmenu\Controller\Adminhtml\Action
                     }
                 }
             }
-            /** @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate */
-            // $localeDate = $this->_objectManager->get('Magento\Framework\Stdlib\DateTime\TimezoneInterface');
-            // $data['start_time'] = $localeDate->date($data['start_time'])->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i');
-            // $data['end_time'] = $localeDate->date($data['end_time'])->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i');
 
-            if(isset($data['stores'])) $data['stores'] = implode(',', $data['stores']);
+            if (isset($data['stores'])) {
+                $data['stores'] = implode(',', $data['stores']);
+            }
             $model->setData($data)
                 ->setStoreViewId($storeViewId);
 
@@ -102,7 +134,7 @@ class Save extends \Magiccart\Magicmenu\Controller\Adminhtml\Action
                 } elseif ($this->getRequest()->getParam('back') === 'new') {
                     return $resultRedirect->setPath(
                         '*/*/new',
-                        ['_current' => TRUE]
+                        ['_current' => true]
                     );
                 }
 

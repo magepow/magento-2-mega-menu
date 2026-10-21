@@ -1,14 +1,9 @@
 <?php
 /**
- * Magiccart 
- * @category 	Magiccart 
- * @copyright 	Copyright (c) 2014 Magiccart (http://www.magiccart.net/) 
- * @license 	http://www.magiccart.net/license-agreement.html
- * @Author: DOng NGuyen<nguyen@dvn.com>
- * @@Create Date: 2016-03-04 11:44:03
- * @@Modify Date: 2016-03-29 17:49:29
- * @@Function:
+ * Copyright © Magiccart. All rights reserved.
+ * See LICENSE for license details.
  */
+declare(strict_types=1);
 
 namespace Magiccart\Magicmenu\Block\Adminhtml\Helper\Renderer\Grid;
 

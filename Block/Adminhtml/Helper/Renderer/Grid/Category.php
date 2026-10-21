@@ -1,14 +1,10 @@
 <?php
 /**
- * Magiccart 
- * @category 	Magiccart 
- * @copyright 	Copyright (c) 2014 Magiccart (http://www.magiccart.net/) 
- * @license 	http://www.magiccart.net/license-agreement.html
- * @Author: DOng NGuyen<nguyen@dvn.com>
- * @@Create Date: 2016-03-04 11:44:03
- * @@Modify Date: 2016-03-04 16:24:03
- * @@Function:
+ * Copyright © Magiccart. All rights reserved.
+ * See LICENSE for license details.
  */
+declare(strict_types=1);
+
 namespace Magiccart\Magicmenu\Block\Adminhtml\Helper\Renderer\Grid;
 
 class Category extends \Magento\Backend\Block\Widget\Grid\Column\Renderer\AbstractRenderer
