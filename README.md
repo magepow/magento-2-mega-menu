@@ -149,6 +149,7 @@ give 67% of the width to the categories and 33% to the left block.
 | Search results | `Magiccart\Magicmenu\Api\Data\MagicmenuSearchResultsInterface` |
 | Frontend block | `Magiccart\Magicmenu\Block\Menu` |
 | Configuration reader | `Magiccart\Magicmenu\Model\Config` |
+| Visibility options | `Magiccart\Magicmenu\Model\System\Config\Visibility` |
 
 Use the repository instead of loading or saving the model directly:
 
@@ -157,6 +158,53 @@ $menu = $this->magicmenuRepository->getById($id);
 $menu->setName('New name');
 $this->magicmenuRepository->save($menu);
 ```
+
+## Upgrade notes (2.1.0)
+
+The release is backward compatible: existing installations keep working and a custom theme does
+**not** have to be updated.
+
+* A new `visibility` column is added to the `magiccart_magicmenu` table by the declarative schema.
+  Run `bin/magento setup:upgrade` to apply it. Existing rows get the default value `0`
+  (show on desktop and mobile), so the menu renders exactly as before.
+* No `setup_version` / `InstallSchema` / `UpgradeSchema` script is used, the column is declared in
+  `etc/db_schema.xml` only.
+* `Block\Menu::drawExtraMenu()` keeps its signature and its behaviour: it renders **every** extra
+  menu item, whatever its visibility is. A theme that still uses the original templates therefore
+  shows the complete extra menu on the desktop and on the mobile, exactly like the previous
+  versions. The visibility setting is simply ignored there. A legacy call that passes a visibility
+  (`drawExtraMenu('mobile')`) is still honoured.
+* `Block\Menu::getExtraMenu()` keeps its signature and returns the complete extra menu
+  collection of the current store, it is not filtered by a visibility anymore.
+
+  ```php
+  use Magiccart\Magicmenu\Model\System\Config\Visibility;
+
+  // desktop navigation
+  $drawExtraMenu = $block->drawExtraMenuByVisibility(Visibility::DESKTOP_ONLY);
+  // mobile navigation
+  $drawExtraMobileMenu = $block->drawExtraMenuByVisibility(Visibility::MOBILE_ONLY);
+  ```
+
+  A theme that copies the templates only has to replace the `drawExtraMenu()` call with the two
+  calls above, everything else stays the same.
+* `Magiccart\Magicmenu\Api\Data\MagicmenuInterface` gained the `KEY_VISIBILITY` constant and
+  the `getVisibility()` / `setVisibility()` accessors. A third party implementation of the
+  interface has to add the two methods.
+
+### Visibility of an extra menu
+
+`Magiccart > Magic Menu > Extra Menu > Edit > Visibility Location` selects where an extra menu
+item is rendered.
+
+| Value | Meaning |
+|---|---|
+| Show On Desktop / Mobile | The item is rendered in the desktop and in the mobile menu. |
+| Desktop Only | The item is only rendered in the desktop navigation. |
+| Mobile Only | The item is only rendered in the mobile navigation. |
+
+The setting only has an effect on a theme that renders the desktop and the mobile menu
+separately, see the upgrade notes above.
 
 ## Upgrade notes (2.0.0)
 

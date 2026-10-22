@@ -10,6 +10,7 @@ namespace Magiccart\Magicmenu\Test\Unit\Model;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magiccart\Magicmenu\Api\Data\MagicmenuInterface;
 use Magiccart\Magicmenu\Model\Magicmenu;
+use Magiccart\Magicmenu\Model\System\Config\Visibility;
 use PHPUnit\Framework\TestCase;
 
 class MagicmenuTest extends TestCase
@@ -50,5 +51,17 @@ class MagicmenuTest extends TestCase
 
         $this->model->setStoreViewId(3);
         $this->assertSame(3, $this->model->getStoreViewId());
+    }
+
+    public function testVisibilityAccessor(): void
+    {
+        $this->assertSame(Visibility::BOTH, $this->model->getVisibility());
+
+        $this->model->setVisibility(Visibility::MOBILE_ONLY);
+        $this->assertSame(Visibility::MOBILE_ONLY, $this->model->getVisibility());
+        $this->assertSame(
+            Visibility::MOBILE_ONLY,
+            $this->model->getData(MagicmenuInterface::KEY_VISIBILITY)
+        );
     }
 }

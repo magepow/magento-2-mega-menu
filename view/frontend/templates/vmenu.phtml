@@ -5,6 +5,8 @@
  */
 declare(strict_types=1);
 
+use Magiccart\Magicmenu\Model\System\Config\Visibility;
+
 /**
  * @var \Magiccart\Magicmenu\Block\Menu $block
  * @var \Magento\Framework\Escaper $escaper
@@ -25,7 +27,12 @@ foreach ($ids as $id) {
 }
 $drawHomeMenu = $vmenu['home'] ? $block->drawHomeMenu() : '';
 $drawMainMenu = $vmenu['mainCat'] ? implode("\n", $desktop) : '';
-$drawExtraMenu = $vmenu['extraCat'] ? $block->drawExtraMenu() : '';
+$drawExtraMenu = $vmenu['extraCat']
+    ? $block->drawExtraMenuByVisibility(Visibility::DESKTOP_ONLY)
+    : '';
+$drawExtraMobileMenu = $vmenu['extraCat']
+    ? $block->drawExtraMenuByVisibility(Visibility::MOBILE_ONLY)
+    : '';
 $classes = $vmenu['event'];
 ?>
 <div class="vmagicmenu clearfix">
@@ -39,7 +46,7 @@ $classes = $vmenu['event'];
     <nav class="navigation" role="navigation">
         <ul class="nav-mobile" data-alo-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
             <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $menu['mainCat'] ? $mobileMenu : '' ?>
-            <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $drawExtraMenu ?>
+            <?= /* @noEscape - HTML is escaped by Magiccart\Magicmenu\Block\Menu */ $drawExtraMobileMenu ?>
         </ul>
     </nav>
 <?php endif; ?>

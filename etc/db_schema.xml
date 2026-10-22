@@ -23,6 +23,7 @@
         <column xsi:type="varchar" name="link" length="255" nullable="true" comment="Extra menu link"/>
         <column xsi:type="varchar" name="ext_content" length="1024" nullable="true" comment="Extra menu content"/>
         <column xsi:type="smallint" name="extra" unsigned="false" nullable="false" default="0" comment="Is Extra"/>
+        <column xsi:type="int" name="visibility" unsigned="false" nullable="false" default="0" comment="Extra menu visibility"/>
         <column xsi:type="varchar" name="stores" length="255" nullable="true" comment="Stores"/>
         <column xsi:type="int" name="order" unsigned="false" nullable="false" default="0" comment="Order"/>
         <column xsi:type="smallint" name="status" unsigned="false" nullable="false" default="1" comment="Status"/>

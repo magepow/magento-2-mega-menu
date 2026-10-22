@@ -32,6 +32,11 @@ interface MagicmenuInterface
     public const KEY_LINK = 'link';
     public const KEY_EXT_CONTENT = 'ext_content';
     public const KEY_EXTRA = 'extra';
+
+    /**
+     * Extra menu visibility location.
+     */
+    public const KEY_VISIBILITY = 'visibility';
     public const KEY_STORES = 'stores';
     public const KEY_ORDER = 'order';
     public const KEY_STATUS = 'status';
@@ -261,6 +266,21 @@ interface MagicmenuInterface
      * @return $this
      */
     public function setExtra($extra);
+
+    /**
+     * Get the extra menu visibility location.
+     *
+     * @return int
+     */
+    public function getVisibility(): int;
+
+    /**
+     * Set the extra menu visibility location.
+     *
+     * @param int $visibility
+     * @return $this
+     */
+    public function setVisibility(int $visibility);
 
     /**
      * Get comma separated list of store ids.

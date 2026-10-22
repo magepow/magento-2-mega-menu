@@ -255,6 +255,22 @@ class Magicmenu extends AbstractModel implements MagicmenuInterface
     /**
      * @inheritdoc
      */
+    public function getVisibility(): int
+    {
+        return (int)$this->getData(self::KEY_VISIBILITY);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setVisibility(int $visibility)
+    {
+        return $this->setData(self::KEY_VISIBILITY, $visibility);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getStores()
     {
         return $this->getData(self::KEY_STORES);

@@ -18,6 +18,7 @@ use Magiccart\Magicmenu\Api\MagicmenuRepositoryInterface;
 use Magiccart\Magicmenu\Controller\Adminhtml\Action;
 use Magiccart\Magicmenu\Model\MagicmenuFactory;
 use Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\CollectionFactory;
+use Magiccart\Magicmenu\Model\System\Config\Visibility;
 
 class Save extends Action implements HttpPostActionInterface
 {
@@ -108,6 +109,8 @@ class Save extends Action implements HttpPostActionInterface
         if (isset($data['stores']) && is_array($data['stores'])) {
             $data['stores'] = implode(',', $data['stores']);
         }
+
+        $data['visibility'] = Visibility::normalize($data['visibility'] ?? Visibility::BOTH);
 
         $model->setData($data)
             ->setStoreViewId($storeViewId);

@@ -5,6 +5,49 @@ All notable changes to the `Magiccart_Magicmenu` module are documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-10-22
+
+### Added
+
+- Extra menu visibility selector (show on desktop/mobile/both) for extra menu items.
+- `visibility` column on the `magiccart_magicmenu` table, declared in `etc/db_schema.xml`.
+  Existing rows keep the default value `0` (show on desktop and mobile), so an upgrade does not
+  change the rendering of an existing menu.
+- `Visibility` location column in the extra menu admin grid.
+- `Model\System\Config\Visibility` with the `isValid()` and `normalize()` helpers.
+- `Block\Menu::drawExtraMenuByVisibility()` and `Block\Menu::getExtraMenuByVisibility()` for
+  themes that render the desktop and the mobile menu in two separate containers.
+- Unit tests for the `Visibility` option source and the model accessor.
+
+### Changed
+
+- `Block\Menu::drawExtraMenu()` keeps rendering every item, so a theme that still uses the
+  original templates keeps the previous behaviour. `Block\Menu::drawExtraMenuByVisibility()`
+  renders the items of a single viewport and is used by the updated templates of the module.
+- `Model\System\Config\Visibility` implements `OptionSourceInterface` and exposes the option
+  labels from a single source.
+- The extra menu collection and the rendered CMS static blocks are loaded once per request
+  instead of once per viewport.
+- The posted `visibility` value is validated before it is persisted.
+
+### Fixed
+
+- An extra menu that consists of a single item now gets the `last` CSS class, so the border of the
+  last item is not drawn twice. The bug became visible because the desktop and the mobile menu
+  are rendered from their own list of items.
+
+### Backward compatibility
+
+- `Api\Data\MagicmenuInterface` gained the `KEY_VISIBILITY` constant and the `getVisibility()` /
+  `setVisibility()` accessors. A third party implementation of the interface has to add the two
+  methods with the `int` types of the contract.
+- `Block\Menu::drawExtraMenu()` and `Block\Menu::getExtraMenu()` keep their signature.
+  `drawExtraMenu()` keeps rendering the complete extra menu, so a theme that does not update its
+  templates keeps the previous behaviour. A legacy call that passes a visibility
+  (`drawExtraMenu('mobile')`) is still honoured.
+- `Block\Menu::getExtraMenu()` returns the complete extra menu collection of the current store,
+  it is not filtered by a visibility anymore.
+
 ## [2.0.0] - 2025-10-21
 
 ### Added

@@ -18,7 +18,8 @@
             "extra": true,
             "stores": true,
             "order": true,
-            "status": true
+            "status": true,
+            "visibility": true
         },
         "index": {},
         "constraint": {

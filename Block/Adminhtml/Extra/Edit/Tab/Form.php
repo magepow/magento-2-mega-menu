@@ -20,6 +20,7 @@ use Magiccart\Magicmenu\Api\MagicmenuRepositoryInterface;
 use Magiccart\Magicmenu\Model\MagicmenuFactory;
 use Magiccart\Magicmenu\Model\Status;
 use Magiccart\Magicmenu\Model\System\Config\Blocks;
+use Magiccart\Magicmenu\Model\System\Config\Visibility;
 
 class Form extends Generic implements TabInterface
 {
@@ -27,6 +28,11 @@ class Form extends Generic implements TabInterface
      * @var Blocks
      */
     protected $_blocks;
+
+    /**
+     * @var Visibility
+     */
+    private $visibility;
 
     /**
      * @var Store
@@ -56,9 +62,11 @@ class Form extends Generic implements TabInterface
         MagicmenuRepositoryInterface $magicmenuRepository,
         MagicmenuFactory $magicmenuFactory,
         Blocks $blocks,
+        Visibility $visibility,
         array $data = []
     ) {
         $this->_blocks = $blocks;
+        $this->visibility = $visibility;
         $this->_systemStore = $systemStore;
         $this->magicmenuRepository = $magicmenuRepository;
         $this->magicmenuFactory = $magicmenuFactory;
@@ -148,6 +156,19 @@ class Form extends Generic implements TabInterface
                 'name'  => 'ext_content',
                 'values' => $this->_blocks->toOptionArray(),
                 'after_element_html' => '<p class="nm"><small>Content Dropdown while hover</small></p>',
+            ]
+        );
+
+        $fieldset->addField('visibility', 'select',
+            [
+                'label' => __('Visibility Location'),
+                'title' => __('Visibility Location'),
+                'name'  => 'visibility',
+                'values' => $this->visibility->toOptionArray(),
+                'value' => Visibility::BOTH,
+                'after_element_html' => '<p class="nm"><small>'
+                    . __('Show Extra Menu Locations')
+                    . '</small></p>',
             ]
         );
 

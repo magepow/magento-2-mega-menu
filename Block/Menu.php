@@ -25,7 +25,9 @@ use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\UrlInterface;
 use Magento\Store\Block\SwitcherFactory;
 use Magiccart\Magicmenu\Model\Config as MagicmenuConfig;
+use Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\Collection as MagicmenuCollection;
 use Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\CollectionFactory as MagicmenuCollectionFactory;
+use Magiccart\Magicmenu\Model\System\Config\Visibility;
 
 class Menu extends Navigation
 {
@@ -67,6 +69,27 @@ class Menu extends Navigation
      * @var string
      */
     protected $urlMedia;
+
+    /**
+     * Cached extra menu collection for the current store.
+     *
+     * @var MagicmenuCollection|null
+     */
+    private $extraMenuCollection;
+
+    /**
+     * Store id the cached extra menu collection belongs to.
+     *
+     * @var int|null
+     */
+    private $extraMenuStoreId;
+
+    /**
+     * Rendered CMS static blocks, keyed by identifier.
+     *
+     * @var array<string, string>
+     */
+    private $staticBlocks = [];
 
     /**
      * @var string
@@ -470,47 +493,116 @@ class Menu extends Navigation
     }
 
     /**
+     * Render the extra menu.
+     *
+     * Every extra menu item is rendered, whatever its visibility is. This keeps
+     * the behaviour of a theme that still uses the original template: the menu
+     * looks exactly like it did before the visibility setting was introduced.
+     * A template that separates the desktop and the mobile menu uses
+     * drawExtraMenuByVisibility() instead.
+     *
+     * A legacy call that passes a visibility (drawExtraMenu('mobile')) is still
+     * honoured and renders the items of that viewport only.
+     *
      * @return string
      */
     public function drawExtraMenu()
     {
-        if ($this->hasData('extraMenu')) {
-            return $this->getData('extraMenu');
+        $arguments = func_get_args();
+        $visibility = isset($arguments[0]) ? $this->resolveVisibility($arguments[0]) : null;
+
+        if ($visibility !== null) {
+            return $this->drawExtraMenuByVisibility($visibility);
         }
-        $extMenu = $this->getExtraMenu();
-        $count = count($extMenu);
+
+        if ($this->hasData('extraMenu')) {
+            return (string)$this->getData('extraMenu');
+        }
+
+        $drawExtraMenu = $this->renderExtraMenu($this->getExtraMenu()->getItems());
+        $this->setData('extraMenu', $drawExtraMenu);
+
+        return $drawExtraMenu;
+    }
+
+    /**
+     * Render the extra menu for a single viewport.
+     *
+     * The items that are enabled for the given visibility are rendered, the
+     * items that are enabled for both viewports are always included.
+     *
+     * @param int|string $visibility
+     * @return string
+     */
+    public function drawExtraMenuByVisibility(int|string $visibility = Visibility::DESKTOP_ONLY)
+    {
+        $visibility = $this->resolveVisibility($visibility) ?? Visibility::DESKTOP_ONLY;
+        $cacheKey = 'extraMenu_' . $visibility;
+
+        if ($this->hasData($cacheKey)) {
+            return (string)$this->getData($cacheKey);
+        }
+
+        $drawExtraMenu = $this->renderExtraMenu($this->getExtraMenuByVisibility($visibility));
+        $this->setData($cacheKey, $drawExtraMenu);
+
+        return $drawExtraMenu;
+    }
+
+    /**
+     * Render the given extra menu items.
+     *
+     * @param array $items
+     * @return string
+     */
+    private function renderExtraMenu(array $items): string
+    {
+        $count = count($items);
         $drawExtraMenu = '';
 
-        if ($count) {
-            $i = 1;
-            $class = 'first';
-            $currentUrl = $this->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]);
-            foreach ($extMenu as $ext) {
-                $link = $ext->getLink();
-                $url = (filter_var($link, FILTER_VALIDATE_URL)) ? $link : $this->getUrl('', ['_direct' => $link]);
-                $active = ($link && $url == $currentUrl) ? ' active' : '';
-                $html = $this->getStaticBlock($ext->getExtContent());
-                $class .= $ext->getCatCol() ? ' ' . $ext->getCatCol() : ' dropdown';
-                if ($html) {
-                    $active .= ' hasChild parent';
-                }
-                $drawExtraMenu .= "<li class='level0 category-item level-top ext " . $this->_escaper->escapeHtmlAttr(
-                    $active . ' ' . $class
-                ) . "'>";
-                if ($link) {
-                    $drawExtraMenu .= '<a class="level-top" href="' . $this->_escaper->escapeUrl($url) . '"><span>'
-                        . $this->_escaper->escapeHtml($ext->getName()) . $this->getCatLabel($ext) . '</span></a>';
-                } else {
-                    $drawExtraMenu .= '<span class="level-top"><span>' . $this->_escaper->escapeHtml($ext->getName())
-                        . $this->getCatLabel($ext) . '</span></span>';
-                }
-                $drawExtraMenu .= $html;
-                $drawExtraMenu .= '</li>';
-                $i++;
-                $class = ($i == $count) ? 'last' : '';
-            }
+        if (!$count) {
+            return $drawExtraMenu;
         }
-        $this->setData('extraMenu', $drawExtraMenu);
+
+        $currentUrl = $this->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]);
+        $lastIndex = $count - 1;
+
+        foreach (array_values($items) as $index => $ext) {
+            $link = $ext->getLink();
+            $url = (filter_var($link, FILTER_VALIDATE_URL)) ? $link : $this->getUrl('', ['_direct' => $link]);
+            $active = ($link && $url == $currentUrl) ? ' active' : '';
+            $html = $this->getStaticBlock($ext->getExtContent());
+
+            if ($html) {
+                $active .= ' hasChild parent';
+            }
+
+            $positionClass = '';
+            if ($index === 0) {
+                $positionClass = 'first';
+            }
+            if ($index === $lastIndex) {
+                $positionClass = $positionClass === '' ? 'last' : $positionClass . ' last';
+            }
+
+            $itemClass = $active . ' ' . $positionClass
+                . ($ext->getCatCol() ? ' ' . $ext->getCatCol() : ' dropdown');
+
+            $drawExtraMenu .= "<li class='level0 category-item level-top ext " . $this->_escaper->escapeHtmlAttr(
+                $itemClass
+            ) . "'>";
+
+            if ($link) {
+                $drawExtraMenu .= '<a class="level-top" href="' . $this->_escaper->escapeUrl($url) . '"><span>'
+                    . $this->_escaper->escapeHtml($ext->getName()) . $this->getCatLabel($ext) . '</span></a>';
+            } else {
+                $drawExtraMenu .= '<span class="level-top"><span>' . $this->_escaper->escapeHtml($ext->getName())
+                    . $this->getCatLabel($ext) . '</span></span>';
+            }
+
+            $drawExtraMenu .= $html;
+            $drawExtraMenu .= '</li>';
+        }
 
         return $drawExtraMenu;
     }
@@ -661,24 +753,79 @@ class Menu extends Navigation
     }
 
     /**
-     * @return \Magento\Catalog\Model\ResourceModel\Magicmenu\Collection
+     * Retrieve the extra menu collection of the current store.
+     *
+     * The collection is loaded once per store and request and reused for every
+     * viewport.
+     *
+     * @return MagicmenuCollection
      */
     public function getExtraMenu()
     {
-        $store = $this->_storeManager->getStore()->getStoreId();
-        $collection = $this->magicmenuCollectionFactory->create()
-            ->addFieldToSelect(['link', 'name', 'cat_col', 'magic_label', 'ext_content', 'order'])
-            ->addFieldToFilter('extra', 1)
-            ->addFieldToFilter('status', 1);
-        $collection->getSelect()
-            ->where('find_in_set(0, stores) OR find_in_set(?, stores)', $store)
-            ->order('order');
+        $storeId = (int)$this->_storeManager->getStore()->getStoreId();
 
-        return $collection;
+        if ($this->extraMenuCollection === null || $this->extraMenuStoreId !== $storeId) {
+            $collection = $this->magicmenuCollectionFactory->create()
+                ->addFieldToSelect(['link', 'name', 'cat_col', 'magic_label', 'ext_content', 'order', 'visibility'])
+                ->addFieldToFilter('extra', 1)
+                ->addFieldToFilter('status', 1);
+            $collection->getSelect()
+                ->where('find_in_set(0, stores) OR find_in_set(?, stores)', $storeId)
+                ->order('order');
+
+            $this->extraMenuCollection = $collection;
+            $this->extraMenuStoreId = $storeId;
+        }
+
+        return $this->extraMenuCollection;
+    }
+
+    /**
+     * Retrieve the extra menu items matching the given visibility.
+     *
+     * @param int|string $visibility
+     * @return array
+     */
+    public function getExtraMenuByVisibility(int|string $visibility): array
+    {
+        $visibility = $this->resolveVisibility($visibility) ?? Visibility::BOTH;
+        $items = [];
+
+        foreach ($this->getExtraMenu() as $item) {
+            if (Visibility::matches($item->getVisibility(), $visibility)) {
+                $items[] = $item;
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * Resolve a visibility argument.
+     *
+     * Supports the legacy 'mobile' and 'desktop' keywords.
+     *
+     * @param mixed $visibility
+     * @return int|null
+     */
+    private function resolveVisibility($visibility): ?int
+    {
+        if ($visibility === 'mobile') {
+            return Visibility::MOBILE_ONLY;
+        }
+
+        if ($visibility === 'desktop') {
+            return Visibility::DESKTOP_ONLY;
+        }
+
+        return Visibility::isValid($visibility) ? (int)$visibility : null;
     }
 
     /**
      * Render the CMS static block by its identifier.
+     *
+     * The rendered result is memoized per identifier to avoid loading the same
+     * block twice when the menu is rendered for desktop and mobile.
      *
      * @param string|null $identifier
      * @return string
@@ -689,9 +836,15 @@ class Menu extends Navigation
             return '';
         }
 
-        return $this->cmsBlockFactory->create()
-            ->setData('identifier', (string)$identifier)
-            ->toHtml();
+        $identifier = (string)$identifier;
+
+        if (!array_key_exists($identifier, $this->staticBlocks)) {
+            $this->staticBlocks[$identifier] = $this->cmsBlockFactory->create()
+                ->setData('identifier', $identifier)
+                ->toHtml();
+        }
+
+        return $this->staticBlocks[$identifier];
     }
 
     /**

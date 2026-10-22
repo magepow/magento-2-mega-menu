@@ -12,6 +12,7 @@ use Magento\Backend\Helper\Data as BackendHelper;
 use Magento\Framework\DataObject;
 use Magiccart\Magicmenu\Model\ResourceModel\Magicmenu\CollectionFactory as MagicmenuCollectionFactory;
 use Magiccart\Magicmenu\Model\Status;
+use Magiccart\Magicmenu\Model\System\Config\Visibility;
 
 class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 {
@@ -132,6 +133,18 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
                 'index' => 'order',
                 'header_css_class' => 'col-order',
                 'column_css_class' => 'col-order',
+            ]
+        );
+
+        $this->addColumn(
+            'visibility',
+            [
+                'header' => __('Visibility Location'),
+                'index' => 'visibility',
+                'type' => 'options',
+                'options' => Visibility::getVisibility(),
+                'header_css_class' => 'col-visibility',
+                'column_css_class' => 'col-visibility',
             ]
         );
 
