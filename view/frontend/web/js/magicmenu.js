@@ -11,6 +11,9 @@
  *   CommonJS        : const Magicmenu = require('./magicmenu');
  *   Plain script    : window.Magicmenu
  *
+ * Can also be called as a function (Magento data-mage-init / x-magento-init):
+ *   Magicmenu(config, element)
+ *
  * The file auto-initializes on DOM ready (same as the old version). Manual init:
  *   const menu = new Magicmenu({ breakpoint: 991 }).init();
  */
@@ -863,5 +866,20 @@
         else document.addEventListener('DOMContentLoaded', start, { once: true });
     }
 
-    return Magicmenu;
+    /**
+     * Magento (mage/apply/main.js) calls an AMD module as a plain function:
+     *   fn(config, element)
+     * A native ES class throws "cannot be invoked without 'new'" in that case,
+     * so the exported value is a Proxy that makes the class callable.
+     *   Magicmenu(config)     -> returns the shared, initialized instance
+     *   new Magicmenu(config) -> creates a new instance (call .init() yourself)
+     */
+    return new Proxy(Magicmenu, {
+        apply: function (target, thisArg, args) {
+            const config   = args[0] && typeof args[0] === 'object' ? args[0] : {};
+            const instance = target.instance || (target.instance = new target(config));
+            Object.assign(instance.settings, config);
+            return instance.init();
+        }
+    });
 });
