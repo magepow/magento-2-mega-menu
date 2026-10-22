@@ -6,12 +6,12 @@
  *  - class MagicAccordion : thay cho $.fn.magicaccordion
  *  - class Magicmenu      : thay cho $.fn.magicmenu
  *
- * Dùng:
+ * Usage:
  *   AMD / RequireJS : define(['Magiccart_Magicmenu/js/magicmenu'], function (Magicmenu) {...})
  *   CommonJS        : const Magicmenu = require('./magicmenu');
- *   Script thường   : window.Magicmenu
+ *   Plain script    : window.Magicmenu
  *
- * File tự khởi tạo khi DOM ready (giống bản cũ). Có thể tạo thủ công:
+ * The file auto-initializes on DOM ready (same as the old version). Manual init:
  *   const menu = new Magicmenu({ breakpoint: 991 }).init();
  */
 (function (root, factory) {
@@ -26,7 +26,7 @@
     'use strict';
 
     /* ------------------------------------------------------------------ *
-     * DOM helpers (thay thế các hàm jQuery đã dùng)
+     * DOM helpers (replacements for the jQuery functions that were used)
      * ------------------------------------------------------------------ */
 
     const qs  = (selector, scope = document) => scope.querySelector(selector);
@@ -39,7 +39,7 @@
         return Math.max(b.scrollHeight, d.scrollHeight, b.offsetHeight, d.offsetHeight, d.clientHeight);
     };
 
-    /** Giống $.fn.data(): tự ép kiểu true/false/null/number/JSON */
+    /** Like $.fn.data(): auto-casts true/false/null/number/JSON */
     const parseData = (value) => {
         if (value === null || value === undefined) return undefined;
         if (value === 'true') return true;
@@ -47,7 +47,7 @@
         if (value === 'null') return null;
         if (value !== '' && String(+value) === value) return +value;
         if (/^(?:\{[\s\S]*\}|\[[\s\S]*\])$/.test(value)) {
-            try { return JSON.parse(value); } catch (e) { /* trả về chuỗi gốc */ }
+            try { return JSON.parse(value); } catch (e) { /* fall back to the raw string */ }
         }
         return value;
     };
@@ -81,7 +81,7 @@
     const toggle = (el) => (getComputedStyle(el).display === 'none' ? show(el) : hide(el));
 
     const PX_PROPS = new Set(['width', 'height', 'minHeight', 'left', 'right', 'top']);
-    /** Giống $.fn.css(): tự thêm "px" cho số */
+    /** Like $.fn.css(): automatically appends "px" to numbers */
     const css = (els, props) => {
         (Array.isArray(els) ? els : [els]).forEach((el) => {
             if (!el) return;
@@ -265,7 +265,7 @@
             }
         }
 
-        /** Đổi icon/text expand-collapse của li chứa submenu */
+        /** Switch the expand/collapse icon/text of an li that contains a submenu */
         _setSign(li, open) {
             if (!li || li.tagName !== 'LI') return;
             const link = qs('a', li);
@@ -391,7 +391,7 @@
             return this;
         }
 
-        /** Lazy-load khi phần tử xuất hiện trong viewport */
+        /** Lazy-load when the element enters the viewport */
         _observe(elements, callback) {
             if (!elements.length) return;
             if (!('IntersectionObserver' in window)) {
@@ -408,12 +408,12 @@
             elements.forEach((el) => observer.observe(el));
         }
 
-        /** Phát sự kiện refresh (tương đương $(window).trigger('magicmenu:refresh')) */
+        /** Dispatch the refresh event (equivalent to $(window).trigger('magicmenu:refresh')) */
         refresh() {
             window.dispatchEvent(new CustomEvent('magicmenu:refresh'));
         }
 
-        /** Lắng nghe refresh, gộp theo frame để tránh chạy quá nhiều khi scroll */
+        /** Listen for refresh, batched per frame to avoid running too often while scrolling */
         _onRefresh(fn) {
             let raf = 0;
             window.addEventListener('magicmenu:refresh', () => {
@@ -422,7 +422,7 @@
             });
         }
 
-        /** Chỉ chạy fn một lần cho mỗi (element, key) */
+        /** Run fn only once per (element, key) */
         _once(el, key, fn) {
             const flag = '_mm_' + key;
             if (el[flag]) return;
@@ -434,12 +434,12 @@
 
         _listen() {
             const { toggleBtn, swipeArea } = this.controls;
-            // cùng một function reference => addEventListener tự loại trùng
+            // same function reference => addEventListener ignores duplicates automatically
             toggleBtn.forEach((btn) => btn.addEventListener('click', this._toggleHandler));
             swipeArea.forEach((area) => this._onSwipeLeft(area, this._toggleHandler));
         }
 
-        /** Thay cho sự kiện "swipeleft" của jQuery Mobile */
+        /** Replacement for the jQuery Mobile "swipeleft" event */
         _onSwipeLeft(el, callback) {
             this._once(el, 'swipe', () => {
                 let start = null;
@@ -606,7 +606,7 @@
             });
         }
 
-        /** Khung tối đa để mega menu không tràn ra ngoài */
+        /** Maximum bounding box so the mega menu does not overflow */
         _boxMax(fullWidth) {
             let box = document.body;
             if (!fullWidth) {
@@ -624,7 +624,7 @@
             return box;
         }
 
-        /** Tính độ rộng mega theo số cột + block trái/phải */
+        /** Calculate the mega width from the column count + left/right blocks */
         _calcMega(item) {
             const options  = getData(item, 'options');
             const children = qsa('.cat-mega .children', item);
@@ -856,7 +856,7 @@
     };
     Magicmenu.Accordion = MagicAccordion;
 
-    /* ---- Auto init khi DOM ready (tương đương $(document).ready) ------- */
+    /* ---- Auto init on DOM ready (equivalent to $(document).ready) ------- */
     if (typeof document !== 'undefined') {
         const start = () => { Magicmenu.instance = new Magicmenu().init(); };
         if (document.readyState !== 'loading') start();
