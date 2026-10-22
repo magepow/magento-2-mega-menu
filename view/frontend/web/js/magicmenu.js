@@ -1,422 +1,867 @@
 /**
  * Copyright © Magiccart. All rights reserved.
  * See LICENSE for license details.
+ *
+ * Magicmenu - Pure JavaScript (no jQuery) version.
+ *  - class MagicAccordion : thay cho $.fn.magicaccordion
+ *  - class Magicmenu      : thay cho $.fn.magicmenu
+ *
+ * Dùng:
+ *   AMD / RequireJS : define(['Magiccart_Magicmenu/js/magicmenu'], function (Magicmenu) {...})
+ *   CommonJS        : const Magicmenu = require('./magicmenu');
+ *   Script thường   : window.Magicmenu
+ *
+ * File tự khởi tạo khi DOM ready (giống bản cũ). Có thể tạo thủ công:
+ *   const menu = new Magicmenu({ breakpoint: 991 }).init();
  */
-define([
-    'jquery'
-    ], function ($) {
-    !(function($){"use strict";$.fn.magicaccordion=function(options){var defaults={accordion:!0,mouseType:!1,speed:300,closedSign:'collapse',openedSign:'expand',openedActive:!1,};var methods={init:function(){return this.each(function(){var self=$(this);methods.menuLoad(self)})},menuLoad:function(self){var opts=$.extend(defaults,options);if(self.hasClass('menu-init'))return;self.addClass('menu-init');self.find("li").each(function(){if($(this).find("ul").length){$(this).find("ul").hide();$(this).find("a:first").after("<span class='"+opts.closedSign+"'>"+opts.closedSign+"</span>");if($(this).find("a:first").attr('href')=="#"){$(this).find("a:first").on('click',function(){return!1})}}});if(opts.openedActive){methods.openedActive(self)}if(opts.mouseType){self.find("li a").mouseenter(function(){methods.menuAction(self,$(this))})}else{self.find("li span").on('click',function(){methods.menuAction(self,$(this))})}var catplus=self.find('.nav-accordion >.level0:hidden').not('.all-cat');if(catplus.length){self.find('.all-cat').show().on('click',function(event){$(this).children().toggle();catplus.slideToggle('slow')})}else{self.find('.all-cat').hide()}},menuAction:function(self,item){var opts=$.extend(defaults,options);var parent=item.parent();if(parent.find("ul").length){if(opts.accordion){if(!parent.find("ul").is(':visible')){var parents=parent.parents("ul");var visible=self.find("ul:visible");visible.each(function(visibleIndex){var close=!0;parents.each(function(parentIndex){if(parents[parentIndex]==visible[visibleIndex]){close=!1;return!1}});if(close){if($(this).parent().find("ul")!=visible[visibleIndex]){$(visible[visibleIndex]).slideUp(opts.speed,function(){$(this).parent("li").find("a:first").next().html(opts.closedSign).addClass(opts.closedSign).removeClass(opts.openedSign)})}}})}}var parentFirst=parent.find("ul:first");if(parentFirst.is(":visible")){parentFirst.slideUp(opts.speed,function(){$(this).parent("li").find("a:first").next().delay(opts.speed+1000).html(opts.closedSign).removeClass(opts.openedSign).addClass(opts.closedSign)})}else{parentFirst.slideDown(opts.speed,function(){$(this).parent("li").find("a:first").next().delay(opts.speed+1000).html(opts.openedSign).removeClass(opts.closedSign).addClass(opts.openedSign)})}}},openedActive:function(self){var opts=$.extend(defaults,options);self.find("li.active").each(function(){$(this).parents("ul").slideDown(opts.speed,opts.easing);$(this).parents("ul").parent("li").find("a:first").next().html(opts.openedSign).removeClass(opts.closedSign).addClass(opts.openedSign);$(this).find("ul:first").slideDown(opts.speed,opts.easing);$(this).find("a:first").next().html(opts.openedSign).removeClass(opts.closedSign).addClass(opts.openedSign)})}};if(methods[options]){return methods[options].apply(this,Array.prototype.slice.call(arguments,1))}else if(typeof options==='object'||!options){return methods.init.apply(this)}else{$.error('Method "'+options+'" does not exist in magicaccordion plugin!')}}})($);
-    (function ($) {
-        "use strict";
-        $.fn.magicmenu = function (options) {
-            var defaults = {
-                breakpoint : 991,
-                horizontal : '.magicmenu',
-                vertical   : '.vmagicmenu',
-                sticky     : '.header-sticker',
-            };
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define([], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = factory();
+    } else {
+        root.Magicmenu = factory();
+    }
+})(typeof self !== 'undefined' ? self : this, function () {
+    'use strict';
 
-            var settings   = $.extend(defaults, options);
-            var breakpoint = settings.breakpoint;
-            var sticky     = settings.sticky;
-            var topmenu    = $(settings.horizontal);
-            var vmenu      = $(settings.vertical);
-            var body       = $('body');
-            var methods    = {
-                options: {
-                    responsive: false,
-                    expanded: false,
-                    showDelay: 42,
-                    hideDelay: 300,
-                    delay: 0,
-                    mediaBreakpoint: '(max-width: ' + breakpoint + 'px)'
-                },
-                init : function() {
-                    methods.controls = {
-                        toggleBtn: $('[data-action="toggle-nav"],[data-action="toggle-topmenu"]'),
-                        swipeArea: $('.nav-sections,.topmenu-close')
-                    };
-                    methods._listen();
-                    if (!document.documentElement.classList.contains('magicmenu-init')) {
-                        document.documentElement.classList.add('magicmenu-init');
-                        methods.getAppVersion('Magiccart_Magicmenu', 'https://magepow.com/magento-2-mega-menu.html');
-                    }
-                    return this.each(function() {
-                        var accordion = $("nav.navigation, .meanmenu-accordion");
-                        if ("IntersectionObserver" in window) {
-                            let accordionObserver = new IntersectionObserver(function(entries, observer) {
-                                entries.forEach(function(entry) {
-                                    if (entry.isIntersecting) {
-                                        let el  = entry.target;
-                                        let $el = $(el);
-                                        methods.active($el);
-                                        $el.magicaccordion($el.data('menu-init'));
-                                        accordionObserver.unobserve(el);
-                                    }
-                                });
-                            });
-                            accordion.each(function(){ accordionObserver.observe(this); });
+    /* ------------------------------------------------------------------ *
+     * DOM helpers (thay thế các hàm jQuery đã dùng)
+     * ------------------------------------------------------------------ */
 
-                            let megamenuObserver = new IntersectionObserver(function(entries, observer) {
-                                entries.forEach(function(entry) {
-                                    if (entry.isIntersecting) {
-                                        methods.megamenu($(entry.target));
-                                        megamenuObserver.unobserve(entry.target);
-                                    }
-                                });
-                            });
-                            topmenu.each(function(){ megamenuObserver.observe(this); });
-                            vmenu.each(function(){ megamenuObserver.observe(this); });
-                        } else {
-                            accordion.each(function(){ var el = $(this); methods.active(el); el.magicaccordion($(this).data('menu-init')); });
-                            topmenu.each(function(){ methods.megamenu(this); });
-                            vmenu.each(function(){ methods.megamenu(this); });
-                        }
-                    });
-                },
+    const qs  = (selector, scope = document) => scope.querySelector(selector);
+    const qsa = (selector, scope = document) => Array.from(scope.querySelectorAll(selector));
 
-                taphover: function(el){
-                    var categories = el.find('.category-item.hasChild'),
-                        event      = el.find('.nav-desktop.click').length ? 'touchstart click' : 'touchstart';
-                    categories.on(event, function (e) { /* 'touchstart click' if want for both touchstart and click */
-                        'use strict'; //satisfy code inspectors
-                        var link = $(this); //preselect the link
-                        link.trigger('mouseenter');
-                        if (link.hasClass('over')) {
-                            return true;
-                        } else {
-                            link.addClass('over');
-                            categories.not(this).removeClass('over');
-                            link.parents('.category-item').addClass('over');
-                            e.preventDefault();
-                            return false; //extra, and to make sure the function has consistent return points
-                        }
-                    });
-                },
+    const viewportWidth  = () => document.documentElement.clientWidth;
+    const viewportHeight = () => document.documentElement.clientHeight;
+    const documentHeight = () => {
+        const b = document.body, d = document.documentElement;
+        return Math.max(b.scrollHeight, d.scrollHeight, b.offsetHeight, d.offsetHeight, d.clientHeight);
+    };
 
-                sticky: function(topmenu){
-                    if ($(document).height() <= $(window).height()) return;
-                    var menuSticky  = $(sticky);
-                    var menuHeight  = menuSticky.innerHeight();
-                    var postionTop  = topmenu.offset().top + topmenu.height();
-                    var heightItem  =  0;
-                    var heightAIO   = 0
-                    var vmagicmenu = topmenu.parent().find('.vmagicmenu.fixed-auto');
-                    var menuAIO = vmagicmenu.find('.nav-desktop');
-                    if(body.hasClass('cms-index-index') && menuAIO.length){
-                        heightItem  = menuAIO.height();
-                        vmagicmenu.on('mouseenter', function() {
-                                    heightAIO = menuAIO.height() ; menuAIO.addClass('over').css({"overflow": "", "height": 'auto', "display": ''}); 
-                                }).on('mouseleave', function() {
-                                    menuAIO.removeClass('over').css({"overflow": "hidden", "height": heightAIO}); 
-                                });
-                    }
-                    var header = $('header.page-header');
-                    header.css('min-height', menuHeight);
-                    $(window).on('resize', function(){ 
-                        if(!menuSticky.hasClass('header-container-fixed')){
-                            header.css('min-height', function(){
-                                return $(sticky).innerHeight();
-                            });
-                        }
-                    });
-                    $(window).on('scroll', function () {
-                        var postion = $(this).scrollTop();
-                        $(this).trigger('magicmenu:refresh');
-                        if (postion > postionTop ){ /* not use = */
-                            menuSticky.addClass('header-container-fixed');
-                            if(heightItem && !menuAIO.hasClass('over')){
-                                heightAIO = heightItem - (postion - postionTop) - menuHeight;
-                                if(heightAIO > 0 ) menuAIO.css({"height": heightAIO, "overflow": "hidden", "display": ''});
-                                else menuAIO.css({"height": 'auto', "display": 'none', "overflow": "" });
-                            } else {
-                                menuAIO.css({"height": 'auto', "display": '', "overflow": "" });
-                            }
-                        } else {
-                            menuSticky.removeClass('header-container-fixed');
-                            menuAIO.css({"height": 'auto'});
-                        }
-                    });
-                },
+    /** Giống $.fn.data(): tự ép kiểu true/false/null/number/JSON */
+    const parseData = (value) => {
+        if (value === null || value === undefined) return undefined;
+        if (value === 'true') return true;
+        if (value === 'false') return false;
+        if (value === 'null') return null;
+        if (value !== '' && String(+value) === value) return +value;
+        if (/^(?:\{[\s\S]*\}|\[[\s\S]*\])$/.test(value)) {
+            try { return JSON.parse(value); } catch (e) { /* trả về chuỗi gốc */ }
+        }
+        return value;
+    };
+    const getData = (el, key) => (el ? parseData(el.getAttribute('data-' + key)) : undefined);
 
-                initMenu: function($navtop, fullWidth, horizontal=true){
-                    $navtop.each(function(index, val) {
-                        var $item     = $(this);
-                        if(fullWidth){
-                            var mega = $item.find('.level-top-mega');
-                            if(fullWidth == 2 && horizontal ){
-                                if(mega.parent().hasClass('full-width')){
-                                    mega.addClass('parent-full-width').width($('body').width());            
-                                } else {
-                                    mega.addClass('parent-full-width').wrap('<div class="full-width"></div>').width($('body').width());
-                                }
-                            }else {
-                                if(mega.parent().hasClass('auto-width')){
-                                    mega.addClass('parent-auto-width');            
-                                } else {
-                                    mega.addClass('parent-auto-width').wrap('<div class="auto-width"></div>');
-                                }
-                            }
-                        }
-                        var options   = $item.data('options');
-                        var $catMega = $item.find('.cat-mega');
-                        var $children = $catMega.find('.children');
-                        var columns   = $children.length;
-                        var wchil     = $children.outerWidth();
-                        if(options){
-                            var col     = parseInt(options.cat_col);
-                            if(!isNaN(col)) columns = col;
-                            var cat         = parseFloat(options.cat_proportion);
-                            var left        = parseFloat(options.left_proportion);
-                            var right       = parseFloat(options.right_proportion);
-                            if(isNaN(left)) left = 0; if(isNaN(right)) right = 0;
-                            var proportion  = cat + left + right;
-                            var wCat        = Math.ceil(100*cat/proportion);
-                            var wLeft       = Math.floor(100*left/proportion);
-                            var wRight      = Math.floor(100*right/proportion);
-                            // Init Responsive
-                            $catMega.css("width", wCat + "%");
-                            $item.find('.mega-block-left').css("width", wLeft + "%");
-                            $item.find('.mega-block-right').css("width", wRight + "%");
-                            $children.each(function(idx) { if(idx % columns ==0 && idx != 0) $(this).css("clear", "both"); });
-                            $item.attr({'data-wcat': wCat, 'data-wleft': wLeft,'data-wright': wRight });
-                        } 
+    const isVisible = (el) => !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
 
-                    });
-                },
+    const displayCache = {};
+    const defaultDisplay = (tag) => {
+        if (!displayCache[tag]) {
+            const t = document.createElement(tag);
+            document.body.appendChild(t);
+            let d = getComputedStyle(t).display;
+            t.remove();
+            if (d === 'none') d = 'block';
+            displayCache[tag] = d;
+        }
+        return displayCache[tag];
+    };
 
-                horizontal: function ($navtop, fullWidth, init) {
-                    if(init) methods.initMenu($navtop, fullWidth);
-                    var menuBox     = $navtop.closest('.magicmenu');
-                    var menuBoxMax  = $('body');
-                    if(!fullWidth){
-                        var maxWidth = 0;
-                        var container =  $('.container');
-                        var boxed     = container.length ? container : $('.navigation');
-                        if(boxed.length){
-                            boxed.each(function(){
-                                    var width = parseInt($(this).width());
-                                    if (width > maxWidth) {
-                                        maxWidth    = width;
-                                        menuBoxMax  = $(this);
-                                    }
-                            });
-                        }
-                    }
-                    var maxW        = menuBoxMax.width();
-                    var isRTL       = body.hasClass('rtl');
-                    var dir         = isRTL ? 'right' : 'left';
-                    $navtop.on('hover mouseenter', function(){
-                        var $item       = $(this);
-                        var options     = $item.data('options');
-                        var $children   = $item.find('.cat-mega .children');
-                        var columns     = $children.length;
-                        var wChild      = $children.outerWidth(true);
-                        var wMega       = wChild*columns;
-                        if(options){
-                            var col     = parseInt(options.cat_col);
-                            if(!isNaN(col)) wMega = wChild*col;
-                            var wCat    = $item.data('wcat');
-                            var wLeft   = Math.ceil($item.data('wleft')*wMega/wCat);
-                            var wRight  = Math.ceil($item.data('wright')*wMega/wCat);
-                            if( wLeft || wRight ) wMega = wMega + wLeft + wRight;
-                        }
-                        if(wMega > maxW) wMega = Math.floor(maxW / wChild)*wChild;
-                        $item.find('.content-mega-horizontal').width(wMega);
-                        var topMega     = $item.find('.level-top-mega');
-                        if(topMega.length){
-                            var offsetMega          = $item.offset();
-                            var offsetMenuBox       = menuBox.offset();
-                            var offsetmenuBoxMax    = menuBoxMax.offset();
-                            if(isRTL){
-                                var wWidth                  = $(window).width();
-                                var offsetMegaRight         = wWidth - (offsetMega.left         + $item.outerWidth());
-                                var offsetMenuBoxRight      = wWidth - (offsetMenuBox.left      + menuBox.outerWidth());
-                                var offsetmenuBoxMaxRight   = wWidth - (offsetmenuBoxMax.left   + menuBoxMax.outerWidth());
-                                var itemSpace               = offsetMegaRight                   - offsetMenuBoxRight;
-                                var xMaxOffset              = offsetmenuBoxMaxRight             + maxW;
-                                var xItemOffset             = offsetMegaRight                   + topMega.outerWidth();     
-                            } else {
-                                var itemSpace               = offsetMega.left                   - offsetMenuBox.left;
-                                var xMaxOffset              = offsetmenuBoxMax.left             + maxW;
-                                var xItemOffset             = offsetMega.left                   + topMega.outerWidth();                                
-                            }
-                            var xSpace                      = xItemOffset - xMaxOffset;
-                            var space                       = itemSpace   - xSpace
-                            if(space < itemSpace){
-                                topMega.css(dir, space);
-                            }else {
-                                /* Fix error sticky menu position */
-                                topMega.css(dir, 'auto');
-                            }
-                        }
-                    })
-                },
+    const show = (el) => {
+        if (el.style.display === 'none') el.style.display = el._mmDisplay || '';
+        if (getComputedStyle(el).display === 'none') el.style.display = defaultDisplay(el.tagName);
+    };
+    const hide = (el) => {
+        if (el.style.display !== 'none') {
+            el._mmDisplay = el.style.display;
+            el.style.display = 'none';
+        }
+    };
+    const toggle = (el) => (getComputedStyle(el).display === 'none' ? show(el) : hide(el));
 
-                vertical: function ($navtop, fullWidth, init)  {
-                    if(init) methods.initMenu($navtop, fullWidth, false);
-                    var menuBoxMax  = $('body');
-                    if(!fullWidth){
-                        var maxWidth = 0;
-                        var container =  $('.container');
-                        var boxed     = container.length ? container : $('.navigation');
-                        if(boxed.length){
-                            boxed.each(function(){
-                                    var width = parseInt($(this).width());
-                                    if (width > maxWidth) {
-                                        maxWidth    = width;
-                                        menuBoxMax  = $(this);
-                                    }
-                            });
-                        }
-                    }
-                    var maxW        = menuBoxMax.width();
-                    $navtop.on('hover mouseenter', function(){
-                        var $item       = $(this);
-                        var options     = $item.data('options');
-                        var $children   = $item.find('.cat-mega .children');
-                        var columns     = $children.length;
-                        var wChild      = $children.outerWidth(true);
-                        var topMega     = $item.find('.level-top-mega');
-                        var wMega       = wChild*columns;
-                        if(options){
-                            var col     = parseInt(options.cat_col);
-                            if(!isNaN(col)) wMega = wChild*col;
-                            var wCat    = $item.data('wcat');
-                            var wLeft   = Math.ceil($item.data('wleft')*wMega/wCat);
-                            var wRight  = Math.ceil($item.data('wright')*wMega/wCat);
-                            if( wLeft || wRight ) wMega = wMega + wLeft + wRight;
-                        }
-                        var wMageMax        = maxW - (topMega.outerWidth(true) - topMega.width());
-                        if(fullWidth || menuBoxMax.is('body')){
-                            var offsetMega      = $item.offset();
-                            var xSpace          = offsetMega.left;
-                            wMageMax            = wMageMax - xSpace - $item.width();
-                        }
-                        if(wMega > wMageMax) wMega = Math.floor(wMageMax / wChild)*wChild;
-                        $item.find('.content-mega-horizontal').width(wMega);
-                    })
-                },
+    const PX_PROPS = new Set(['width', 'height', 'minHeight', 'left', 'right', 'top']);
+    /** Giống $.fn.css(): tự thêm "px" cho số */
+    const css = (els, props) => {
+        (Array.isArray(els) ? els : [els]).forEach((el) => {
+            if (!el) return;
+            Object.keys(props).forEach((key) => {
+                let v = props[key];
+                if (typeof v === 'number' && PX_PROPS.has(key)) v += 'px';
+                el.style[key] = v;
+            });
+        });
+    };
 
-                toggleVertical: function ($vmenu) {
-                    if($vmenu.hasClass('init')) return;
-                    $vmenu.addClass('init');
-                    $vmenu.find('.v-title').on('click', function() {
-                        // $vmenu.find('.nav-desktop').parent().toggle();
-                        $vmenu.find('.nav-desktop').height('').slideToggle(400);
-                    });
-                    var catplus = $vmenu.find('.nav-desktop > .level0:hidden').not('.all-cat');
-                    // var catmore = $vmenu.find('.nav-desktop > .level0');
-                    if(catplus.length) $vmenu.find('.all-cat').show().on('click', function(event) {$(this).children().toggle(); catplus.slideToggle('slow');});
-                    // if(catplus.length) $vmenu.find('.all-cat').show().on('click', function(event) {$(this).children().toggle(); catmore.slideToggle('slow');});
-                    else $vmenu.find('.all-cat').hide();
-                },
+    const extras = (el, horizontal) => {
+        const cs = getComputedStyle(el);
+        const sides = horizontal ? ['Left', 'Right'] : ['Top', 'Bottom'];
+        return sides.reduce((sum, s) =>
+            sum + (parseFloat(cs['padding' + s]) || 0) + (parseFloat(cs['border' + s + 'Width']) || 0), 0);
+    };
+    const width  = (el) => el.getBoundingClientRect().width  - extras(el, true);
+    const height = (el) => el.getBoundingClientRect().height - extras(el, false);
+    const outerWidth = (el, withMargin = false) => {
+        let w = el.getBoundingClientRect().width;
+        if (withMargin) {
+            const cs = getComputedStyle(el);
+            w += (parseFloat(cs.marginLeft) || 0) + (parseFloat(cs.marginRight) || 0);
+        }
+        return w;
+    };
+    const setWidth = (el, value) => {
+        if (!isFinite(value)) return;
+        const add = getComputedStyle(el).boxSizing === 'border-box' ? extras(el, true) : 0;
+        el.style.width = (value + add) + 'px';
+    };
+    const offset = (el) => {
+        if (!el.getClientRects().length) return { top: 0, left: 0 };
+        const r = el.getBoundingClientRect();
+        return { top: r.top + window.pageYOffset, left: r.left + window.pageXOffset };
+    };
 
-                _listen: function () {
-                    var controls = this.controls,
-                        toggle = this.toggle;
+    const wrap = (el, className) => {
+        const div = document.createElement('div');
+        div.className = className;
+        el.parentNode.insertBefore(div, el);
+        div.appendChild(el);
+    };
+    const siblings = (el) => (el.parentElement ? Array.from(el.parentElement.children).filter((s) => s !== el) : []);
+    const ancestors = (el, selector) => {
+        const list = [];
+        for (let p = el.parentElement; p; p = p.parentElement) {
+            if (p.matches(selector)) list.push(p);
+        }
+        return list;
+    };
 
-                    controls.toggleBtn.off('click');
-                    controls.toggleBtn.on('click', toggle.bind(this));
-                    controls.swipeArea.off('swipeleft');
-                    controls.swipeArea.on('swipeleft', toggle.bind(this));
-                },
+    /* ---- slideUp / slideDown / slideToggle (Web Animations API) ------- */
 
-                toggle: function () {
-                    var html = $('html');
+    const SPEEDS = { slow: 600, fast: 200 };
+    const toMs = (speed, fallback = 400) =>
+        typeof speed === 'number' ? speed : (SPEEDS[speed] !== undefined ? SPEEDS[speed] : fallback);
+    const SLIDE_PROPS = ['height', 'paddingTop', 'paddingBottom', 'marginTop', 'marginBottom'];
 
-                    if (html.hasClass('nav-open')) {
-                        html.removeClass('nav-open');
-                        setTimeout(function () {
-                            html.removeClass('nav-before-open');
-                        }, this.options.hideDelay);
-                    } else {
-                        html.addClass('nav-before-open');
-                        setTimeout(function () {
-                            html.addClass('nav-open');
-                        }, this.options.showDelay);
-                    }
-                },
+    const stopSlide = (el) => {
+        const s = el._mmSlide;
+        if (!s) return;
+        el._mmSlide = null;
+        s.anim.cancel();
+        s.done();
+    };
 
-                active: function (menu) {
-                    if($('body').hasClass('cms-index-index')){
-                        menu.find('li.home').addClass('active');
-                        menu.find("li:not('.home')").removeClass('active');
-                    } else {
-                        var currentUrl = window.location.href.replace(/\/$/, "");
-                        menu.find("li:not('.home') a").each(function(){
-                            if($(this).attr('href') != undefined){
-                                var thisHref = ($(this).attr('href').split('?'))[0];
-                                if(currentUrl.indexOf(thisHref) == 0) {
-                                    menu.find('li.home').removeClass('active');
-                                    $(this).closest('li').addClass('active');
-                                }
-                            }
-                       });                        
-                    }
-                },
+    const slide = (el, dir, speed, callback) => {
+        const duration = toMs(speed);
+        stopSlide(el);
+        const visible = isVisible(el);
 
-                megamenu: function (menu) {
-                    var isHorizontal = menu.hasClass('magicmenu');
-                    /* Topmenu */
-                    var navDesktop = menu.find('.nav-desktop');
-                    if(isHorizontal && navDesktop.hasClass('sticker')) methods.sticky(menu);
-                    /* Active menu top-vmega */
-                    menu.find('.vmega .category-item').on('hover mouseenter', function() {
-                        $(this).siblings().removeClass('over');
-                        $(this).addClass('over');
-                    });
-                    var fullWidth  = navDesktop.data('fullwidth');
-                    if( navDesktop.data('breakpoint') ) breakpoint = navDesktop.data('breakpoint');
-                    var leveltop = navDesktop.find('li.level0.hasChild, li.level0.home').not('.dropdown');
-                    methods.toggleVertical(menu);
-                    if(isHorizontal) methods.horizontal(leveltop, fullWidth, true);                       
-                    else methods.vertical(leveltop, fullWidth, true);
-                    // Responsive
-                    if ( breakpoint > $(window).width() ) body.addClass('nav-mobile-display');
-                    $(window).on("magicmenu:refresh", function( event ) {
-                        if ( breakpoint > $(window).width()){
-                            body.addClass('nav-mobile-display');
-                            $('.nav-mobile').show();
-                            if(isHorizontal) navDesktop.hide();
-                        } else {
-                            body.removeClass('nav-mobile-display');
-                            $('.nav-mobile').hide();
-                            if(isHorizontal){
-                                navDesktop.show();
-                                methods.horizontal(leveltop, fullWidth, true);    
-                            }else methods.vertical(leveltop, fullWidth, true);
-                        }
-                    });
+        const instant = () => {
+            if (dir === 'down' && !visible) show(el);
+            else if (dir === 'up' && visible) hide(el);
+            if (callback) callback.call(el);
+        };
 
-                    $(window).on('resize', function(){ $(this).trigger('magicmenu:refresh')});
-                    
-                    methods.taphover(menu);    
-                    methods.active(menu);    
-                },
+        if ((dir === 'down' && visible) || (dir === 'up' && !visible)
+            || typeof el.animate !== 'function' || !duration) {
+            return instant();
+        }
 
-                getAppVersion: function (appName, href) {
-                    // this expression is to get the version string
-                    let regx = new RegExp('.*\/(.*?)\/assets\/', 'i');
-                    let result = regx.exec(href);
-                    let version = result ? result[1].replace(/\D/g, '') : '1.0.0';
-                    console.log(`%c ${appName} %c v${version}  %c`, "background: #555555; padding: 1px; margin-bottom: 2px; border-radius: 3px 0 0 3px; color: #fff", "background: #44cc11; padding: 1px; margin-bottom: 2px; border-radius: 0 3px 3px 0; color: #fff", "background:transparent", `🚀 ${href}`);
+        if (dir === 'down') show(el);
+        const cs   = getComputedStyle(el);
+        const full = {};
+        const zero = {};
+        SLIDE_PROPS.forEach((p) => { full[p] = cs[p]; zero[p] = '0px'; });
+        if (full.height === 'auto') return instant();
 
-                    return version;
+        const prevOverflow = el.style.overflow;
+        el.style.overflow = 'hidden';
+        const anim = el.animate(dir === 'down' ? [zero, full] : [full, zero],
+            { duration, easing: 'ease', fill: 'forwards' });
+
+        const done = () => {
+            el.style.overflow = prevOverflow;
+            if (dir === 'up') hide(el);
+            if (callback) callback.call(el);
+        };
+        el._mmSlide = { anim, done };
+        anim.onfinish = () => {
+            if (!el._mmSlide || el._mmSlide.anim !== anim) return;
+            el._mmSlide = null;
+            done();
+            anim.cancel();
+        };
+    };
+    const slideToggle = (el, speed, callback) =>
+        slide(el, isVisible(el) ? 'up' : 'down', speed, callback);
+
+    /* ------------------------------------------------------------------ *
+     * MagicAccordion
+     * ------------------------------------------------------------------ */
+
+    class MagicAccordion {
+        /**
+         * @param {HTMLElement} element
+         * @param {Object} [options]
+         */
+        constructor(element, options = {}) {
+            this.el   = element;
+            this.opts = Object.assign({}, MagicAccordion.defaults, options);
+            this.init();
+        }
+
+        init() {
+            const self = this.el;
+            const opts = this.opts;
+
+            if (self.classList.contains('menu-init')) return this;
+            self.classList.add('menu-init');
+
+            qsa('li', self).forEach((li) => {
+                const subs = qsa('ul', li);
+                if (!subs.length) return;
+                subs.forEach(hide);
+
+                const link = qs('a', li);
+                if (!link) return;
+
+                const sign = document.createElement('span');
+                sign.className   = opts.closedSign;
+                sign.textContent = opts.closedSign;
+                link.after(sign);
+
+                if (link.getAttribute('href') === '#') {
+                    link.addEventListener('click', (e) => e.preventDefault());
                 }
+            });
 
-            };
+            if (opts.openedActive) this.openedActive();
 
-            if(methods[options]) { // $("#element").pluginName('methodName', 'arg1', 'arg2');
-                return methods[options].apply(this, Array.prototype.slice.call(arguments, 1));
-            } else if (typeof options === 'object' || !options) { // $("#element").pluginName({ option: 1, option:2 });
-                return methods.init.apply(this);
+            if (opts.mouseType) {
+                qsa('li a', self).forEach((a) => a.addEventListener('mouseenter', () => this.menuAction(a)));
             } else {
-                $.error('Method "' + options + '" does not exist in magicmenu plugin!');
+                qsa('li span', self).forEach((s) => s.addEventListener('click', () => this.menuAction(s)));
+            }
+
+            this._initAllCat();
+            return this;
+        }
+
+        _initAllCat() {
+            const self    = this.el;
+            const allCat  = qsa('.all-cat', self);
+            const catplus = qsa('.nav-accordion > .level0', self)
+                .filter((el) => !isVisible(el) && !el.matches('.all-cat'));
+
+            if (catplus.length) {
+                allCat.forEach((btn) => {
+                    show(btn);
+                    btn.addEventListener('click', () => {
+                        Array.from(btn.children).forEach(toggle);
+                        catplus.forEach((el) => slideToggle(el, 'slow'));
+                    });
+                });
+            } else {
+                allCat.forEach(hide);
             }
         }
 
-    })($);
+        /** Đổi icon/text expand-collapse của li chứa submenu */
+        _setSign(li, open) {
+            if (!li || li.tagName !== 'LI') return;
+            const link = qs('a', li);
+            const sign = link && link.nextElementSibling;
+            if (!sign) return;
+            const { openedSign, closedSign } = this.opts;
+            sign.textContent = open ? openedSign : closedSign;
+            sign.classList.remove(open ? closedSign : openedSign);
+            sign.classList.add(open ? openedSign : closedSign);
+        }
 
-    $(document).ready(function($) {$(document).magicmenu();});
+        menuAction(item) {
+            const { speed, accordion } = this.opts;
+            const parent = item.parentElement;
+            if (!parent) return;
+
+            const subs = qsa('ul', parent);
+            if (!subs.length) return;
+
+            if (accordion && !subs.some(isVisible)) {
+                const parents = ancestors(parent, 'ul');
+                qsa('ul', this.el)
+                    .filter(isVisible)
+                    .forEach((ul) => {
+                        if (parents.includes(ul)) return;
+                        slide(ul, 'up', speed, () => this._setSign(ul.parentElement, false));
+                    });
+            }
+
+            const first = subs[0];
+            if (isVisible(first)) {
+                slide(first, 'up', speed, () => this._setSign(first.parentElement, false));
+            } else {
+                slide(first, 'down', speed, () => this._setSign(first.parentElement, true));
+            }
+        }
+
+        openedActive() {
+            const { speed } = this.opts;
+            qsa('li.active', this.el).forEach((li) => {
+                const parents = ancestors(li, 'ul');
+                parents.forEach((ul) => {
+                    slide(ul, 'down', speed);
+                    this._setSign(ul.parentElement, true);
+                });
+
+                const sub = qs('ul', li);
+                if (sub) {
+                    slide(sub, 'down', speed);
+                    this._setSign(li, true);
+                }
+            });
+        }
+    }
+
+    MagicAccordion.defaults = {
+        accordion   : true,
+        mouseType   : false,
+        speed       : 300,
+        closedSign  : 'collapse',
+        openedSign  : 'expand',
+        openedActive: false
+    };
+
+    /* ------------------------------------------------------------------ *
+     * Magicmenu
+     * ------------------------------------------------------------------ */
+
+    class Magicmenu {
+        /**
+         * @param {Object} [options]
+         * @param {number} [options.breakpoint=991]
+         * @param {string} [options.horizontal='.magicmenu']
+         * @param {string} [options.vertical='.vmagicmenu']
+         * @param {string} [options.sticky='.header-sticker']
+         */
+        constructor(options = {}) {
+            this.settings   = Object.assign({}, Magicmenu.defaults, options);
+            this.breakpoint = this.settings.breakpoint;
+            this.options    = {
+                responsive     : false,
+                expanded       : false,
+                showDelay      : 42,
+                hideDelay      : 300,
+                delay          : 0,
+                mediaBreakpoint: '(max-width: ' + this.breakpoint + 'px)'
+            };
+            this.controls     = { toggleBtn: [], swipeArea: [] };
+            this._initialized = false;
+            this._toggleHandler = () => this.toggle();
+        }
+
+        /* ------------------------------ init ------------------------------ */
+
+        init() {
+            if (this._initialized) return this;
+            this._initialized = true;
+
+            this.controls = {
+                toggleBtn: qsa('[data-action="toggle-nav"],[data-action="toggle-topmenu"]'),
+                swipeArea: qsa('.nav-sections,.topmenu-close')
+            };
+            this._listen();
+
+            const html = document.documentElement;
+            if (!html.classList.contains('magicmenu-init')) {
+                html.classList.add('magicmenu-init');
+                this.getAppVersion('Magiccart_Magicmenu', 'https://magepow.com/magento-2-mega-menu.html');
+            }
+
+            window.addEventListener('resize', () => this.refresh());
+
+            const accordions = qsa('nav.navigation, .meanmenu-accordion');
+            const megamenus  = qsa(this.settings.horizontal).concat(qsa(this.settings.vertical));
+
+            this._observe(accordions, (el) => {
+                this.active(el);
+                const data = getData(el, 'menu-init');
+                new MagicAccordion(el, data && typeof data === 'object' ? data : {});
+            });
+            this._observe(megamenus, (el) => this.megamenu(el));
+
+            return this;
+        }
+
+        /** Lazy-load khi phần tử xuất hiện trong viewport */
+        _observe(elements, callback) {
+            if (!elements.length) return;
+            if (!('IntersectionObserver' in window)) {
+                elements.forEach(callback);
+                return;
+            }
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    callback(entry.target);
+                    observer.unobserve(entry.target);
+                });
+            });
+            elements.forEach((el) => observer.observe(el));
+        }
+
+        /** Phát sự kiện refresh (tương đương $(window).trigger('magicmenu:refresh')) */
+        refresh() {
+            window.dispatchEvent(new CustomEvent('magicmenu:refresh'));
+        }
+
+        /** Lắng nghe refresh, gộp theo frame để tránh chạy quá nhiều khi scroll */
+        _onRefresh(fn) {
+            let raf = 0;
+            window.addEventListener('magicmenu:refresh', () => {
+                if (raf) return;
+                raf = requestAnimationFrame(() => { raf = 0; fn(); });
+            });
+        }
+
+        /** Chỉ chạy fn một lần cho mỗi (element, key) */
+        _once(el, key, fn) {
+            const flag = '_mm_' + key;
+            if (el[flag]) return;
+            el[flag] = true;
+            fn();
+        }
+
+        /* ---------------------------- toggle nav -------------------------- */
+
+        _listen() {
+            const { toggleBtn, swipeArea } = this.controls;
+            // cùng một function reference => addEventListener tự loại trùng
+            toggleBtn.forEach((btn) => btn.addEventListener('click', this._toggleHandler));
+            swipeArea.forEach((area) => this._onSwipeLeft(area, this._toggleHandler));
+        }
+
+        /** Thay cho sự kiện "swipeleft" của jQuery Mobile */
+        _onSwipeLeft(el, callback) {
+            this._once(el, 'swipe', () => {
+                let start = null;
+                el.addEventListener('touchstart', (e) => {
+                    const t = e.touches[0];
+                    start = { x: t.clientX, y: t.clientY, time: Date.now() };
+                }, { passive: true });
+                el.addEventListener('touchend', (e) => {
+                    if (!start) return;
+                    const t  = e.changedTouches[0];
+                    const dx = t.clientX - start.x;
+                    const dy = t.clientY - start.y;
+                    const dt = Date.now() - start.time;
+                    start = null;
+                    if (dt < 1000 && dx < -30 && Math.abs(dy) < 30) callback();
+                }, { passive: true });
+            });
+        }
+
+        toggle() {
+            const html = document.documentElement;
+            if (html.classList.contains('nav-open')) {
+                html.classList.remove('nav-open');
+                setTimeout(() => html.classList.remove('nav-before-open'), this.options.hideDelay);
+            } else {
+                html.classList.add('nav-before-open');
+                setTimeout(() => html.classList.add('nav-open'), this.options.showDelay);
+            }
+        }
+
+        /* ---------------------------- tap hover --------------------------- */
+
+        taphover(menu) {
+            const categories = qsa('.category-item.hasChild', menu);
+            const events     = qs('.nav-desktop.click', menu) ? ['touchstart', 'click'] : ['touchstart'];
+
+            categories.forEach((link) => {
+                events.forEach((type) => {
+                    link.addEventListener(type, (e) => {
+                        link.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+                        if (link.classList.contains('over')) return;
+
+                        link.classList.add('over');
+                        categories.forEach((c) => { if (c !== link) c.classList.remove('over'); });
+                        ancestors(link, '.category-item').forEach((p) => p.classList.add('over'));
+
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }, { passive: false });
+                });
+            });
+        }
+
+        /* ------------------------------ sticky ---------------------------- */
+
+        sticky(topmenu) {
+            if (documentHeight() <= viewportHeight()) return;
+
+            const body       = document.body;
+            const menuSticky = qsa(this.settings.sticky);
+            const stickyH    = () => (menuSticky[0] ? menuSticky[0].clientHeight : 0);
+            const menuHeight = stickyH();
+            const postionTop = offset(topmenu).top + height(topmenu);
+
+            let heightItem = 0;
+            let heightAIO  = 0;
+            const vmagicmenu = topmenu.parentElement ? qsa('.vmagicmenu.fixed-auto', topmenu.parentElement) : [];
+            const menuAIO    = vmagicmenu.reduce((list, v) => list.concat(qsa('.nav-desktop', v)), []);
+
+            if (body.classList.contains('cms-index-index') && menuAIO.length) {
+                heightItem = height(menuAIO[0]);
+                vmagicmenu.forEach((v) => {
+                    v.addEventListener('mouseenter', () => {
+                        heightAIO = height(menuAIO[0]);
+                        menuAIO.forEach((el) => el.classList.add('over'));
+                        css(menuAIO, { overflow: '', height: 'auto', display: '' });
+                    });
+                    v.addEventListener('mouseleave', () => {
+                        menuAIO.forEach((el) => el.classList.remove('over'));
+                        css(menuAIO, { overflow: 'hidden', height: heightAIO });
+                    });
+                });
+            }
+
+            const header = qsa('header.page-header');
+            css(header, { minHeight: menuHeight });
+
+            window.addEventListener('resize', () => {
+                if (!menuSticky.some((el) => el.classList.contains('header-container-fixed'))) {
+                    css(header, { minHeight: stickyH() });
+                }
+            });
+
+            window.addEventListener('scroll', () => {
+                const position = window.pageYOffset || document.documentElement.scrollTop;
+                this.refresh();
+
+                if (position > postionTop) { /* not use = */
+                    menuSticky.forEach((el) => el.classList.add('header-container-fixed'));
+                    if (heightItem && !menuAIO.some((el) => el.classList.contains('over'))) {
+                        heightAIO = heightItem - (position - postionTop) - menuHeight;
+                        if (heightAIO > 0) css(menuAIO, { height: heightAIO, overflow: 'hidden', display: '' });
+                        else css(menuAIO, { height: 'auto', display: 'none', overflow: '' });
+                    } else {
+                        css(menuAIO, { height: 'auto', display: '', overflow: '' });
+                    }
+                } else {
+                    menuSticky.forEach((el) => el.classList.remove('header-container-fixed'));
+                    css(menuAIO, { height: 'auto' });
+                }
+            }, { passive: true });
+        }
+
+        /* ---------------------------- mega layout ------------------------- */
+
+        initMenu(navtop, fullWidth, horizontal = true) {
+            navtop.forEach((item) => {
+                if (fullWidth) {
+                    qsa('.level-top-mega', item).forEach((mega) => {
+                        const parent = mega.parentElement;
+                        if (Number(fullWidth) === 2 && horizontal) {
+                            mega.classList.add('parent-full-width');
+                            if (!parent.classList.contains('full-width')) wrap(mega, 'full-width');
+                            setWidth(mega, width(document.body));
+                        } else {
+                            mega.classList.add('parent-auto-width');
+                            if (!parent.classList.contains('auto-width')) wrap(mega, 'auto-width');
+                        }
+                    });
+                }
+
+                const options  = getData(item, 'options');
+                const catMega  = qsa('.cat-mega', item);
+                const children = catMega.reduce((list, c) => list.concat(qsa('.children', c)), []);
+                let columns    = children.length;
+
+                if (options && typeof options === 'object') {
+                    const col = parseInt(options.cat_col, 10);
+                    if (!isNaN(col)) columns = col;
+
+                    const cat   = parseFloat(options.cat_proportion);
+                    let left    = parseFloat(options.left_proportion);
+                    let right   = parseFloat(options.right_proportion);
+                    if (isNaN(left)) left = 0;
+                    if (isNaN(right)) right = 0;
+
+                    const proportion = cat + left + right;
+                    const wCat   = Math.ceil(100 * cat / proportion);
+                    const wLeft  = Math.floor(100 * left / proportion);
+                    const wRight = Math.floor(100 * right / proportion);
+
+                    // Init Responsive
+                    catMega.forEach((el) => { el.style.width = wCat + '%'; });
+                    qsa('.mega-block-left', item).forEach((el) => { el.style.width = wLeft + '%'; });
+                    qsa('.mega-block-right', item).forEach((el) => { el.style.width = wRight + '%'; });
+                    children.forEach((el, idx) => {
+                        if (columns && idx % columns === 0 && idx !== 0) el.style.clear = 'both';
+                    });
+
+                    item.setAttribute('data-wcat', wCat);
+                    item.setAttribute('data-wleft', wLeft);
+                    item.setAttribute('data-wright', wRight);
+                }
+            });
+        }
+
+        /** Khung tối đa để mega menu không tràn ra ngoài */
+        _boxMax(fullWidth) {
+            let box = document.body;
+            if (!fullWidth) {
+                let maxWidth = 0;
+                const container = qsa('.container');
+                const boxed     = container.length ? container : qsa('.navigation');
+                boxed.forEach((el) => {
+                    const w = parseInt(width(el), 10);
+                    if (w > maxWidth) {
+                        maxWidth = w;
+                        box = el;
+                    }
+                });
+            }
+            return box;
+        }
+
+        /** Tính độ rộng mega theo số cột + block trái/phải */
+        _calcMega(item) {
+            const options  = getData(item, 'options');
+            const children = qsa('.cat-mega .children', item);
+            const wChild   = children.length ? outerWidth(children[0], true) : NaN;
+            let wMega      = wChild * children.length;
+
+            if (options && typeof options === 'object') {
+                const col = parseInt(options.cat_col, 10);
+                if (!isNaN(col)) wMega = wChild * col;
+                const wCat   = getData(item, 'wcat');
+                const wLeft  = Math.ceil(getData(item, 'wleft')  * wMega / wCat);
+                const wRight = Math.ceil(getData(item, 'wright') * wMega / wCat);
+                if (wLeft || wRight) wMega = wMega + wLeft + wRight;
+            }
+            return { wChild, wMega };
+        }
+
+        horizontal(navtop, fullWidth, init) {
+            if (init) this.initMenu(navtop, fullWidth);
+            navtop.forEach((item) => {
+                this._once(item, 'horizontal', () => {
+                    item.addEventListener('mouseenter', () => this._hoverHorizontal(item, fullWidth));
+                });
+            });
+        }
+
+        _hoverHorizontal(item, fullWidth) {
+            const body    = document.body;
+            const menuBox = item.closest(this.settings.horizontal);
+            const boxMax  = this._boxMax(fullWidth);
+            const maxW    = width(boxMax);
+            const isRTL   = body.classList.contains('rtl');
+            const dir     = isRTL ? 'right' : 'left';
+
+            const calc  = this._calcMega(item);
+            const wChild = calc.wChild;
+            let wMega   = calc.wMega;
+            if (wMega > maxW) wMega = Math.floor(maxW / wChild) * wChild;
+            qsa('.content-mega-horizontal', item).forEach((el) => setWidth(el, wMega));
+
+            const topMega = qs('.level-top-mega', item);
+            if (!topMega || !menuBox) return;
+
+            const offsetMega   = offset(item);
+            const offsetBox    = offset(menuBox);
+            const offsetBoxMax = offset(boxMax);
+            let itemSpace, xMaxOffset, xItemOffset;
+
+            if (isRTL) {
+                const wWin            = viewportWidth();
+                const megaRight       = wWin - (offsetMega.left   + outerWidth(item));
+                const boxRight        = wWin - (offsetBox.left    + outerWidth(menuBox));
+                const boxMaxRight     = wWin - (offsetBoxMax.left + outerWidth(boxMax));
+                itemSpace  = megaRight - boxRight;
+                xMaxOffset = boxMaxRight + maxW;
+                xItemOffset = megaRight + outerWidth(topMega);
+            } else {
+                itemSpace  = offsetMega.left - offsetBox.left;
+                xMaxOffset = offsetBoxMax.left + maxW;
+                xItemOffset = offsetMega.left + outerWidth(topMega);
+            }
+
+            const xSpace = xItemOffset - xMaxOffset;
+            const space  = itemSpace - xSpace;
+            if (space < itemSpace) {
+                css(topMega, { [dir]: space });
+            } else {
+                /* Fix error sticky menu position */
+                css(topMega, { [dir]: 'auto' });
+            }
+        }
+
+        vertical(navtop, fullWidth, init) {
+            if (init) this.initMenu(navtop, fullWidth, false);
+            navtop.forEach((item) => {
+                this._once(item, 'vertical', () => {
+                    item.addEventListener('mouseenter', () => this._hoverVertical(item, fullWidth));
+                });
+            });
+        }
+
+        _hoverVertical(item, fullWidth) {
+            const boxMax  = this._boxMax(fullWidth);
+            const maxW    = width(boxMax);
+            const topMega = qs('.level-top-mega', item);
+
+            const calc   = this._calcMega(item);
+            const wChild = calc.wChild;
+            let wMega    = calc.wMega;
+
+            const extra = topMega ? outerWidth(topMega, true) - width(topMega) : NaN;
+            let wMegaMax = maxW - extra;
+            if (fullWidth || boxMax === document.body) {
+                wMegaMax = wMegaMax - offset(item).left - width(item);
+            }
+            if (wMega > wMegaMax) wMega = Math.floor(wMegaMax / wChild) * wChild;
+            qsa('.content-mega-horizontal', item).forEach((el) => setWidth(el, wMega));
+        }
+
+        toggleVertical(vmenu) {
+            if (vmenu.classList.contains('init')) return;
+            vmenu.classList.add('init');
+
+            qsa('.v-title', vmenu).forEach((title) => {
+                title.addEventListener('click', () => {
+                    qsa('.nav-desktop', vmenu).forEach((nav) => {
+                        nav.style.height = '';
+                        slideToggle(nav, 400);
+                    });
+                });
+            });
+
+            const catplus = qsa('.nav-desktop > .level0', vmenu)
+                .filter((el) => !isVisible(el) && !el.matches('.all-cat'));
+            const allCat = qsa('.all-cat', vmenu);
+
+            if (catplus.length) {
+                allCat.forEach((btn) => {
+                    show(btn);
+                    btn.addEventListener('click', () => {
+                        Array.from(btn.children).forEach(toggle);
+                        catplus.forEach((el) => slideToggle(el, 'slow'));
+                    });
+                });
+            } else {
+                allCat.forEach(hide);
+            }
+        }
+
+        /* ----------------------------- active menu ------------------------ */
+
+        active(menu) {
+            if (document.body.classList.contains('cms-index-index')) {
+                qsa('li.home', menu).forEach((li) => li.classList.add('active'));
+                qsa('li:not(.home)', menu).forEach((li) => li.classList.remove('active'));
+                return;
+            }
+
+            const currentUrl = window.location.href.replace(/\/$/, '');
+            qsa('li:not(.home) a', menu).forEach((a) => {
+                const href = a.getAttribute('href');
+                if (href === null) return;
+                const thisHref = href.split('?')[0];
+                if (thisHref && currentUrl.indexOf(thisHref) === 0) {
+                    qsa('li.home', menu).forEach((li) => li.classList.remove('active'));
+                    const li = a.closest('li');
+                    if (li) li.classList.add('active');
+                }
+            });
+        }
+
+        /* ------------------------------ megamenu -------------------------- */
+
+        megamenu(menu) {
+            const body         = document.body;
+            const isHorizontal = menu.matches(this.settings.horizontal);
+            const navDesktop   = qsa('.nav-desktop', menu);
+
+            /* Topmenu */
+            if (isHorizontal && navDesktop.some((n) => n.classList.contains('sticker'))) this.sticky(menu);
+
+            /* Active menu top-vmega */
+            qsa('.vmega .category-item', menu).forEach((item) => {
+                item.addEventListener('mouseenter', () => {
+                    siblings(item).forEach((s) => s.classList.remove('over'));
+                    item.classList.add('over');
+                });
+            });
+
+            const fullWidth = getData(navDesktop[0], 'fullwidth');
+            const bp        = getData(navDesktop[0], 'breakpoint');
+            if (bp) this.breakpoint = bp;
+
+            const leveltop = navDesktop
+                .reduce((list, nav) => list.concat(qsa('li.level0.hasChild, li.level0.home', nav)), [])
+                .filter((li) => !li.classList.contains('dropdown'));
+
+            this.toggleVertical(menu);
+
+            const build = () => (isHorizontal
+                ? this.horizontal(leveltop, fullWidth, true)
+                : this.vertical(leveltop, fullWidth, true));
+            build();
+
+            // Responsive
+            const isMobile = () => this.breakpoint > viewportWidth();
+            if (isMobile()) body.classList.add('nav-mobile-display');
+
+            this._onRefresh(() => {
+                if (isMobile()) {
+                    body.classList.add('nav-mobile-display');
+                    qsa('.nav-mobile').forEach(show);
+                    if (isHorizontal) navDesktop.forEach(hide);
+                } else {
+                    body.classList.remove('nav-mobile-display');
+                    qsa('.nav-mobile').forEach(hide);
+                    if (isHorizontal) navDesktop.forEach(show);
+                    build();
+                }
+            });
+
+            this.taphover(menu);
+            this.active(menu);
+        }
+
+        /* ------------------------------- misc ----------------------------- */
+
+        getAppVersion(appName, href) {
+            // this expression is to get the version string
+            const regx    = /.*\/(.*?)\/assets\//i;
+            const result  = regx.exec(href);
+            const version = result ? result[1].replace(/\D/g, '') : '1.0.0';
+            console.log(
+                `%c ${appName} %c v${version}  %c`,
+                'background: #555555; padding: 1px; margin-bottom: 2px; border-radius: 3px 0 0 3px; color: #fff',
+                'background: #44cc11; padding: 1px; margin-bottom: 2px; border-radius: 0 3px 3px 0; color: #fff',
+                'background:transparent',
+                `🚀 ${href}`
+            );
+            return version;
+        }
+    }
+
+    Magicmenu.defaults = {
+        breakpoint: 991,
+        horizontal: '.magicmenu',
+        vertical  : '.vmagicmenu',
+        sticky    : '.header-sticker'
+    };
+    Magicmenu.Accordion = MagicAccordion;
+
+    /* ---- Auto init khi DOM ready (tương đương $(document).ready) ------- */
+    if (typeof document !== 'undefined') {
+        const start = () => { Magicmenu.instance = new Magicmenu().init(); };
+        if (document.readyState !== 'loading') start();
+        else document.addEventListener('DOMContentLoaded', start, { once: true });
+    }
+
+    return Magicmenu;
 });

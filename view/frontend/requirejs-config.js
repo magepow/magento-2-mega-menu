@@ -7,11 +7,5 @@ var config = {
         '*': {
             'magicmenu': 'Magiccart_Magicmenu/js/magicmenu'
         }
-    },
-
-    shim: {
-        'magicmenu': {
-            deps: ['jquery']
-        }
     }
 };
