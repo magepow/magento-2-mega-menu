@@ -22,6 +22,8 @@
                 <thumbnail>1</thumbnail>
                 <extraCat>1</extraCat>
                 <notIncludeNav>0</notIncludeNav>
+                <exclude_html_desktop>0</exclude_html_desktop>
+                <exclude_html_mobile>0</exclude_html_mobile>
             </topmenu>
             <vmenu>
                 <enabled>0</enabled>
@@ -31,6 +33,8 @@
                 <thumbnail>1</thumbnail>
                 <extraCat>0</extraCat>
                 <notIncludeNav>0</notIncludeNav>
+                <exclude_html_desktop>0</exclude_html_desktop>
+                <exclude_html_mobile>0</exclude_html_mobile>
             </vmenu>
             <accordion>
                 <enabled>1</enabled>

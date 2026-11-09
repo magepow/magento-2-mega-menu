@@ -106,6 +106,8 @@ class Menu extends Navigation
      */
     public $sysCfg;
 
+    public $_sysCfg;
+
     /**
      * @var MagicmenuConfig
      */
@@ -163,6 +165,7 @@ class Menu extends Navigation
         $configModule['topmenu']['notIncludeNav'] = $configModule['topmenu']['notIncludeNav'] ?? '';
         $configModule['vmenu']['notIncludeNav'] = $configModule['vmenu']['notIncludeNav'] ?? '';
         $this->sysCfg = (object)$configModule;
+        $this->_sysCfg = $this->sysCfg;
 
         parent::__construct(
             $context,
